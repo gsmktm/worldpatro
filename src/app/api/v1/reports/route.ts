@@ -14,26 +14,62 @@ const ReportInput = z.object({
 });
 
 export async function GET(request: Request) {
-  const kind = new URL(request.url).searchParams.get("kind");
+  const url = new URL(request.url);
+  const kind = url.searchParams.get("kind");
+  const summary = url.searchParams.get("view") === "summary";
 
   if (useFirebaseBackend()) {
     const user = await getFirebaseUser();
     if (!user) return NextResponse.json({ error: "Authentication required" }, { status: 401 });
     const reports = (await listUserDocs(user.uid, "reports")).filter(r => !kind || r.kind === kind);
-    return NextResponse.json({ backend: "firebase", reports });
+    return NextResponse.json({
+      backend: "firebase",
+      reports: summary ? reports.map(r => ({
+        id: r.id, title: r.title, kind: r.kind, createdAt: r.createdAt ?? null
+      })) : reports
+    }, { headers: { "Cache-Control": "no-store" } });
   }
 
   const auth = await requireUser();
   if (auth.error || !auth.supabase || !auth.userId) return auth.error!;
-  let query = auth.supabase.from("saved_reports").select("*").eq("user_id", auth.userId);
+  let query = auth.supabase.from("saved_reports")
+    .select(summary ? "id,title,kind,created_at" : "*").eq("user_id", auth.userId);
   if (kind) query = query.eq("kind", kind);
   const { data, error } = await query.order("created_at", { ascending: false }).limit(100);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ backend: "supabase", reports: data });
+  return NextResponse.json({ backend: "supabase", reports: data }, {
+    headers: { "Cache-Control": "no-store" }
+  });
 }
 
 export async function POST(request: Request) {
-  const parsed = ReportInput.safeParse(await request.json().catch(() => null));
+  if (request.headers.get("sec-fetch-site") === "cross-site") {
+    return NextResponse.json({ error: "Cross-origin writes not permitted." }, { status: 403 });
+  }
+  const origin = request.headers.get("origin");
+  if (origin) {
+    try {
+      if (new URL(origin).origin !== new URL(request.url).origin) {
+        return NextResponse.json({ error: "Cross-origin writes not permitted." }, { status: 403 });
+      }
+    } catch {
+      return NextResponse.json({ error: "Invalid Origin." }, { status: 403 });
+    }
+  }
+  if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
+    return NextResponse.json({ error: "Content-Type must be application/json." }, { status: 415 });
+  }
+  const maxBytes = 512 * 1024;
+  if (Number(request.headers.get("content-length") ?? 0) > maxBytes) {
+    return NextResponse.json({ error: "Report request exceeds 512 KiB." }, { status: 413 });
+  }
+  const raw = await request.text();
+  if (Buffer.byteLength(raw, "utf8") > maxBytes) {
+    return NextResponse.json({ error: "Report request exceeds 512 KiB." }, { status: 413 });
+  }
+  let input: unknown = null;
+  try { input = JSON.parse(raw); } catch { /* validated below */ }
+  const parsed = ReportInput.safeParse(input);
   if (!parsed.success) return NextResponse.json({ error: "Invalid report", issues: parsed.error.issues }, { status: 400 });
   const v = parsed.data;
 

@@ -25,6 +25,9 @@ export default function KundliStudio() {
   const [busy,startTransition]=useTransition();
   const [activeDasha,setActiveDasha]=useState<"mahadasha"|"antardasha">("mahadasha");
   const [selectedVarga,setSelectedVarga]=useState("D1");
+  const [history,setHistory]=useState<Array<{id:string;title:string;createdAt:string|null}>>([]);
+  const [historyBusy,setHistoryBusy]=useState(false);
+  const [deletingId,setDeletingId]=useState<string|null>(null);
 
   function change(key:keyof typeof birth,value:string) {
     setBirth(prev=>({...prev,[key]:value}));
@@ -68,10 +71,43 @@ export default function KundliStudio() {
       if(response.status===401)throw new Error("Sign in to save a private birth chart.");
       if(!response.ok)throw new Error("Authenticated report storage is unavailable.");
       setNotice("Saved privately to your account.");
+      await loadHistory(true);
     } catch(e) {
       setError(e instanceof Error?e.message:"Unable to save.");
     }
   }
+
+  async function loadHistory(silent=false) {
+    setHistoryBusy(true);
+    try {
+      const response=await fetch("/api/v1/reports?kind=kundli&view=summary",{cache:"no-store"});
+      if(response.status===401)throw new Error("Sign in to see saved charts.");
+      if(!response.ok)throw new Error("Report storage is not configured or temporarily unavailable.");
+      const data=await response.json();
+      const rows=Array.isArray(data.reports)?data.reports:[];
+      setHistory(rows.map((r:{id:string;title:string;createdAt?:string;created_at?:string})=>({
+        id:r.id,title:r.title,createdAt:r.createdAt??r.created_at??null
+      })));
+      if(!silent)setNotice(rows.length+" private charts loaded.");
+    }catch(err){
+      if(!silent)setError(err instanceof Error?err.message:"Saved charts could not be loaded.");
+    }finally{setHistoryBusy(false);}
+  }
+  async function deleteReport(id:string) {
+    if(!window.confirm("Permanently delete this saved birth chart from your account?"))return;
+    setDeletingId(id);setError("");setNotice("");
+    try {
+      const response=await fetch("/api/v1/reports/"+encodeURIComponent(id),{
+        method:"DELETE",headers:{"accept":"application/json"}
+      });
+      const body=await response.json();
+      if(!response.ok||!body.deleted)throw new Error(body.error||"Deletion failed.");
+      setHistory(prev=>prev.filter(r=>r.id!==id));
+      setNotice("Saved report deleted from your account.");
+    }catch(err){setError(err instanceof Error?err.message:"Unable to delete report.");}
+    finally{setDeletingId(null);}
+  }
+
   function exportJson() {
     if(!chart)return;
     const url=URL.createObjectURL(new Blob([JSON.stringify(chart,null,2)],{type:"application/json"}));
@@ -127,8 +163,16 @@ export default function KundliStudio() {
       <div className="kundliActions">
         <button type="button" className="primaryBtn" onClick={save}>Save privately</button>
         <button type="button" className="ghost" onClick={exportJson}>Export complete JSON</button>
+        <button type="button" className="ghost" disabled={historyBusy} onClick={()=>loadHistory()}>{historyBusy?"Loading…":"My saved charts"}</button>
         <a href="/login" className="ghost">Account</a>
       </div>
+      {history.length>0&&<div className="kundliHistory">
+        <div className="eyebrow">PRIVATE · MY SAVED KUNDLI REPORTS</div>
+        {history.map(item=><div key={item.id} className="kundliHistoryRow">
+          <div><strong>{item.title}</strong><small>{item.createdAt?new Date(item.createdAt).toLocaleString():"Saved report"}</small></div>
+          <button type="button" onClick={()=>deleteReport(item.id)} disabled={Boolean(deletingId)}>{deletingId===item.id?"Deleting…":"Delete permanently"}</button>
+        </div>)}
+      </div>}
 
       <div className="kundliColumns">
         <section className="kundliPanel"><div className="eyebrow">GRAHA TABLE</div><h3>Nine grahas · sidereal longitude</h3>

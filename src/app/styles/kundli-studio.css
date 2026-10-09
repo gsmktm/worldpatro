@@ -15,3 +15,9 @@
 .kundliProvenance{border-color:rgba(225,174,93,.35)}.kundliProvenance small{font-size:10px;color:#8ba4b3}.kundliEmpty{color:#8ba3b3;line-height:1.5}.kundliEmpty strong{color:var(--gold2);font:500 21px Georgia,serif}.kundliEmpty p{font-size:11px}
 @media(max-width:1100px){.kundliForm{grid-template-columns:repeat(3,minmax(0,1fr))}.kundliColumns{grid-template-columns:1fr}.kundliSummary{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.kundliForm{grid-template-columns:repeat(2,minmax(0,1fr))}.kundliVargaGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.kundliDashaList{grid-template-columns:repeat(2,minmax(0,1fr))}.kundliHouses{grid-template-columns:repeat(2,1fr)}}
+
+.kundliHistory{padding:15px;border:1px solid var(--line);border-radius:13px;background:#061a29;display:grid;gap:7px}
+.kundliHistoryRow{display:flex;justify-content:space-between;align-items:center;gap:13px;border:1px solid var(--lineSoft);border-radius:10px;padding:11px;background:#0b2433}
+.kundliHistoryRow strong,.kundliHistoryRow small{display:block}.kundliHistoryRow strong{font-size:12px;color:var(--ivory)}.kundliHistoryRow small{font-size:10px;color:var(--muted);margin-top:5px}
+.kundliHistoryRow button{padding:8px 10px;background:rgba(158,49,56,.16);border:1px solid rgba(198,74,80,.34);color:#ffb2b2;border-radius:8px;cursor:pointer;font-size:10px}
+@media(max-width:520px){.kundliHistoryRow{flex-direction:column;align-items:flex-start}}
