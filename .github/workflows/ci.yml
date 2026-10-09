@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, production-v1, firebase-v1, firebase-config, world-os-v2, world-os-v2-meta, production-hardening-v2, production-hardening-v2-1, production-smoke-v2]
+    branches: [main, production-v1, firebase-v1, firebase-config, world-os-v2, world-os-v2-meta, production-hardening-v2, production-hardening-v2-1, production-smoke-v2, public-api-integrations-v1]
   pull_request:
 
 concurrency:
