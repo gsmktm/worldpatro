@@ -1,4 +1,4 @@
-import { generateText, isStepCount, tool } from "ai";
+import { generateText, isStepCount, tool, type ToolSet } from "ai";
 import { z } from "zod";
 import { buildCalendarSnapshot } from "@/lib/calendars";
 import { calculatePanchang } from "@/lib/astro";
@@ -93,6 +93,23 @@ const systems: Record<AgentRole, string> = {
   operations: "You are Karma, the authorized workflow specialist. Produce plans, approvals, dependencies, evidence requirements and rollback or verification steps. Never claim to execute a consequential action. Mark every external action as REQUIRES HUMAN CONFIRMATION."
 };
 
+function toolsForRole(role: AgentRole): ToolSet {
+  switch (role) {
+    case "time":
+      return { calendar: calendarTool };
+    case "astronomy":
+      return { panchang: panchangTool };
+    case "world":
+      return { country: countryTool };
+    case "research":
+      return { calendar: calendarTool, country: countryTool };
+    case "balance":
+      return { wbe: wbeTool };
+    case "operations":
+      return {};
+  }
+}
+
 export async function runSpecialist(role: AgentRole, task: string, context: AgentContext = {}): Promise<SpecialistResult> {
   const agent = profile(role);
   const contextLine = JSON.stringify({
@@ -104,13 +121,7 @@ export async function runSpecialist(role: AgentRole, task: string, context: Agen
     scores: context.scores
   });
 
-  const tools =
-    role === "time" ? { calendar: calendarTool } :
-    role === "astronomy" ? { panchang: panchangTool } :
-    role === "world" ? { country: countryTool } :
-    role === "research" ? { calendar: calendarTool, country: countryTool } :
-    role === "balance" ? { wbe: wbeTool } :
-    {};
+  const tools = toolsForRole(role);
 
   const { text } = await generateText({
     model: SUBAGENT_MODEL,
