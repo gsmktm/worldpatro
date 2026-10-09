@@ -1,0 +1,13 @@
+.muhuratStudio{display:grid;gap:14px;margin-top:16px}.muhuratIntro,.muhuratForm,.muhuratSummary,.muhuratCandidate,.muhuratLimits{border:1px solid var(--line);background:linear-gradient(145deg,#0c293c,#061522);border-radius:16px;padding:18px}
+.muhuratIntro h2{font:500 clamp(27px,4vw,42px) Georgia,serif;margin:8px 0;color:var(--ivory)}.muhuratIntro p{font-size:12px;color:#9dafbc;line-height:1.65;max-width:900px}
+.muhuratForm{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:end}.muhuratForm label{font-size:10px;color:#9bafbd;display:grid;gap:7px}
+.muhuratForm input,.muhuratForm select{height:41px;min-width:0;width:100%;background:#051420;color:var(--ivory);padding:9px;border:1px solid var(--lineSoft);border-radius:9px}
+.muhuratForm button{height:41px;cursor:pointer}.muhuratError{background:rgba(145,43,53,.2);padding:12px;border-radius:9px;color:#ffbdb8}
+.muhuratResults{display:grid;gap:10px}.muhuratSummary{display:flex;gap:10px;justify-content:space-between;align-items:center}.muhuratSummary h3{font:500 27px Georgia,serif;color:var(--ivory);margin:6px 0}.muhuratSummary small,.muhuratSummary span{color:#7992a5;font-size:10px}
+.muhuratCards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.muhuratCandidate{min-width:0}.muhuratCandidateHead{display:flex;justify-content:space-between;gap:9px;align-items:flex-start}
+.muhuratCandidate h4{color:var(--ivory);font:500 16px Georgia,serif;margin:0 0 12px}.muhuratCandidateHead span{font-size:9px;color:var(--gold2);max-width:120px;text-align:right}.muhuratCandidate>strong{font:500 18px Georgia,serif;color:var(--gold2)}
+.muhuratCandidate p{color:#9eb3c0;font-size:11px}.muhuratCandidate small{display:block;color:#7693a4;font-size:9px;margin-bottom:10px}.muhuratCandidate button{cursor:pointer;color:var(--gold2);background:none;border:0;text-decoration:underline;padding:5px 0;font-size:10px}
+.muhuratReasons{border-top:1px solid var(--line);margin-top:8px}.muhuratReasons p{margin:9px 0;font-size:10px}.muhuratReasons b{color:var(--gold)}
+.muhuratSkipped{border:1px solid var(--lineSoft);padding:14px;border-radius:10px;color:#96aab7;font-size:11px}.muhuratSkipped summary{cursor:pointer;color:var(--gold2)}.muhuratLimits{font-size:11px;color:#869eaf;line-height:1.65}.muhuratLimits b{color:var(--gold2)}
+@media(max-width:1100px){.muhuratForm{grid-template-columns:repeat(3,minmax(0,1fr))}.muhuratCards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:670px){.muhuratForm{grid-template-columns:repeat(2,minmax(0,1fr))}.muhuratCards{grid-template-columns:1fr}.muhuratSummary{align-items:flex-start;flex-direction:column}}
