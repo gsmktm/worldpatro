@@ -259,3 +259,12 @@ The real /app/muhurat page and POST /api/v1/muhurat/search calculate location-aw
 ## Private saved birth charts
 
 Authenticated reports now support safe lightweight listings via GET /api/v1/reports?kind=kundli&view=summary and user-scoped permanent deletion via DELETE /api/v1/reports/{id}. The Kundli UI can show saved chart titles and let an authenticated owner delete a report after explicit confirmation. Cross-site authenticated writes and deletes are rejected. See docs/REPORT_PRIVACY.md.
+
+
+## Verified partial Nepal BS coverage · 2083
+
+World Patro now derives BS/AD correspondences **only** inside Bhadra 2083 (17 August–16 September 2026) and Asoj 2083 (17 September–17 October 2026), from Kathmandu Metropolitan City's published BS/AD month grids. Other dates are reported as `authority_required`. Use `GET /api/v1/calendar/bs/convert?ad=2026-10-09` or `?bs=2083-06-23`. This is municipal civil-date provenance, not official holiday or Panchang certification. See `docs/NEPAL_CALENDAR_AUTHORITY.md`.
+
+## Account Privacy Center
+
+`/app/privacy` and `GET /api/v1/account/export?limit=100` provide bounded private application-data snapshots with truncation warnings. The endpoint does not include authentication provider exports or backups and is not an account-wide erasure service. Saved reports retain owner-only deletion.

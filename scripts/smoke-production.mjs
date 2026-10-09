@@ -207,6 +207,29 @@ await json("/api/v1/reports",{
   body:JSON.stringify({kind:"kundli",title:"test",result:{}})
 },403);
 
+
+const officialBs=await json("/api/v1/calendar/bs/convert?ad=2026-10-09",undefined,200);
+invariant(officialBs.body.result?.bsYear===2083 &&
+  officialBs.body.result?.bsMonth===6 &&
+  officialBs.body.result?.bsDay===23,"KMC Asoj 2083 day correspondence failed.");
+invariant(officialBs.body.result?.provenance?.sourceUrl?.includes("kathmandu.gov.np"),
+  "Municipal authority provenance missing.");
+const backToAD=await json("/api/v1/calendar/bs/convert?bs=2083-06-23",undefined,200);
+invariant(backToAD.body.result?.date==="2026-10-09","BS->AD round trip failed.");
+const firstBhadra=await json("/api/v1/calendar/bs/convert?ad=2026-08-17",undefined,200);
+invariant(firstBhadra.body.result?.bsMonth===5&&firstBhadra.body.result?.bsDay===1,"Bhadra published anchor failed.");
+const outOfCoverage=await json("/api/v1/calendar/bs/convert?ad=2026-10-18",undefined,404);
+invariant(outOfCoverage.body.status==="authority_required","Unverified BS dates must not be invented.");
+const bsInPatro=await json("/api/v1/patro/today?date=2026-10-09",undefined,200);
+invariant(bsInPatro.body.calendars.find(c=>c.id==="bs")?.status==="authority-sourced",
+  "Verified BS month not surfaced in Patro.");
+await json("/api/v1/patro/today?date=2026-02-30",undefined,400);
+const exportPrivate=await fetch(new URL("/api/v1/account/export?limit=100",base));
+invariant([401,503].includes(exportPrivate.status),"Unauthenticated account export must be denied.");
+await json("/api/v1/account/export?limit=999",undefined,400);
+const privacyPage=await hit("/app/privacy",undefined,200);
+invariant(privacyPage.text.includes("Privacy"),"Privacy Studio failed to render.");
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -245,6 +268,12 @@ console.log(JSON.stringify({
     "reports-id-validation",
     "reports-private-delete-guard",
     "reports-json-415",
-    "reports-cross-origin-403"
+    "reports-cross-origin-403",
+    "municipal-bs-ad-forward-reverse",
+    "bs-verified-boundaries",
+    "bs-provenance-and-patro",
+    "strict-gregorian-validation",
+    "account-export-auth-guard",
+    "privacy-center-ui"
   ]
 }));

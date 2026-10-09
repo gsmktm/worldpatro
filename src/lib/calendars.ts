@@ -1,4 +1,5 @@
-export type CalendarStatus = "calculated" | "authority-required" | "astronomy-required";
+import { publishedBsFromAD } from "@/lib/nepal-bs-authority";
+export type CalendarStatus = "calculated" | "authority-sourced" | "authority-required" | "astronomy-required";
 
 export type CalendarResult = {
   id: string;
@@ -6,7 +7,10 @@ export type CalendarResult = {
   icon: string;
   value: string;
   method: string;
-  provenance: "CALCULATED" | "AUTHORITY / CURATED DATA REQUIRED" | "ASTRONOMICAL";
+  provenance: "CALCULATED" | "VERIFIED MUNICIPAL CALENDAR" | "AUTHORITY / CURATED DATA REQUIRED" | "ASTRONOMICAL";
+  sourceUrl?: string;
+  checkedOn?: string;
+  coverage?: string;
   status: CalendarStatus;
   note: string;
 };
@@ -19,6 +23,8 @@ function fmt(date: Date, locale: string, calendar: string) {
 
 export function buildCalendarSnapshot(input: Date, locale = "en"): CalendarResult[] {
   if (Number.isNaN(input.getTime())) throw new Error("Invalid date.");
+  const isoDate = input.toISOString().slice(0, 10);
+  const publishedBs = publishedBsFromAD(isoDate);
   return [
     {
       id: "vedic", name: "Vedic Panchang", icon: "ॐ",
@@ -35,10 +41,20 @@ export function buildCalendarSnapshot(input: Date, locale = "en"): CalendarResul
     },
     {
       id: "bs", name: "Bikram Sambat (Nepal)", icon: "🇳🇵",
-      value: "Versioned Nepal BS authority table required",
-      method: "Authority-first Nepal civil calendar profile",
-      provenance: "AUTHORITY / CURATED DATA REQUIRED", status: "authority-required",
-      note: "World Patro will not invent a universal arithmetic BS date outside a validated data release."
+      value: publishedBs
+        ? publishedBs.bsYear + " " + publishedBs.monthEn + " " + publishedBs.bsDay
+        : "Verified BS/AD source for this date not yet available",
+      method: publishedBs?.method || "Authority-first Nepal civil calendar profile",
+      provenance: publishedBs ? "VERIFIED MUNICIPAL CALENDAR" : "AUTHORITY / CURATED DATA REQUIRED",
+      status: publishedBs ? "authority-sourced" : "authority-required",
+      sourceUrl: publishedBs?.provenance.sourceUrl,
+      checkedOn: publishedBs?.provenance.checkedOn,
+      coverage: publishedBs
+        ? publishedBs.provenance.coverageStart + " – " + publishedBs.provenance.coverageEnd
+        : undefined,
+      note: publishedBs
+        ? "Verified against Kathmandu Metropolitan City published BS/AD month grid. Municipal civil-date correspondence; not an independent Panchang or holiday approval. Coverage is limited."
+        : "Only explicitly verified month ranges are converted; World Patro does not guess dates outside those releases."
     },
     {
       id: "nepal-sambat", name: "Nepal Sambat", icon: "𑐣",
