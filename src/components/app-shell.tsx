@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FEATURES } from "@/lib/features";
 
 const groups = [
-  { label: "TIME", slugs: ["patro","panchang","astrology","kundli","muhurat","religions"] },
+  { label: "TIME", slugs: ["patro","panchang","astrology","kundli","muhurat","numerology","religions"] },
   { label: "INTELLIGENCE", slugs: ["world","research","sources","alerts"] },
   { label: "BALANCE", slugs: ["wbe","gates"] },
   { label: "OPERATIONS", slugs: ["agents","workflows","consult","learn"] }

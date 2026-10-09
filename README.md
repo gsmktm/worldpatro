@@ -236,3 +236,11 @@ Operational endpoints:
 - `GET /api/v1/world/earthquakes?lat=27.7172&lon=85.3240&radiusKm=500&days=7&minMagnitude=2.5`
 
 See `docs/PUBLIC_API_INTEGRATIONS.md`.
+
+
+## Uploaded-archive integration
+
+Archive-derived interactive studios and a security audit are documented in `docs/ARCHIVE_MIGRATION_AUDIT.md`.
+Functional routes include `/app/wbe`, `/app/gates`, `/app/patro`, `/app/panchang`, `/app/numerology`, `/api/v1/wbe/snapshots`, and `/api/v1/numerology/calculate`.
+
+The full predecessor Kundli/Chinese lunar/BS algorithms are intentionally **not** claimed as migrated until authority and regression tests pass.

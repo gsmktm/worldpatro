@@ -1,0 +1,14 @@
+
+.numerologyStudio{display:grid;gap:14px;margin-top:16px}
+.numerologyTitle,.numerologyForm,.numerologyResults{padding:21px;border:1px solid var(--line);background:linear-gradient(145deg,#0d2a3e,#051420);border-radius:17px}
+.numerologyTitle h2{font:500 35px Georgia,serif;color:var(--ivory);margin:8px 0}.numerologyTitle p{font-size:12px;color:#91a7b6;line-height:1.65;max-width:850px}
+.numerologyTabs{display:flex;gap:7px;flex-wrap:wrap}.numerologyTabs button{background:#071a2b;border:1px solid var(--lineSoft);border-radius:9px;padding:10px 14px;font-size:11px;color:#a7bbc8;cursor:pointer}.numerologyTabs button[aria-pressed=true]{border-color:var(--gold);background:rgba(166,121,56,.19);color:var(--gold2)}
+.numerologyForm{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:12px}
+.numerologyForm label{display:grid;gap:7px;font-size:10px;color:#a6b8c4}.numerologyForm input,.numerologyForm select{background:#05101b;padding:11px;min-width:0;color:var(--ivory);border:1px solid var(--lineSoft);border-radius:9px;width:100%}
+.numerologyForm button{height:40px;cursor:pointer}.numerologyResultsHead{display:flex;justify-content:space-between;align-items:center;gap:10px}.numerologyResultsHead h3{font:500 27px Georgia,serif;color:var(--ivory);margin:7px 0}
+.numerologyResultGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.numerologyEntry,.numerologyNested{padding:13px;background:#071929;border:1px solid var(--lineSoft);border-radius:10px;min-width:0}
+.numerologyEntry span{display:block;font-size:10px;color:var(--muted);text-transform:capitalize}.numerologyEntry strong{display:block;color:var(--gold2);font:500 23px Georgia,serif;margin-top:8px}
+.numerologyNested{grid-column:span 2}.numerologyNested h4{margin:0 0 9px;text-transform:capitalize;color:var(--gold2);font-size:12px}.numerologyNested pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;color:#9eb1bd;font-size:10px;line-height:1.5;max-height:230px;overflow:auto}
+.numerologyDisclaimer{border-top:1px solid var(--lineSoft);padding:15px 0;color:#7891a2;font-size:11px;line-height:1.65}
+@media(max-width:900px){.numerologyForm,.numerologyResultGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){.numerologyForm,.numerologyResultGrid{grid-template-columns:1fr}.numerologyNested{grid-column:auto}.numerologyResultsHead{align-items:start;flex-direction:column}}
