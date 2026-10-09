@@ -44,6 +44,12 @@ export async function POST(request: Request) {
   const startedAt = performance.now();
   const requestId = request.headers.get("x-request-id")?.slice(0, 100) || randomUUID();
 
+  const contentType = request.headers.get("content-type")?.toLowerCase() || "";
+  if (!contentType.startsWith("application/json")) {
+    worldMetric("worldpatro.agent.requests", 1, { outcome: "unsupported_media_type" });
+    return agentResponse({ error: "Content-Type must be application/json." }, 415, requestId, startedAt);
+  }
+
   const contentLength = Number(request.headers.get("content-length") || 0);
   if (Number.isFinite(contentLength) && contentLength > AGENT_MAX_BODY_BYTES) {
     worldMetric("worldpatro.agent.requests", 1, { outcome: "payload_too_large" });
@@ -54,10 +60,15 @@ export async function POST(request: Request) {
   if (!access.allowed) {
     worldMetric("worldpatro.agent.requests", 1, { outcome: "unauthorized", mode: access.mode });
     worldLog("agent.run.denied", { requestId, mode: access.mode, reason: access.reason });
-    return agentResponse({
-      error: access.reason === "api-key-required" ? "Agent API key required." : "Sign in to use the World Patro Conductor.",
-      accessMode: access.mode
-    }, 401, requestId, startedAt);
+    const status = access.reason === "origin-not-allowed" ? 403 : 401;
+    const error =
+      access.reason === "api-key-required"
+        ? "Agent API key required."
+        : access.reason === "origin-not-allowed"
+          ? "Cross-origin agent execution is not allowed."
+          : "Sign in to use the World Patro Conductor.";
+
+    return agentResponse({ error, accessMode: access.mode }, status, requestId, startedAt);
   }
 
   if (!process.env.VERCEL_OIDC_TOKEN && !process.env.AI_GATEWAY_API_KEY) {
