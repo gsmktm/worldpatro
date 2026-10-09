@@ -1,0 +1,30 @@
+export type Feature = {
+  slug: string;
+  title: string;
+  eyebrow: string;
+  description: string;
+  functions: string[];
+  api?: string[];
+  tables?: string[];
+  status: "live-core" | "database-ready" | "source-connector";
+};
+
+export const FEATURES: Feature[] = [
+  { slug:"patro", title:"9 Calendars · One Patro", eyebrow:"Time Engine", description:"Canonical date context, variant-aware calendar views and provenance.", functions:["One-click date snapshot","Method/variant disclosure","Native/localized labels","Authority and uncertainty states"], api:["/api/v1/calendar/convert","/api/v1/patro/today"], tables:["calendar_profiles","authority_releases"], status:"live-core" },
+  { slug:"panchang", title:"Vedic Panchang", eyebrow:"Astronomy", description:"Location-aware astronomical Panchang with explicit traditional interpretation boundary.", functions:["Tithi & Paksha","Nakshatra","Yoga","Sunrise / Sunset","Moonrise / Moonset","Lahiri sidereal positions"], api:["/api/v1/panchang/day"], tables:["saved_reports"], status:"live-core" },
+  { slug:"astrology", title:"Astrology Studio", eyebrow:"Interpretive Layer", description:"Kundli, divisional charts, dashas, transits and interpretation workspace.", functions:["Birth profile intake","Kundli pipeline","Dasha timeline","Transit watch","Saved reports"], tables:["birth_profiles","saved_reports"], status:"database-ready" },
+  { slug:"kundli", title:"Kundli Generator", eyebrow:"Natal Intelligence", description:"Birth-time/place based chart workflow with reproducible calculation metadata.", functions:["Birth details","Location/timezone validation","Chart generation","Versioned calculation settings","Export-ready reports"], tables:["birth_profiles","saved_reports"], status:"database-ready" },
+  { slug:"muhurat", title:"Muhurat Finder", eyebrow:"Sacred Time", description:"Search candidate windows under explicit tradition and location profiles.", functions:["Event category","Location","Date range","Rule profile","Compare windows"], tables:["saved_reports"], status:"database-ready" },
+  { slug:"religions", title:"World Religious Calendar", eyebrow:"Faiths · Festivals · Sacred Time", description:"Variant-aware observance layer across living traditions without forcing one universal calendar.", functions:["Tradition profiles","Festival dates","Fasting cycles","Official vs observational status","Regional authority overlays"], tables:["religious_observances","authority_releases","source_registry"], status:"source-connector" },
+  { slug:"world", title:"World Intelligence", eyebrow:"Public-source Intelligence", description:"Country, economic, diplomatic, climate and institutional facts with claim-level provenance.", functions:["Country brief","Latest indicators","Diplomatic timeline","Treaties & elections","Source comparison"], api:["/api/v1/world/country"], tables:["entities","events","claims","evidence","source_registry"], status:"source-connector" },
+  { slug:"wbe", title:"WBE-9 Balance Engine", eyebrow:"Symbolic Framework", description:"Nine traditions × nine grahas × nine powers, strictly separated from empirical facts.", functions:["Nine-dial assessment","Counterbalance view","Anchor gates","Symbolic cascade","Fact/symbolism separation"], api:["/api/v1/wbe/assess"], tables:["wbe_assessments"], status:"live-core" },
+  { slug:"gates", title:"729 Gates Explorer", eyebrow:"9 × 9 × 9", description:"Search and navigate all 729 comparative symbolic gates.", functions:["729 generated gates","9 anchor gates","Filter & search","Gate of the day","Save to research"], api:["/api/v1/wbe/gates"], status:"live-core" },
+  { slug:"research", title:"Research Workspace", eyebrow:"Evidence OS", description:"Notebooks, citations, claims and source-backed analytical work.", functions:["Research notebooks","Claim/evidence graph","Source viewer","Compare sources","Export brief"], tables:["research_notebooks","research_items","claims","evidence"], status:"database-ready" },
+  { slug:"alerts", title:"Watchlists & Alerts", eyebrow:"Change Detection", description:"Entity, topic, calendar and workflow notifications with provenance.", functions:["Watchlists","Severity rules","Quiet hours","Digest mode","Acknowledgement"], api:["/api/v1/notifications"], tables:["watchlists","watchlist_items","notifications"], status:"database-ready" },
+  { slug:"workflows", title:"Order & Workflow Center", eyebrow:"Authorized Operations", description:"Human-controlled instructions, approvals and audit trails — never autonomous coercive action.", functions:["Create order","Approval chain","Assign owner","Dependencies","Completion evidence","Post-action review"], api:["/api/v1/workflows/orders"], tables:["workflow_orders","workflow_events"], status:"database-ready" },
+  { slug:"sources", title:"Source Registry", eyebrow:"Trust Layer", description:"Publisher, authority, license, retrieval and freshness metadata for every factual module.", functions:["Source tiers","License tracking","Retrieval timestamps","Authority profiles","Corrections"], api:["/api/v1/sources"], tables:["source_registry","authority_releases"], status:"database-ready" },
+  { slug:"consult", title:"Astrologer Consultations", eyebrow:"Marketplace", description:"Profiles, availability, booking and consent-aware consultation records.", functions:["Browse experts","Request session","Availability","Consent","Review"], tables:["astrologers","consultations"], status:"database-ready" },
+  { slug:"learn", title:"Learning Hub", eyebrow:"Knowledge", description:"Curated articles and educational content with multilingual support.", functions:["Articles","Glossary","Sources","Bookmarks","Multilingual content"], tables:["articles"], status:"database-ready" }
+];
+
+export const FEATURE_MAP = new Map(FEATURES.map(f => [f.slug, f]));

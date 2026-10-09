@@ -1,148 +1,76 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import type { CalendarResult } from "@/lib/calendars";
-import { ANCHORS } from "@/lib/wbe";
 
-type ApiPayload = {
-  canonical: { isoDate: string; generatedAt: string; mode: string };
-  calendars: CalendarResult[];
-};
-
-const commands = [
-  "World Today",
-  "Convert across 9 calendars",
-  "Run WBE-9",
-  "Open 729 Gates",
-  "Country Brief",
-  "Leader Brief",
-  "Today's Sacred Time",
-  "Show Sources"
-];
+type Snapshot = { canonical:{isoDate:string;generatedAt:string}; calendars:CalendarResult[] };
 
 export default function CommandCenter() {
-  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
-  const [data, setData] = useState<ApiPayload | null>(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [date,setDate] = useState(() => new Date().toISOString().slice(0,10));
+  const [snapshot,setSnapshot] = useState<Snapshot|null>(null);
+  const [country,setCountry] = useState<any>(null);
+  const [error,setError] = useState("");
+  const [pending,startTransition] = useTransition();
 
-  const load = async (target = date) => {
-    setLoading(true);
+  const refresh = (selected=date) => startTransition(async () => {
     setError("");
     try {
-      const response = await fetch(`/api/v1/patro/today?date=${encodeURIComponent(target)}`, { cache: "no-store" });
-      if (!response.ok) throw new Error("Could not calculate the selected date.");
-      setData(await response.json());
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
-    } finally {
-      setLoading(false);
-    }
-  };
+      const [p,c] = await Promise.all([
+        fetch(`/api/v1/patro/today?date=${selected}`,{cache:"no-store"}),
+        fetch("/api/v1/world/country?iso3=NPL",{cache:"no-store"})
+      ]);
+      if (!p.ok) throw new Error("Patro snapshot failed.");
+      setSnapshot(await p.json());
+      if (c.ok) setCountry(await c.json());
+    } catch (e) { setError(e instanceof Error ? e.message : "Request failed"); }
+  });
 
-  useEffect(() => { void load(date); }, []);
+  useEffect(() => { refresh(date); }, []);
 
-  const calculated = useMemo(() => data?.calendars.filter((c) => c.status === "calculated").length ?? 0, [data]);
+  return <div>
+    <section className="commandHero">
+      <div>
+        <div className="eyebrow">ONE-CLICK WORLD COMMAND CENTER</div>
+        <h1>Time connects the whole system.</h1>
+        <p>Choose one canonical day, then move through nine calendars, Panchang, world data, sources, WBE symbolism, research, alerts and authorized workflows.</p>
+      </div>
+      <div className="commandInput">
+        <label>Date</label>
+        <input type="date" value={date} onChange={e=>setDate(e.target.value)}/>
+        <button onClick={()=>refresh()} disabled={pending}>{pending ? "Synchronizing…" : "Synchronize World Patro"}</button>
+        {error ? <small className="error">{error}</small> : <small>Default location profile: Kathmandu · Asia/Kathmandu</small>}
+      </div>
+    </section>
 
-  return (
-    <>
-      <section className="hero">
-        <div className="heroInner">
-          <div className="eyebrow">Time · Calendars · Sacred Time · World Balance</div>
-          <div className="om">ॐ</div>
-          <h1>World Patro</h1>
-          <div className="subtitle">Global Calendar & World Balance OS</div>
-          <p className="tagline">
-            Nine calendar systems, one canonical date context, and WBE-9 — 9 traditions × 9 grahas × 9 powers = 729 symbolic gates around one silent hub.
-          </p>
-          <nav className="nav">
-            <a className="pill" href="#patro">9 Calendars</a>
-            <a className="pill" href="#wbe">WBE-9</a>
-            <a className="pill" href="/gates">729 Gates</a>
-            <a className="pill" href="/api/v1/health">API Health</a>
-          </nav>
-        </div>
-      </section>
+    <section className="metricRow">
+      <Metric label="Calendar systems" value="9" meta="one canonical context"/>
+      <Metric label="WBE gates" value="729" meta="9 anchor gates"/>
+      <Metric label="Trust layers" value="4" meta="fact · authority · astronomy · interpretation"/>
+      <Metric label="Database" value="Supabase-ready" meta="RLS + audit + realtime"/>
+    </section>
 
-      <main className="shell">
-        <section id="patro" className="section">
-          <div className="sectionHead">
-            <div>
-              <h2>9 Calendars → One Patro</h2>
-              <p>Real calculation where the platform has a deterministic engine; explicit unsupported/source-required states where it does not.</p>
-            </div>
-            <p>{calculated}/9 currently calculated in this clean core.</p>
-          </div>
+    <div className="sectionTitle"><div><div className="eyebrow">ONE PATRO</div><h2>9 synchronized calendar profiles</h2></div><span className="muted">{snapshot?.canonical?.isoDate ?? "loading…"}</span></div>
+    <section className="calendarGrid">
+      {(snapshot?.calendars ?? []).map((c,i)=><article key={c.id} className={`calendarCard ${i===0?"featured":""}`}>
+        <div className="cardHeader"><span className="calIcon">{c.icon}</span><span className={`provenance ${c.status==="calculated"?"ok":"warn"}`}>{c.provenance}</span></div>
+        <h3>{c.name}</h3><div className="calDate">{c.value}</div>
+        <p>{c.note}</p><small>{c.method}</small>
+      </article>)}
+    </section>
 
-          <div className="toolbar">
-            <label htmlFor="date">Canonical date</label>
-            <input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-            <button className="button" onClick={() => void load()} disabled={loading}>{loading ? "Calculating…" : "One-Click Convert"}</button>
-            {error && <span className="error">{error}</span>}
-          </div>
+    <div className="sectionTitle"><div><div className="eyebrow">PUBLIC FACTS</div><h2>Nepal live indicator snapshot</h2></div><span className="provenance ok">WORLD BANK</span></div>
+    <section className="dataPanel">
+      {country?.indicators?.map((x:any)=><div className="indicator" key={x.id}><span>{x.name}</span><strong>{x.value===null?"Unavailable":Intl.NumberFormat("en",{notation:"compact",maximumFractionDigits:2}).format(x.value)}</strong><small>{x.year ?? "—"} · {x.source}</small></div>)}
+      {!country && <div className="muted">Loading public-source indicators…</div>}
+    </section>
 
-          <div className="grid9">
-            {(data?.calendars ?? []).map((calendar, index) => (
-              <article className={`card ${index === 0 ? "primary" : ""}`} key={calendar.id}>
-                <div className="cardTop">
-                  <span className="icon">{calendar.icon}</span>
-                  <span className={`badge ${calendar.status === "calculated" ? "status-ok" : "status-warn"}`}>{calendar.provenance}</span>
-                </div>
-                <h3>{calendar.name}</h3>
-                <div className="date">{calendar.value}</div>
-                <div className="meta"><strong>Method:</strong> {calendar.method}<br />{calendar.note}</div>
-              </article>
-            ))}
-          </div>
+    <section className="truthBoundary">
+      <strong>Truth boundary</strong>
+      <p>Factual data must carry a source and retrieval time. Authority releases override algorithmic guesses. WBE-9 and astrology remain explicitly labeled interpretive/symbolic layers.</p>
+    </section>
+  </div>;
+}
 
-          <div className="legend">
-            <span>CALCULATED = deterministic engine</span>
-            <span>OFFICIAL TABLE REQUIRED = no guessed date</span>
-            <span>EPHEMERIS REQUIRED = astronomy/location needed</span>
-          </div>
-        </section>
-
-        <section id="wbe" className="section">
-          <div className="sectionHead">
-            <div>
-              <h2>WBE-9 · World Balance Ecosystem</h2>
-              <p>Symbolic comparative framework. It is deliberately separated from empirical facts and does not claim any religion is ruled by a planet.</p>
-            </div>
-          </div>
-
-          <div className="wbe">
-            <div className="wheel">
-              <div className="spokes">
-                {ANCHORS.map((gate) => (
-                  <div className="spoke" key={gate.code}>
-                    <strong>{gate.graha}</strong>
-                    <span>{gate.tradition}</span>
-                    <span>{gate.power}</span>
-                    <span>{gate.domain}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="hub"><div><strong>G</strong><br /><small>Silent Hub</small></div></div>
-            </div>
-
-            <aside className="panel">
-              <div className="eyebrow">One-Click Command Center</div>
-              <h2>Nine spokes. One still center.</h2>
-              <p className="meta">The 729 Gates are the full cross-product of traditions, grahas and powers. Only nine are Anchor Gates. Cross-gates are comparative lenses, never doctrinal assignments.</p>
-              <div className="commands">
-                {commands.map((command) => <div className="command" key={command}>{command}</div>)}
-              </div>
-              <div className="legend">
-                <span>FACT</span><span>INTERPRETATION</span><span>WBE SYMBOLISM</span><span>SCENARIO</span><span>UNKNOWN</span>
-              </div>
-            </aside>
-          </div>
-        </section>
-      </main>
-
-      <footer className="footer">
-        <div className="shell">World Patro · Nepal-origin, globally neutral · Symbolic WBE content is not scientific or doctrinal fact.</div>
-      </footer>
-    </>
-  );
+function Metric({label,value,meta}:{label:string;value:string;meta:string}) {
+  return <div className="metric"><span>{label}</span><strong>{value}</strong><small>{meta}</small></div>;
 }

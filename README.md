@@ -1,72 +1,117 @@
-# World Patro · WBE-9
+# World Patro · Global Calendar, Astrology & World Intelligence OS
 
-**World Patro — Global Calendar & World Balance OS**
+World Patro is a Nepal-origin, globally neutral full-stack platform connecting **time, nine calendar profiles, astronomical sacred time, public-source world intelligence, research, alerts, authorized workflows and WBE-9**.
 
-A Nepal-origin, globally neutral platform concept combining:
+## Production principles
 
-- **9 Calendars → One Patro**
-- provenance-first calendar/date conversion
-- Vedic Panchang as an astronomy-dependent sacred-time layer
-- WBE-9 symbolic balance framework
-- **9 traditions × 9 grahas × 9 powers = 729 Gates**
-- a one-click command-center architecture for future public world intelligence
+1. **No fabricated dates or sources.**
+2. **Authority beats algorithmic guesswork** for official/observational calendars.
+3. **Facts, reported claims, interpretation, forecasts and WBE symbolism are separate types.**
+4. **Every factual record can carry provenance, retrieval time and verification state.**
+5. **User data is protected by Supabase RLS.**
+6. **Consequential workflow actions require human confirmation.**
 
-## Important truth boundary
+The source blueprint specifically argues that World Patro cannot be a collection of date-offset formulas and should normalize internally through calendar-neutral day/instant concepts with versioned authority profiles. The app architecture follows that direction.
 
-This repository intentionally does **not** invent calendar dates.
+## Routes
 
-The clean core currently calculates Gregorian, Islamic Civil Hijri, Chinese, Hebrew, Persian Solar Hijri and Thai Buddhist Era through the runtime's ICU/Intl calendar implementations.
+### Product
+- `/` — cinematic public landing
+- `/app` — one-click command center
+- `/app/patro`
+- `/app/panchang`
+- `/app/astrology`
+- `/app/kundli`
+- `/app/muhurat`
+- `/app/religions`
+- `/app/world`
+- `/app/wbe`
+- `/app/gates`
+- `/app/research`
+- `/app/alerts`
+- `/app/workflows`
+- `/app/sources`
+- `/app/consult`
+- `/app/learn`
+- `/login`
 
-Bikram Sambat and Nepal Sambat return explicit source-required states until validated versioned data/rules are connected. Vedic Panchang returns an ephemeris-required state until the astronomy/location pipeline is connected.
+### API
+- `GET /api/v1/health`
+- `GET /api/v1/patro/today?date=2026-10-08`
+- `POST /api/v1/calendar/convert`
+- `GET /api/v1/panchang/day?date=2026-10-08&lat=27.7172&lon=85.3240&tz=Asia/Kathmandu`
+- `GET /api/v1/world/country?iso3=NPL`
+- `GET /api/v1/wbe/gates`
+- `POST /api/v1/wbe/assess`
+- `GET /api/v1/sources`
+- `GET /api/v1/notifications`
+- `GET|POST /api/v1/workflows/orders`
 
-That is a product feature, not a failure: World Patro must distinguish **CALCULATED**, **OFFICIAL TABLE**, **ASTRONOMICAL EPHEMERIS**, **OBSERVATIONAL**, and **CURATED RULESET** data.
+## Local run
 
-## WBE-9
-
-WBE-9 is a symbolic comparative framework, not doctrine or scientific proof.
-
-Nine anchor spokes are used as a design mandala; the complete cross-product generates exactly **729 Gates**. Cross-gates are comparative lenses and must never be presented as claims that a faith is ruled by a graha or foreign concept.
-
-## Run
+Requires Node.js 22+.
 
 ```bash
 npm install
+cp .env.example .env.local
+npm run typecheck
 npm run dev
 ```
 
-Open http://localhost:3000
+The public app runs without Supabase. Authenticated persistence becomes live when these are configured:
 
-## API
-
-- `GET /api/v1/health`
-- `GET /api/v1/patro/today?date=2026-10-08`
-- `GET /api/v1/wbe/gates?page=1&limit=27`
-- `GET /api/v1/wbe/gates?anchors=true`
-- `POST /api/v1/wbe/assess`
-
-Example:
-
-```bash
-curl -X POST http://localhost:3000/api/v1/wbe/assess \
-  -H 'content-type: application/json' \
-  -d '{"scores":[6,5,8,7,6,7,5,8,4]}'
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 ```
 
-## Next production phases
+Never expose a Supabase secret/service key in a `NEXT_PUBLIC_` variable.
 
-1. authoritative/versioned Nepal BS connector
-2. expert-reviewed Nepal Sambat lunisolar model
-3. real Panchang astronomy pipeline with ephemeris, timezone and location
-4. source registry + claim/evidence model
-5. country/leader/diplomatic public-data connectors
-6. Postgres/PostGIS persistence
-7. auth, RBAC/ABAC, audit logs
-8. notification/watchlist engine
-9. safe order/workflow center
-10. citation-first AI research copilot
+## Supabase
 
-## Design doctrine
+The migration is in:
 
-**FACT → SOURCE → METHOD → VERSION → CONFIDENCE → INTERPRETATION**
+`supabase/migrations/20261009000000_world_patro_core.sql`
 
-WBE symbolism always remains visibly separate from empirical data.
+It creates:
+
+- profiles + birth profiles
+- saved calculation reports
+- calendar profile registry
+- source registry + authority releases
+- temporal entities/events
+- claim/evidence provenance model
+- world religious observances
+- research notebooks
+- watchlists + realtime notifications
+- authorized workflow orders + audit events
+- WBE assessments
+- astrologers + consultations
+- articles
+
+All exposed public tables have RLS enabled and the migration contains explicit Data API grants for current Supabase defaults.
+
+## Deploy
+
+### Vercel
+Link this repository to Vercel, set the two public Supabase environment variables for Preview and Production, and deploy the `main` branch.
+
+### Supabase
+Create a dedicated **World Patro** project — never reuse an unrelated production database — then apply the migration and run Security/Performance advisors before production.
+
+## Current trust coverage
+
+**Live now in code**
+- Gregorian, Islamic Civil, Chinese, Hebrew, Persian and Thai Buddhist Era correspondence via ICU/Intl
+- astronomical Vedic Panchang core using Astronomy Engine
+- 729 WBE Gates / 9 Anchor Gates
+- World Bank country indicator connector
+- Supabase auth/persistence adapters and production schema
+
+**Authority connector required before claiming exact official output**
+- Nepal Bikram Sambat authority release profile
+- Nepal Sambat lunisolar authority/research profile
+- observational Hijri declarations
+- regional religious calendars and government holiday overlays
+
+That limitation is intentional: unsupported data is marked, never guessed.

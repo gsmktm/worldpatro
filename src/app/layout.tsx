@@ -2,14 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "World Patro · Global Calendar & World Balance OS",
-  description: "Nine calendars, sacred time, world intelligence and the WBE-9 symbolic balance framework."
+  title: { default:"World Patro", template:"%s · World Patro" },
+  description:"Global Calendar, Astrology, Sacred Time & World Intelligence OS — Nepal to the world."
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
+export default function RootLayout({children}:{children:React.ReactNode}) {
+  return <html lang="en"><body>{children}</body></html>;
 }

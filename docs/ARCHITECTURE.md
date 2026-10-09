@@ -1,52 +1,89 @@
-# Architecture
+# World Patro Production Architecture
 
-World Patro is organized as independent layers:
+## 1. Layers
 
-1. **Time & Calendar Facts** — canonical date context, calendar adapters, timezone policy and astronomy.
-2. **Sacred Time** — Panchang, religious observances and regional variants with method badges.
-3. **Public World Intelligence** — future source-backed country, leader, diplomacy, treaty, election and indicator modules.
-4. **WBE-9 Symbolism** — 729-gate comparative framework, never blended into empirical scoring.
-5. **Research & Provenance** — future source registry, claims, evidence and correction history.
-6. **Operations** — future watchlists, notifications and authorized workflows.
+### Calendar-neutral core
+Public calls can use familiar Gregorian dates, but internal production work should preserve:
+- civil day
+- civil timestamp + IANA timezone release
+- astronomical instant
+- Earth-rotation context when high precision requires it
 
-## Calendar adapter contract
+### Trust layers
+1. deterministic civil calendar core
+2. astronomical calendar core
+3. authority / observation releases
+4. interpretive astrology and WBE symbolism
 
-Every production calendar adapter should implement:
+Never collapse these into one confidence score.
 
-- parseInput
-- validate
-- toCanonical
-- fromCanonical
-- getVariants
-- getProvenance
-- explain
+## 2. Request flow
 
-Unsupported dates must return **unsupported/uncertain** rather than guessed values.
+`UI → Route Handler → validation → canonical context → calculation/source adapter → provenance → response → optional persistence`
 
-## Canonical context
+Authenticated writes add:
 
-Production should evolve toward:
+`getClaims() → RLS → database transaction → audit/realtime event`
 
-```ts
-type DateContext = {
-  instantUtc: string;
-  localDateTime: string;
-  timezoneIana: string;
-  utcOffset: string;
-  lat?: number;
-  lon?: number;
-  altitudeM?: number;
-  jurisdiction?: string;
-  inputCalendar: string;
-  variant?: string;
-  locale: string;
-  precision: "date" | "minute" | "second";
-  sourceVersions: Record<string,string>;
-};
-```
+## 3. Domain flow
 
-## WBE
+### 9 Calendars
+Input date/place/method → canonical context → calendar adapters → result cards → provenance drawer → save/share.
 
-`src/lib/wbe.ts` generates the 729 Gates deterministically. Exactly nine gates have `anchor=true`.
+### Panchang
+Date + timezone + coordinates → UTC instant → ephemeris → Sun/Moon → Lahiri sidereal positions → tithi/nakshatra/yoga → rise/set → traditional interpretation layer.
 
-The system must label WBE output as **WBE SYMBOLISM** and must never infer a user's religion or present planetary symbolism as a factual causal model.
+### World intelligence
+Entity → public source adapters → normalized events/indicators → claims → evidence → confidence/verification → country/leader/diplomatic brief.
+
+### Workflow
+Draft → Review → Approved → Assigned → Active → Verify → Closed → Archived.
+External/consequential actions require explicit human confirmation.
+
+## 4. Database boundaries
+
+Reference data is public-readable under RLS.
+Personal profiles, reports, research, watchlists, notifications and workflows are owner-scoped.
+Admin authorization must use trusted app metadata / server-side roles, never user-editable metadata.
+
+## 5. Realtime
+
+Supabase Realtime is enabled only for user-scoped notifications and workflow orders in the core migration. High-volume global events should use server-side ingestion/queues rather than broadcasting raw feeds to every client.
+
+## 6. Production source registry
+
+Every connector records:
+- owner/publisher
+- source tier
+- license
+- jurisdiction
+- update cadence
+- retrieval time
+- status
+- version/hash where possible
+
+Claims then link to evidence records rather than embedding untraceable prose.
+
+## 7. Routes
+
+The product is organized by stable domain routes under `/app/*`, with versioned APIs under `/api/v1/*`. New intelligence domains should add adapters and APIs without changing canonical time/calendar contracts.
+
+## 8. Deployment
+
+Vercel hosts the Next.js application.
+Supabase provides Postgres, Auth, Realtime and optional Storage.
+Node.js 22+ is required because current Supabase JS has dropped Node 20 support.
+
+## 9. Release gates
+
+Before production:
+- typecheck/build green
+- migration applied to dedicated World Patro project
+- RLS tests
+- Supabase Security + Performance advisors clean or reviewed
+- auth confirmation URLs set
+- Preview and Production env vars scoped correctly
+- API health check passes
+- live country source checked
+- Panchang golden dates checked
+- no secret keys committed
