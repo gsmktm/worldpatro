@@ -5,7 +5,7 @@ const groups = [
   { label: "TIME", slugs: ["patro","panchang","astrology","kundli","muhurat","numerology","religions"] },
   { label: "INTELLIGENCE", slugs: ["world","research","sources","alerts"] },
   { label: "BALANCE", slugs: ["wbe","gates"] },
-  { label: "OPERATIONS", slugs: ["agents","workflows","privacy","consult","learn"] }
+  { label: "OPERATIONS", slugs: ["agents","workflows","admin","privacy","consult","learn"] }
 ];
 
 export function AppShell({ children }:{ children:React.ReactNode }) {
