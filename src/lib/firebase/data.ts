@@ -1,6 +1,8 @@
 import { FieldValue, Timestamp, type DocumentSnapshot } from "firebase-admin/firestore";
 import { getFirebaseAdminFirestore } from "@/lib/firebase/admin";
 
+export type SerializedDocument = { id: string } & Record<string, unknown>;
+
 export function firestoreDb() {
   return getFirebaseAdminFirestore();
 }
@@ -22,7 +24,7 @@ export function serializeFirestoreValue(value: unknown): unknown {
   return value;
 }
 
-export function serializeDocument(doc: DocumentSnapshot) {
+export function serializeDocument(doc: DocumentSnapshot): SerializedDocument {
   return {
     id: doc.id,
     ...(serializeFirestoreValue(doc.data() ?? {}) as Record<string, unknown>)
@@ -31,11 +33,11 @@ export function serializeDocument(doc: DocumentSnapshot) {
 
 export const serverNow = () => FieldValue.serverTimestamp();
 
-export async function listUserDocs(uid: string, collectionName: string, limit = 100) {
+export async function listUserDocs(uid: string, collectionName: string, limit = 100): Promise<SerializedDocument[]> {
   const snapshot = await userCollection(uid, collectionName).limit(limit).get();
   return snapshot.docs.map(serializeDocument).sort((a, b) => {
-    const av = String((a as Record<string, unknown>).createdAt ?? "");
-    const bv = String((b as Record<string, unknown>).createdAt ?? "");
+    const av = String(a.createdAt ?? "");
+    const bv = String(b.createdAt ?? "");
     return bv.localeCompare(av);
   });
 }
