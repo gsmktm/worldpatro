@@ -1,7 +1,7 @@
 "use client";
 
 import { useState,useTransition,type FormEvent } from "react";
-import { MUHURAT_CATEGORIES } from "@/lib/jyotish/muhurat-search";
+import { MUHURAT_CATEGORIES } from "@/lib/jyotish/muhurat-categories";
 
 type Candidate={
   date:string;startUTC:string;endUTC:string;criteriaMatched:number;criteriaTotal:number;
@@ -15,7 +15,9 @@ type Result={
   scannedDays:number;candidates:Candidate[];skipped:Array<{date:string;reason:string}>;
   method:{provenance:string;status:string;warning:string;limitations:string};
 };
-const dayInNepal=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kathmandu",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+const nepParts=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Kathmandu",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
+const np=Object.fromEntries(nepParts.map(p=>[p.type,p.value]));
+const dayInNepal=np.year+"-"+np.month+"-"+np.day;
 
 export default function MuhuratStudio() {
   const [inputs,setInputs]=useState({

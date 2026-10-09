@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { NextResponse } from "next/server";
-import { MUHURAT_CATEGORIES, searchMuhurat } from "@/lib/jyotish/muhurat-search";
+import { searchMuhurat } from "@/lib/jyotish/muhurat-search";
+import { MUHURAT_CATEGORIES } from "@/lib/jyotish/muhurat-categories";
 
 export const runtime="nodejs";
 export const maxDuration=35;

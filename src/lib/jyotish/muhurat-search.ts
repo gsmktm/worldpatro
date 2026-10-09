@@ -42,9 +42,11 @@ function validDay(raw:string){
   return dt;
 }
 function localDay(date:Date,timezone:string){
-  return new Intl.DateTimeFormat("en-CA",{
+  const parts=new Intl.DateTimeFormat("en-US",{
     timeZone:timezone,year:"numeric",month:"2-digit",day:"2-digit"
-  }).format(date);
+  }).formatToParts(date);
+  const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));
+  return p.year+"-"+p.month+"-"+p.day;
 }
 function eventFor(date:string,timezone:string,observer:Astro.Observer,direction:1|-1,after:Date) {
   const next=Astro.SearchRiseSet(Astro.Body.Sun,observer,direction,Astro.MakeTime(after),2);
