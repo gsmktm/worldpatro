@@ -49,3 +49,8 @@ These remain separately staged in the supplied source archive. Their implementat
 ## Release verification
 
 CI must validate full TypeScript compilation, Next.js production build, route rendering, nine-gate invariants, authenticated snapshot write boundaries and invalid-date rejection before merge to `main`.
+
+
+## Phase 2 Kundli progress
+
+A typed astronomy-based Kundli calculator and API have been introduced, including local IANA birth-time validation, sidereal planets, seven selected divisional charts, and Vimshottari major/subperiods. Other legacy engines are not yet production-validated; see `docs/KUNDLI_ENGINE.md`.

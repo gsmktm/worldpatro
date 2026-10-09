@@ -244,3 +244,8 @@ Archive-derived interactive studios and a security audit are documented in `docs
 Functional routes include `/app/wbe`, `/app/gates`, `/app/patro`, `/app/panchang`, `/app/numerology`, `/api/v1/wbe/snapshots`, and `/api/v1/numerology/calculate`.
 
 The full predecessor Kundli/Chinese lunar/BS algorithms are intentionally **not** claimed as migrated until authority and regression tests pass.
+
+
+## Kundli engine and Dasha (archive migration phase 2)
+
+The birth-chart module has functional routes `/app/kundli`, `/app/astrology`, and `POST /api/v1/jyotish/kundli`. It calculates a timezone-resolved birth instant, nine grahas, approximate Lagna/houses, seven selected vargas, and a Vimshottari tree. Calculation does not save data; optional saving uses authenticated `/api/v1/reports`. See `docs/KUNDLI_ENGINE.md` for full limitations.
