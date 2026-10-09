@@ -16,6 +16,8 @@ export async function requireUser() {
     if (!identity) {
       return {
         auth: null,
+        userId: null,
+        supabase: null,
         error: NextResponse.json(
           { error: "Authentication required", provider: "firebase", hint: "Send a Firebase ID token as Authorization: Bearer <token>." },
           { status: 401 }
@@ -23,13 +25,17 @@ export async function requireUser() {
       };
     }
 
+    const auth: AuthContext = {
+      provider: "firebase",
+      userId: identity.uid,
+      firebase: true,
+      supabase: null
+    };
+
     return {
-      auth: {
-        provider: "firebase" as const,
-        userId: identity.uid,
-        firebase: true,
-        supabase: null
-      },
+      auth,
+      userId: identity.uid,
+      supabase: null,
       error: null
     };
   }
@@ -38,6 +44,8 @@ export async function requireUser() {
   if (!supabase) {
     return {
       auth: null,
+      userId: null,
+      supabase: null,
       error: NextResponse.json({ error: "No authenticated database backend is configured" }, { status: 503 })
     };
   }
@@ -45,16 +53,25 @@ export async function requireUser() {
   const { data, error } = await supabase.auth.getClaims();
   const userId = data?.claims?.sub;
   if (error || !userId || typeof userId !== "string") {
-    return { auth: null, error: NextResponse.json({ error: "Authentication required" }, { status: 401 }) };
+    return {
+      auth: null,
+      userId: null,
+      supabase,
+      error: NextResponse.json({ error: "Authentication required" }, { status: 401 })
+    };
   }
 
+  const auth: AuthContext = {
+    provider: "supabase",
+    userId,
+    firebase: false,
+    supabase
+  };
+
   return {
-    auth: {
-      provider: "supabase" as const,
-      userId,
-      firebase: false,
-      supabase
-    },
+    auth,
+    userId,
+    supabase,
     error: null
   };
 }
