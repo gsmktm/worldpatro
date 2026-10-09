@@ -70,6 +70,42 @@ await json("/api/v1/agents/run", {
   body: JSON.stringify({ message: "smoke test only" })
 }, 403);
 
+
+const visualPages = [
+  ["/app/wbe", "Nine spokes"],
+  ["/app/gates", "729 comparative gates"],
+  ["/app/patro", "9 Calendars"],
+  ["/app/panchang", "Vedic Panchang"]
+];
+for (const [path, marker] of visualPages) {
+  const page = await hit(path, undefined, 200);
+  invariant(page.text.includes(marker), path+" did not render its real studio.");
+}
+
+const gateSet = await json("/api/v1/wbe/gates?limit=9", undefined, 200);
+invariant(gateSet.body.total === 729, "WBE 9×9×9 must generate exactly 729 gates.");
+const anchors = await json("/api/v1/wbe/gates?anchors=true&limit=20", undefined, 200);
+invariant(anchors.body.total === 9, "Exactly 9 keynote gates must exist.");
+
+const invalidSnapshot = await json("/api/v1/wbe/snapshots", {
+  method:"POST",
+  headers:{"content-type":"application/json"},
+  body:JSON.stringify({title:"invalid",scores:[5,5]})
+},400);
+invariant(Boolean(invalidSnapshot.body.error),"Invalid WBE scores must return 400.");
+
+await json("/api/v1/wbe/snapshots", {
+  method:"POST",
+  headers:{"content-type":"text/plain"},
+  body:"not a JSON payload"
+},415);
+
+await json("/api/v1/wbe/snapshots", {
+  method:"POST",
+  headers:{"content-type":"application/json","origin":"https://cross-origin.invalid","sec-fetch-site":"cross-site"},
+  body:JSON.stringify({title:"cross site",scores:[5,5,5,5,5,5,5,5,5]})
+},403);
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -82,6 +118,14 @@ console.log(JSON.stringify({
     "agent-status",
     "agent-auth-401",
     "agent-content-type-415",
-    "agent-cross-origin-403"
+    "agent-cross-origin-403",
+    "wbe-visual-studio",
+    "729-gates-studio",
+    "patro-date-studio",
+    "panchang-date-studio",
+    "729-and-9-keynote-gates",
+    "wbe-invalid-score-400",
+    "wbe-content-type-415",
+    "wbe-cross-origin-403"
   ]
 }));
