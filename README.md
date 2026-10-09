@@ -268,3 +268,14 @@ World Patro now derives BS/AD correspondences **only** inside Bhadra 2083 (17 Au
 ## Account Privacy Center
 
 `/app/privacy` and `GET /api/v1/account/export?limit=100` provide bounded private application-data snapshots with truncation warnings. The endpoint does not include authentication provider exports or backups and is not an account-wide erasure service. Saved reports retain owner-only deletion.
+
+
+## Administration + editorial database
+
+- `/app/admin`: server-verified administrator console for source registry, calendar authority, religious observances and educational articles.
+- `GET /api/v1/admin/session`, `GET /api/v1/admin/overview`, `GET|POST /api/v1/admin/content`, `PATCH|DELETE /api/v1/admin/content/:id`.
+- `GET /api/v1/content?kind=article|observance|source|authority` returns **published records only**.
+- Public `/app/learn` and `/app/religions` use the reviewed editorial records, showing an empty state when none are approved.
+- Firebase: server-verified Auth custom claim `worldpatro_role=admin` plus Firestore `adminContent` and `adminAudit`; browser Firestore access remains deny-all. Composite index in `firestore.indexes.json`.
+- Supabase: migration SQL in `supabase/admin_content_schema.sql`, to be run ONLY on the correct World Patro Supabase project—not on unrelated jhuto-com. Admin RLS checks trusted app_metadata roles, enforces content lifecycle and appends audit logs.
+- Secure admin credentials and the appropriate production database are still required. See `docs/ADMIN_CONSOLE.md`. This is a protected editorial admin release, not a claim that all organization functions or integrations are complete.

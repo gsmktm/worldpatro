@@ -260,6 +260,39 @@ invariant(Math.abs(lastMajorEnd-(birthMs+120*365.25*dayMs))<dayMs,
   "Vimshottari timeline is not 120 model-years long.");
 
 
+
+const adminUI=await hit("/app/admin",undefined,200);
+invariant(adminUI.text.includes("World Patro"),"Admin route failed to render its application shell.");
+for(const [path,marker] of [["/app/learn","Learning Library"],["/app/religions","World Religious Calendar"]]){
+  const response=await hit(path,undefined,200);
+  invariant(response.text.includes(marker),path+" did not render published-content frontend.");
+}
+for(const path of ["/api/v1/admin/session","/api/v1/admin/overview","/api/v1/admin/content"]){
+  const response=await fetch(new URL(path,base));
+  invariant([401,503].includes(response.status),path+" failed to deny unauthenticated admin access.");
+}
+const noAnonymousMutation=await fetch(new URL("/api/v1/admin/content",base),{
+  method:"POST",headers:{"content-type":"application/json"},
+  body:JSON.stringify({
+    kind:"article",title:"No Public Write",slug:"unauthorized-record",
+    body:"Nothing",summary:"Not authorized",sourceUrl:"https://example.org"
+  })
+});
+invariant([401,503].includes(noAnonymousMutation.status),"Anonymous admin content insertion is exposed.");
+const noAnonymousUpdate=await fetch(new URL("/api/v1/admin/content/article__not-a-record",base),{
+  method:"PATCH",headers:{"content-type":"application/json"},
+  body:JSON.stringify({status:"published",expectedVersion:1})
+});
+invariant([401,503].includes(noAnonymousUpdate.status),"Anonymous admin publication is exposed.");
+const noAnonymousArchive=await fetch(new URL("/api/v1/admin/content/article__not-a-record?version=1",base),{
+  method:"DELETE"
+});
+invariant([401,503].includes(noAnonymousArchive.status),"Anonymous admin archival is exposed.");
+const published=await json("/api/v1/content?kind=article",undefined,200);
+invariant(Array.isArray(published.body.records),"Public content endpoint must return an array.");
+invariant(published.body.records.every(r=>r.status==="published"),"Public content leaked a draft.");
+await json("/api/v1/content?kind=unknown",undefined,400);
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -305,6 +338,10 @@ console.log(JSON.stringify({
     "strict-gregorian-validation",
     "account-export-auth-guard",
     "privacy-center-ui",
-    "vimshottari-major-minor-continuity"
+    "vimshottari-major-minor-continuity",
+    "admin-role-gates",
+    "admin-unauthorized-crud",
+    "published-only-public-content",
+    "editorial-content-frontend"
   ]
 }));
