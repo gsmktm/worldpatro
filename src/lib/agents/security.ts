@@ -34,7 +34,7 @@ export async function authorizeAgentRequest(request: Request): Promise<{
   const mode = agentAccessMode();
 
   if (mode === "public") {
-    return { allowed: true, mode, user: await getAuthenticatedUser() };
+    return { allowed: true, mode, user: null };
   }
 
   if (mode === "api-key") {
