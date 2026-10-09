@@ -1,0 +1,158 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function ownsIncoming() {
+      return signedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    function ownsExisting() {
+      return signedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    function keepsOwnership() {
+      return request.resource.data.userId == resource.data.userId;
+    }
+
+    function activeReference() {
+      return !('status' in resource.data) || resource.data.status == 'active';
+    }
+
+    match /users/{uid} {
+      allow read, create, update: if signedIn() && request.auth.uid == uid;
+      allow delete: if false;
+    }
+
+    match /birthProfiles/{id} {
+      allow create: if ownsIncoming();
+      allow read, delete: if ownsExisting();
+      allow update: if ownsExisting() && keepsOwnership();
+    }
+
+    match /savedReports/{id} {
+      allow create: if ownsIncoming();
+      allow read, delete: if ownsExisting();
+      allow update: if ownsExisting() && keepsOwnership();
+    }
+
+    match /researchNotebooks/{id} {
+      allow create: if ownsIncoming();
+      allow read, delete: if ownsExisting();
+      allow update: if ownsExisting() && keepsOwnership();
+    }
+
+    match /researchItems/{id} {
+      allow create: if ownsIncoming();
+      allow read, delete: if ownsExisting();
+      allow update: if ownsExisting() && keepsOwnership();
+    }
+
+    match /watchlists/{id} {
+      allow create: if ownsIncoming();
+      allow read, delete: if ownsExisting();
+      allow update: if ownsExisting() && keepsOwnership();
+    }
+
+    match /notifications/{id} {
+      allow read: if ownsExisting();
+      allow update: if ownsExisting()
+        && keepsOwnership()
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['readAt', 'acknowledgedAt', 'updatedAt']);
+      allow create, delete: if false;
+    }
+
+    match /workflowOrders/{id} {
+      allow create: if ownsIncoming()
+        && request.resource.data.status == 'draft'
+        && request.resource.data.requiresHumanConfirmation == true;
+      allow read: if ownsExisting();
+      // State changes are server-controlled so audit events cannot be bypassed.
+      allow update, delete: if false;
+    }
+
+    match /workflowEvents/{id} {
+      allow read: if signedIn()
+        && exists(/databases/$(database)/documents/workflowOrders/$(resource.data.orderId))
+        && get(/databases/$(database)/documents/workflowOrders/$(resource.data.orderId)).data.userId == request.auth.uid;
+      allow write: if false;
+    }
+
+    match /wbeAssessments/{id} {
+      allow create: if ownsIncoming();
+      allow read, delete: if ownsExisting();
+      allow update: if ownsExisting() && keepsOwnership();
+    }
+
+    match /consultations/{id} {
+      allow create: if ownsIncoming();
+      allow read: if ownsExisting();
+      allow update: if ownsExisting()
+        && keepsOwnership()
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['scheduledAt', 'status', 'consentRecording', 'notes', 'updatedAt']);
+      allow delete: if false;
+    }
+
+    // Public reference collections are read-only from browsers.
+    match /calendarProfiles/{id} {
+      allow read: if activeReference();
+      allow write: if false;
+    }
+
+    match /sourceRegistry/{id} {
+      allow read: if activeReference();
+      allow write: if false;
+    }
+
+    match /authorityReleases/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /entities/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /events/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /claims/{id} {
+      allow read: if !('verificationState' in resource.data)
+        || resource.data.verificationState != 'retracted';
+      allow write: if false;
+    }
+
+    match /evidence/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /religiousObservances/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /astrologers/{id} {
+      allow read: if !('isActive' in resource.data) || resource.data.isActive == true;
+      allow write: if false;
+    }
+
+    match /articles/{id} {
+      allow read: if resource.data.isPublished == true;
+      allow write: if false;
+    }
+
+    // Deny anything not explicitly modeled above.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

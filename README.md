@@ -2,16 +2,27 @@
 
 World Patro is a Nepal-origin, globally neutral full-stack platform connecting **time, nine calendar profiles, astronomical sacred time, public-source world intelligence, research, alerts, authorized workflows and WBE-9**.
 
+Production: **https://worldpatro.vercel.app**
+
+## Backend
+
+**Firebase is now the primary backend path.**
+
+The repository includes Firebase Authentication, Cloud Firestore integration, Firestore Security Rules, indexes, Firebase Admin support and Firebase-first user persistence.
+
+See `docs/FIREBASE_SETUP.md` for the one-time console setup.
+
+Supabase code/migrations are retained as an optional PostgreSQL/reference backend, but the application no longer requires a new Supabase project when Firebase is configured.
+
 ## Production principles
 
 1. **No fabricated dates or sources.**
 2. **Authority beats algorithmic guesswork** for official/observational calendars.
 3. **Facts, reported claims, interpretation, forecasts and WBE symbolism are separate types.**
 4. **Every factual record can carry provenance, retrieval time and verification state.**
-5. **User data is protected by Supabase RLS.**
-6. **Consequential workflow actions require human confirmation.**
-
-The source blueprint specifically argues that World Patro cannot be a collection of date-offset formulas and should normalize internally through calendar-neutral day/instant concepts with versioned authority profiles. The app architecture follows that direction.
+5. **User data is protected by Firebase Auth + Firestore Security Rules.**
+6. **Trusted server operations verify Firebase ID tokens and use Admin SDK credentials only server-side.**
+7. **Consequential workflow actions require human confirmation.**
 
 ## Routes
 
@@ -37,15 +48,14 @@ The source blueprint specifically argues that World Patro cannot be a collection
 
 ### API
 - `GET /api/v1/health`
+- `GET /api/v1/firebase/status`
 - `GET /api/v1/patro/today?date=2026-10-08`
 - `POST /api/v1/calendar/convert`
-- `GET /api/v1/panchang/day?date=2026-10-08&lat=27.7172&lon=85.3240&tz=Asia/Kathmandu`
+- `GET /api/v1/panchang/day`
 - `GET /api/v1/world/country?iso3=NPL`
 - `GET /api/v1/wbe/gates`
 - `POST /api/v1/wbe/assess`
-- `GET /api/v1/sources`
-- `GET /api/v1/notifications`
-- `GET|POST /api/v1/workflows/orders`
+- authenticated profile/report/research/watchlist/workflow APIs
 
 ## Local run
 
@@ -58,55 +68,30 @@ npm run typecheck
 npm run dev
 ```
 
-The public app runs without Supabase. Authenticated persistence becomes live when these are configured:
+The public app still runs when the database is unconfigured. Firebase-backed authenticated persistence becomes live once the Firebase Web config and server Admin credentials are added.
+
+## Firebase environment
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+NEXT_PUBLIC_DATABASE_PROVIDER=firebase
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+FIREBASE_SERVICE_ACCOUNT_JSON=
 ```
 
-Never expose a Supabase secret/service key in a `NEXT_PUBLIC_` variable.
+Never expose `FIREBASE_SERVICE_ACCOUNT_JSON` through a public environment variable.
 
-## Supabase
+## Trust coverage
 
-The migration is in:
-
-`supabase/migrations/20261009000000_world_patro_core.sql`
-
-It creates:
-
-- profiles + birth profiles
-- saved calculation reports
-- calendar profile registry
-- source registry + authority releases
-- temporal entities/events
-- claim/evidence provenance model
-- world religious observances
-- research notebooks
-- watchlists + realtime notifications
-- authorized workflow orders + audit events
-- WBE assessments
-- astrologers + consultations
-- articles
-
-All exposed public tables have RLS enabled and the migration contains explicit Data API grants for current Supabase defaults.
-
-## Deploy
-
-### Vercel
-Link this repository to Vercel, set the two public Supabase environment variables for Preview and Production, and deploy the `main` branch.
-
-### Supabase
-Create a dedicated **World Patro** project — never reuse an unrelated production database — then apply the migration and run Security/Performance advisors before production.
-
-## Current trust coverage
-
-**Live now in code**
+**Live calculation/data**
 - Gregorian, Islamic Civil, Chinese, Hebrew, Persian and Thai Buddhist Era correspondence via ICU/Intl
 - astronomical Vedic Panchang core using Astronomy Engine
 - 729 WBE Gates / 9 Anchor Gates
 - World Bank country indicator connector
-- Supabase auth/persistence adapters and production schema
 
 **Authority connector required before claiming exact official output**
 - Nepal Bikram Sambat authority release profile
@@ -114,4 +99,4 @@ Create a dedicated **World Patro** project — never reuse an unrelated producti
 - observational Hijri declarations
 - regional religious calendars and government holiday overlays
 
-That limitation is intentional: unsupported data is marked, never guessed.
+Unsupported data is marked, never guessed.
