@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [main, production-v1, firebase-v1]
+    branches: [main, production-v1, firebase-v1, firebase-config]
   pull_request:
 
 permissions:
