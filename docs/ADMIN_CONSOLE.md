@@ -37,3 +37,15 @@
 - Writes require same-origin browser integrity, JSON, strict Zod schema and 32 KiB body limit; updates need expectedVersion to prevent overwriting another admin's edit.
 
 Reference: https://supabase.com/docs/guides/database/postgres/row-level-security
+
+
+## Trusted role provisioning
+For the already-configured world-patro Firebase project, obtain the service-account JSON directly through a secure Firebase administrator environment. Store it as a protected base64 environment variable, never in GitHub, website forms or public chat. Use:
+```bash
+node scripts/grant-firebase-role.mjs FIREBASE_USER_UID admin --confirm-world-patro
+```
+The script checks the service account's `project_id` is exactly `world-patro`, preserves existing custom claims, applies role and revokes refresh tokens. An administrator may subsequently assign `editor`, `reviewer`, or `none`; these are read-only roles in the current UI. Changes require renewed authentication. See Firebase Admin SDK custom claims documentation: https://firebase.google.com/docs/auth/admin/custom-claims.
+
+Public routes: `/app/sources`, `/app/authorities` show only approved records. No unsupported authority data is synthesized.
+
+Firestore singleton initialization is cached so `settings()` is not called again after database access begins.
