@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./styles/wbe-studio.css";
+import "./styles/patro-studio.css";
 
 export const metadata: Metadata = {
   title: { default:"World Patro", template:"%s · World Patro" },
