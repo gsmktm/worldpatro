@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, production-v1, firebase-v1, firebase-config, world-os-v2, world-os-v2-meta, production-hardening-v2, production-hardening-v2-1, production-smoke-v2, public-api-integrations-v1, nepal-authority-privacy-v1]
+    branches: [main, production-v1, firebase-v1, firebase-config, world-os-v2, world-os-v2-meta, production-hardening-v2, production-hardening-v2-1, production-smoke-v2, public-api-integrations-v1, nepal-authority-privacy-v1, astronomy-golden-gate-v1]
   pull_request:
 
 concurrency:
@@ -25,6 +25,8 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run typecheck
+      - name: External astronomical golden dates (USNO)
+        run: node scripts/validate-astronomy.mjs
       - run: npm run build
       - name: Production smoke test
         shell: bash
