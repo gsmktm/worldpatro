@@ -1,6 +1,17 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useState, useTransition } from "react";
+
+export type AgentRuntimeStatus = {
+  readyForGateway: boolean;
+  runtimeReady: boolean;
+  access: {
+    mode: "authenticated" | "public" | "api-key";
+    authenticatedBackendReady: boolean;
+    apiKeyConfigured: boolean;
+  };
+};
 
 type AgentReply = {
   answer: string;
@@ -16,15 +27,39 @@ const suggestions = [
   "Draft a verified workflow for publishing a World Patro daily brief."
 ];
 
-export function AgentConsole({ date }: { date: string }) {
+export function AgentConsole({
+  date,
+  status
+}: {
+  date: string;
+  status: AgentRuntimeStatus | null;
+}) {
   const [input, setInput] = useState(suggestions[0]);
   const [reply, setReply] = useState<AgentReply | null>(null);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
 
+  const runtimeReady = Boolean(status?.runtimeReady);
+  const accessLabel =
+    status?.access.mode === "authenticated"
+      ? "account-gated"
+      : status?.access.mode === "api-key"
+        ? "API-key gated"
+        : "public";
+
+  const gateMessage = !status
+    ? "Checking agent runtime…"
+    : !status.readyForGateway
+      ? "AI Gateway runtime is not available yet."
+      : status.access.mode === "authenticated" && !status.access.authenticatedBackendReady
+        ? "Authenticated agent access is waiting for Firebase Admin or Supabase Auth activation."
+        : status.access.mode === "api-key" && !status.access.apiKeyConfigured
+          ? "API-key mode is selected, but no server API key is configured."
+          : "";
+
   function run(message: string) {
     const trimmed = message.trim();
-    if (!trimmed) return;
+    if (!trimmed || !runtimeReady) return;
 
     startTransition(async () => {
       setError("");
@@ -58,7 +93,9 @@ export function AgentConsole({ date }: { date: string }) {
         <div className="eyebrow">CONDUCTOR · SUPERVISOR + 6 SPECIALISTS</div>
         <h2>Ask the whole system.</h2>
       </div>
-      <span className="liveBadge"><i/> bounded agents</span>
+      <span className={runtimeReady ? "liveBadge" : "liveBadge gated"}>
+        <i/>{runtimeReady ? "bounded agents" : accessLabel}
+      </span>
     </div>
 
     <div className="agentOrbit" aria-hidden="true">
@@ -68,22 +105,45 @@ export function AgentConsole({ date }: { date: string }) {
       <strong>G</strong>
     </div>
 
+    {gateMessage ? <div className="agentGate">
+      <strong>Protected runtime</strong>
+      <span>{gateMessage}</span>
+      {status?.access.mode === "authenticated" ? <Link href="/login">Open account</Link> : null}
+    </div> : null}
+
     <form className="agentForm" onSubmit={submit}>
       <label htmlFor="world-agent">Command / question</label>
-      <textarea id="world-agent" value={input} onChange={event => setInput(event.target.value)} rows={4}/>
+      <textarea
+        id="world-agent"
+        value={input}
+        onChange={event => setInput(event.target.value)}
+        rows={4}
+        aria-describedby="agent-boundary"
+      />
       <div className="agentActions">
-        <button className="primaryBtn" disabled={pending}>{pending ? "Delegating…" : "Run Conductor"}</button>
-        <span>Facts ≠ interpretation ≠ WBE symbolism</span>
+        <button className="primaryBtn" disabled={pending || !runtimeReady}>
+          {pending ? "Delegating…" : runtimeReady ? "Run Conductor" : "Agent runtime gated"}
+        </button>
+        <span id="agent-boundary">Facts ≠ interpretation ≠ WBE symbolism</span>
       </div>
     </form>
 
     <div className="promptRail">
       {suggestions.map(item =>
-        <button key={item} onClick={() => { setInput(item); run(item); }} disabled={pending}>{item}</button>
+        <button
+          key={item}
+          onClick={() => { setInput(item); run(item); }}
+          disabled={pending || !runtimeReady}
+        >
+          {item}
+        </button>
       )}
     </div>
 
-    {error ? <div className="agentError">{error}</div> : null}
+    {error ? <div className="agentError">
+      <span>{error}</span>
+      {status?.access.mode === "authenticated" ? <Link href="/login">Sign in</Link> : null}
+    </div> : null}
 
     {reply ? <div className="agentReply">
       <div className="delegationLine">
