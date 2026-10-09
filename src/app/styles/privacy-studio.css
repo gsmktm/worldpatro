@@ -1,0 +1,18 @@
+.privacyStudio{display:grid;gap:14px;margin-top:16px}
+.privacyHero,.privacyCollection,.privacyWarning,.privacyHelp,.privacyMeta>div{background:linear-gradient(145deg,#0c283b,#061421);border:1px solid var(--line);border-radius:16px;padding:18px}
+.privacyHero h2{font:500 clamp(29px,4vw,41px) Georgia,serif;color:var(--ivory);margin:9px 0}
+.privacyHero p,.privacyWarning p,.privacyHelp p{color:#94a9b8;font-size:12px;line-height:1.75;max-width:850px}
+.privacyActions{display:flex;gap:9px;flex-wrap:wrap;margin-top:19px}
+.privacyActions button{cursor:pointer}.privacyActions button:disabled{opacity:.5;cursor:not-allowed}
+.privacyMeta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.privacyMeta span,.privacyCollection span,.privacyCollection small{display:block;font-size:10px;color:#8ba3b2}
+.privacyMeta strong{display:block;margin-top:7px;font-size:15px;color:var(--gold2)}
+.privacyCollectionGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.privacyCollection h3{font:500 19px Georgia,serif;color:var(--ivory);margin:9px 0}
+.privacyCollection strong{display:block;color:var(--gold2);font-size:21px;margin:6px 0}
+.privacyWarning{border-color:rgba(225,180,99,.33)}.privacyWarning b{color:var(--gold2)}
+.privacyHelp h3{font:500 24px Georgia,serif;color:var(--ivory)}.privacyHelp a{color:var(--gold2);font-size:12px;text-decoration:underline}
+.privacyError{padding:12px;border-radius:9px;background:rgba(151,44,51,.15);color:#ffc2b8}
+.privacyNotice{padding:11px;border-radius:9px;background:rgba(39,102,83,.15);color:#a5e8cf}
+@media(max-width:850px){.privacyCollectionGrid,.privacyMeta{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:530px){.privacyCollectionGrid,.privacyMeta{grid-template-columns:1fr}}

@@ -119,6 +119,13 @@ export default function PatroStudio({ focus="calendars" }: { focus?:"calendars"|
         <h3>{calendar.name}</h3>
         <div className="patroCardValue">{calendar.value}</div>
         <p>{calendar.method}</p>
+        {calendar.sourceUrl&&<a
+          href={calendar.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="patroAuthorityLink"
+        >Source: municipal BS/AD calendar ↗</a>}
+        {calendar.coverage&&<small className="patroCoverage">Verified coverage: {calendar.coverage} · checked {calendar.checkedOn}</small>}
         <details><summary>Method & limits</summary><p>{calendar.note}</p><span>Classification: {calendar.status}</span></details>
       </article>)}
     </div>
