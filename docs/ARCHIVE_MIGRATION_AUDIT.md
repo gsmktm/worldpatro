@@ -45,3 +45,7 @@ These remain separately staged in the supplied source archive. Their implementat
 6. **Release ops:** secrets in Vercel, authorized Firebase Auth domains, deployed Firestore rules, configured AI Gateway, rate limits/WAF, E2E staging and production URL smoke verification.
 
 **Do not claim every legacy feature is production-ready.** Working screens and endpoints are listed above; later migrations require tests and account/service credentials.
+
+## Release verification
+
+CI must validate full TypeScript compilation, Next.js production build, route rendering, nine-gate invariants, authenticated snapshot write boundaries and invalid-date rejection before merge to `main`.
