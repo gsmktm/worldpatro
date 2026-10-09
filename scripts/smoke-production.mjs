@@ -78,7 +78,8 @@ const visualPages = [
   ["/app/panchang", "Vedic Panchang"],
   ["/app/numerology", "Numerology laboratory"],
   ["/app/kundli", "Birth chart"],
-  ["/app/astrology", "Birth chart"]
+  ["/app/astrology", "Birth chart"],
+  ["/app/muhurat", "Traditional time-window explorer"]
 ];
 for (const [path, marker] of visualPages) {
   const page = await hit(path, undefined, 200);
@@ -160,6 +161,29 @@ await json("/api/v1/jyotish/kundli",{
   method:"POST",headers:{"content-type":"text/plain"},body:"{}"
 },415);
 
+
+const muhurat=await json("/api/v1/muhurat/search",{
+  method:"POST",headers:{"content-type":"application/json"},
+  body:JSON.stringify({
+    category:"general",from:"2026-10-09",to:"2026-10-09",
+    timezone:"Asia/Kathmandu",latitude:27.7172,longitude:85.324,
+    elevation:1300,limit:3
+  })
+},200);
+invariant(muhurat.body.scannedDays===1,"Muhurat did not scan exactly one day.");
+invariant(muhurat.body.method?.status==="TRADITIONAL INTERPRETATION","Muhurat truth-boundary metadata missing.");
+invariant(muhurat.body.candidates?.length===1,"Kathmandu date should produce one checked window.");
+invariant(muhurat.body.candidates[0].reasons?.length>=2,"Muhurat reasons missing.");
+const reversed=await json("/api/v1/muhurat/search",{
+ method:"POST",headers:{"content-type":"application/json"},
+ body:JSON.stringify({
+   category:"general",from:"2026-11-11",to:"2026-10-01",
+   timezone:"Asia/Kathmandu",latitude:27.7172,longitude:85.324,
+   elevation:1300,limit:3
+ })
+},422);
+invariant(Boolean(reversed.body.error),"Reversed date range not rejected.");
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -190,6 +214,9 @@ console.log(JSON.stringify({
     "kundli-nonpersistence-and-truth-boundary",
     "kundli-date-validation",
     "kundli-dst-validation",
-    "kundli-json-content-type"
+    "kundli-json-content-type",
+    "muhurat-location-aware-astronomy",
+    "muhurat-transparent-criteria",
+    "muhurat-invalid-range"
   ]
 }));

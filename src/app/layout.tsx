@@ -4,6 +4,7 @@ import "./styles/wbe-studio.css";
 import "./styles/patro-studio.css";
 import "./styles/numerology-studio.css";
 import "./styles/kundli-studio.css";
+import "./styles/muhurat-studio.css";
 
 export const metadata: Metadata = {
   title: { default:"World Patro", template:"%s · World Patro" },
