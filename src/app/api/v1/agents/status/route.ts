@@ -7,15 +7,23 @@ import { useFirebaseBackend } from "@/lib/firebase/config";
 export function GET() {
   const accessMode = agentAccessMode();
   const authBackendReady = useFirebaseBackend() || isSupabaseConfigured();
+  const apiKeyConfigured = Boolean(process.env.WORLD_PATRO_AGENT_API_KEY);
   const gatewayReady = Boolean(process.env.VERCEL_OIDC_TOKEN || process.env.AI_GATEWAY_API_KEY);
+
+  const accessReady =
+    accessMode === "public"
+      ? true
+      : accessMode === "api-key"
+        ? apiKeyConfigured
+        : authBackendReady;
 
   return NextResponse.json({
     readyForGateway: gatewayReady,
-    runtimeReady: gatewayReady && (accessMode !== "authenticated" || authBackendReady),
+    runtimeReady: gatewayReady && accessReady,
     access: {
       mode: accessMode,
       authenticatedBackendReady: authBackendReady,
-      apiKeyConfigured: Boolean(process.env.WORLD_PATRO_AGENT_API_KEY)
+      apiKeyConfigured
     },
     supervisor: { name: "World Patro Conductor", model: SUPERVISOR_MODEL },
     subagentModel: SUBAGENT_MODEL,
