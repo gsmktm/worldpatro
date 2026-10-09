@@ -4,6 +4,10 @@ import { getAuthenticatedUser, type AppUser } from "@/lib/auth-user";
 export const AGENT_MAX_BODY_BYTES = 16_384;
 
 export type AgentAccessMode = "authenticated" | "public" | "api-key";
+export type AgentAccessReason =
+  | "authentication-required"
+  | "api-key-required"
+  | "origin-not-allowed";
 
 export function agentAccessMode(): AgentAccessMode {
   const configured = process.env.WORLD_PATRO_AGENT_ACCESS_MODE;
@@ -25,11 +29,43 @@ function requestApiKey(request: Request) {
   return request.headers.get("x-world-patro-api-key")?.trim() || "";
 }
 
+function normalizedOrigin(value: string | null | undefined) {
+  if (!value) return null;
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+}
+
+function requestOrigin(request: Request) {
+  return normalizedOrigin(request.headers.get("origin"));
+}
+
+function expectedOrigins(request: Request) {
+  const origins = new Set<string>();
+  const requestUrlOrigin = normalizedOrigin(request.url);
+  const configuredOrigin = normalizedOrigin(process.env.NEXT_PUBLIC_SITE_URL);
+  if (requestUrlOrigin) origins.add(requestUrlOrigin);
+  if (configuredOrigin) origins.add(configuredOrigin);
+  return origins;
+}
+
+function isBrowserSameOrigin(request: Request) {
+  const secFetchSite = request.headers.get("sec-fetch-site");
+  if (secFetchSite === "cross-site") return false;
+
+  const origin = requestOrigin(request);
+  if (!origin) return true;
+
+  return expectedOrigins(request).has(origin);
+}
+
 export async function authorizeAgentRequest(request: Request): Promise<{
   allowed: boolean;
   mode: AgentAccessMode;
   user: AppUser | null;
-  reason?: "authentication-required" | "api-key-required";
+  reason?: AgentAccessReason;
 }> {
   const mode = agentAccessMode();
 
@@ -44,6 +80,10 @@ export async function authorizeAgentRequest(request: Request): Promise<{
       return { allowed: false, mode, user: null, reason: "api-key-required" };
     }
     return { allowed: true, mode, user: null };
+  }
+
+  if (!isBrowserSameOrigin(request)) {
+    return { allowed: false, mode, user: null, reason: "origin-not-allowed" };
   }
 
   const user = await getAuthenticatedUser();
