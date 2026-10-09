@@ -33,6 +33,15 @@ const patro = await json("/api/v1/patro/today?date=2026-10-09", undefined, 200);
 invariant(Array.isArray(patro.body.calendars), "Patro response has no calendars array.");
 invariant(patro.body.calendars.length === 9, `Expected 9 calendar profiles, got ${patro.body.calendars.length}.`);
 
+const integrations = await json("/api/v1/integrations", undefined, 200);
+invariant(integrations.body.summary?.total >= 9, "Integration catalog is unexpectedly incomplete.");
+invariant(integrations.body.integrations?.some(item => item.id === "usgs-earthquake" && item.runtimeEnabled), "USGS integration is not enabled.");
+invariant(integrations.body.integrations?.some(item => item.id === "frankfurter" && item.runtimeEnabled), "Frankfurter integration is not enabled.");
+invariant(integrations.body.integrations?.some(item => item.id === "open-meteo" && !item.runtimeEnabled), "Restricted Open-Meteo integration should default to disabled.");
+
+const nepalHolidays = await json("/api/v1/calendar/public-holidays?country=NP&year=2026", undefined, 200);
+invariant(nepalHolidays.body.status === "authority_required", "Nepal holidays must preserve authority-required state.");
+
 const status = await json("/api/v1/agents/status", undefined, 200);
 invariant(status.body.access?.mode === "authenticated", "Agent status did not report authenticated mode.");
 invariant(status.body.executionPolicy?.maxSupervisorSteps === 7, "Supervisor step limit changed unexpectedly.");
@@ -68,6 +77,8 @@ console.log(JSON.stringify({
     "command-center",
     "health",
     "nine-calendars",
+    "integration-catalog",
+    "nepal-holiday-authority-boundary",
     "agent-status",
     "agent-auth-401",
     "agent-content-type-415",

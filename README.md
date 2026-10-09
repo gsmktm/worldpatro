@@ -211,3 +211,28 @@ Agent hardening includes:
 - additional HSTS, COOP/CORP and DNS-prefetch security headers
 
 Platform-level Vercel Firewall configuration should still be enabled when the account scope permits it; application-level access controls do not replace WAF/DDoS protections.
+
+
+## Curated public API integrations
+
+World Patro uses the community `public-apis/public-apis` repository for discovery, then verifies each selected provider against its own documentation before use.
+
+Active no-key additions:
+- USGS Earthquake Hazards Program
+- Frankfurter v2 FX rates
+- Nager.Date as a guarded global civil-holiday fallback (not Nepal authority)
+
+Optional/controlled providers:
+- NASA Open APIs — `NASA_API_KEY`
+- REST Countries v5 — `REST_COUNTRIES_API_KEY`
+- OpenCage — `OPENCAGE_API_KEY`
+- Open-Meteo commercial customer API — `OPEN_METEO_API_KEY`
+- public Nominatim — explicit opt-in only
+
+Operational endpoints:
+- `GET /api/v1/integrations`
+- `GET /api/v1/calendar/public-holidays?country=US&year=2026`
+- `GET /api/v1/finance/fx?base=USD&quote=NPR`
+- `GET /api/v1/world/earthquakes?lat=27.7172&lon=85.3240&radiusKm=500&days=7&minMagnitude=2.5`
+
+See `docs/PUBLIC_API_INTEGRATIONS.md`.
