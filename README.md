@@ -254,3 +254,8 @@ The birth-chart module has functional routes `/app/kundli`, `/app/astrology`, an
 ## Muhurat Finder migration
 
 The real /app/muhurat page and POST /api/v1/muhurat/search calculate location-aware sunrise, sunrise Panchang, traditional weekday/tithi screening, Rahu Kala exclusion and candidate windows (up to 31 days). These are review aids, not certified or universally accepted auspiciousness declarations. See docs/MUHURAT_ENGINE.md.
+
+
+## Private saved birth charts
+
+Authenticated reports now support safe lightweight listings via GET /api/v1/reports?kind=kundli&view=summary and user-scoped permanent deletion via DELETE /api/v1/reports/{id}. The Kundli UI can show saved chart titles and let an authenticated owner delete a report after explicit confirmation. Cross-site authenticated writes and deletes are rejected. See docs/REPORT_PRIVACY.md.

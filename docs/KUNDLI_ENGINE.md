@@ -22,3 +22,8 @@ The user's Arko Jyotish TAR informed these explicitly scoped calculations. This 
 
 ## Regression
 CI verifies date/timezone normalization for Nepal, nine grahas, seven divisions, Dasha output, JSON validation, Gregorian invalid dates, DST fold/gap and non-persistence disclosure.
+
+
+## Privacy CRUD
+
+Account holders may inspect a lightweight saved-Kundli list and permanently delete a selected report from their primary Firebase/Supabase storage through the authenticated /api/v1/reports/{id} endpoint. Backup/log retention and broader account-deletion policy are not yet automated.

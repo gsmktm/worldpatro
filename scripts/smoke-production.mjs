@@ -184,6 +184,29 @@ const reversed=await json("/api/v1/muhurat/search",{
 },422);
 invariant(Boolean(reversed.body.error),"Reversed date range not rejected.");
 
+
+const privateReportList=await fetch(new URL("/api/v1/reports?kind=kundli&view=summary",base));
+invariant([401,503].includes(privateReportList.status),"Private reports leaked to an unauthenticated caller.");
+
+const deleteInvalid=await json("/api/v1/reports/not-valid!",{
+  method:"DELETE",headers:{"accept":"application/json"}
+},400);
+invariant(Boolean(deleteInvalid.body.error),"Malformed report id must return 400.");
+
+const deleteUnauthorized=await fetch(new URL("/api/v1/reports/abcde123456789012345",base),{
+  method:"DELETE",headers:{"accept":"application/json"}
+});
+invariant([401,503].includes(deleteUnauthorized.status),"Unauthenticated report deletion was not rejected.");
+
+await json("/api/v1/reports",{
+  method:"POST",headers:{"content-type":"text/plain"},body:"{}"
+},415);
+
+await json("/api/v1/reports",{
+  method:"POST",headers:{"content-type":"application/json","origin":"https://cross-origin.invalid","sec-fetch-site":"cross-site"},
+  body:JSON.stringify({kind:"kundli",title:"test",result:{}})
+},403);
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -217,6 +240,11 @@ console.log(JSON.stringify({
     "kundli-json-content-type",
     "muhurat-location-aware-astronomy",
     "muhurat-transparent-criteria",
-    "muhurat-invalid-range"
+    "muhurat-invalid-range",
+    "reports-private-read-guard",
+    "reports-id-validation",
+    "reports-private-delete-guard",
+    "reports-json-415",
+    "reports-cross-origin-403"
   ]
 }));
