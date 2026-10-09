@@ -44,8 +44,13 @@ export function getFirebaseAdminAuth() {
   return getAuth(getFirebaseAdminApp());
 }
 
+let cachedFirestore: ReturnType<typeof getFirestore> | null = null;
+
 export function getFirebaseAdminFirestore() {
-  const db = getFirestore(getFirebaseAdminApp());
-  db.settings({ ignoreUndefinedProperties: true });
-  return db;
+  // Firestore settings must be applied only once, before first use.
+  if (!cachedFirestore) {
+    cachedFirestore = getFirestore(getFirebaseAdminApp());
+    cachedFirestore.settings({ ignoreUndefinedProperties: true });
+  }
+  return cachedFirestore;
 }

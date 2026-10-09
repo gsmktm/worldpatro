@@ -279,3 +279,9 @@ World Patro now derives BS/AD correspondences **only** inside Bhadra 2083 (17 Au
 - Firebase: server-verified Auth custom claim `worldpatro_role=admin` plus Firestore `adminContent` and `adminAudit`; browser Firestore access remains deny-all. Composite index in `firestore.indexes.json`.
 - Supabase: migration SQL in `supabase/admin_content_schema.sql`, to be run ONLY on the correct World Patro Supabase project—not on unrelated jhuto-com. Admin RLS checks trusted app_metadata roles, enforces content lifecycle and appends audit logs.
 - Secure admin credentials and the appropriate production database are still required. See `docs/ADMIN_CONSOLE.md`. This is a protected editorial admin release, not a claim that all organization functions or integrations are complete.
+
+
+## Admin activation and public registry
+- Approved sources: `/app/sources`; approved authority notices: `/app/authorities`.
+- Firebase Admin role provisioning is an explicit offline, trusted-only action: `node scripts/grant-firebase-role.mjs <uid> admin --confirm-world-patro`. Requires a secure `FIREBASE_SERVICE_ACCOUNT_JSON_BASE64` environment variable for the **world-patro** Firebase project; the script rejects the wrong Firebase project and revokes existing refresh tokens after role changes.
+- User sessions must re-authenticate after role changes.

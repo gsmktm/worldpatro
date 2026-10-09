@@ -293,6 +293,20 @@ invariant(Array.isArray(published.body.records),"Public content endpoint must re
 invariant(published.body.records.every(r=>r.status==="published"),"Public content leaked a draft.");
 await json("/api/v1/content?kind=unknown",undefined,400);
 
+
+for(const [path,title] of [
+  ["/app/sources","Source Registry"],
+  ["/app/authorities","Calendar Authority Notices"]
+]){
+  const response=await hit(path,undefined,200);
+  invariant(response.text.includes(title),path+" did not render publication interface.");
+}
+for(const kind of ["source","authority"]){
+  const result=await json("/api/v1/content?kind="+kind,undefined,200);
+  invariant(Array.isArray(result.body.records),kind+" publication endpoint failed.");
+  invariant(result.body.records.every(r=>r.status==="published"),"Unpublished "+kind+" record leaked.");
+}
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -342,6 +356,9 @@ console.log(JSON.stringify({
     "admin-role-gates",
     "admin-unauthorized-crud",
     "published-only-public-content",
-    "editorial-content-frontend"
+    "editorial-content-frontend",
+    "source-registry-publication",
+    "authority-notices-publication",
+    "published-only-source-provenance"
   ]
 }));

@@ -130,7 +130,10 @@ export default function AdminConsole(){
       <div className="eyebrow">ॐ WORLD PATRO · EDITORIAL OPERATIONS</div>
       <h1>Administration Command Center</h1>
       <p>Manage reviewed sources, calendar authority releases, sacred-time observances and published learning content with versioned edits, explicit review and audit history.</p>
-      <div className="adminActions"><span>Role: {overview?.role||gate}</span><span>Database: {overview?.backend||"checking"}</span><button type="button" className="ghost" onClick={()=>startTransition(async()=>refresh())} disabled={working}>Refresh</button></div>
+      <div className="adminActions"><span>Role: {overview?.role||gate}</span><span>Database: {overview?.backend||"checking"}</span><button type="button" className="ghost" onClick={()=>startTransition(async()=>refresh())} disabled={working}>Refresh</button>
+      <Link className="ghost" href="/app/sources">Public sources ↗</Link>
+      <Link className="ghost" href="/app/authorities">Authority notices ↗</Link>
+      </div>
     </div>
     {readOnly&&<p className="adminWarning">This role has read-only oversight. Editing and publication require the server-granted administrator role.</p>}
     {overview&&<div className="adminMetrics">
