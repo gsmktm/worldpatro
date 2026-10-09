@@ -230,6 +230,36 @@ await json("/api/v1/account/export?limit=999",undefined,400);
 const privacyPage=await hit("/app/privacy",undefined,200);
 invariant(privacyPage.text.includes("Privacy"),"Privacy Studio failed to render.");
 
+
+// Vimshottari invariants are structural regressions, not a validation of astrology.
+const majors=kundli.body.chart.dasha.periods;
+const birthMs=Date.parse(kundli.body.chart.canonical.utc);
+const dayMs=86400000;
+const toleranceMs=1000;
+invariant(Math.abs(Date.parse(majors[0].startUTC)-birthMs)<toleranceMs,
+  "The first remaining Mahadasha must begin at birth.");
+let lastMajorEnd=birthMs;
+for(const major of majors){
+  const starts=Date.parse(major.startUTC),ends=Date.parse(major.endUTC);
+  invariant(Math.abs(starts-lastMajorEnd)<toleranceMs,"Mahadasha timeline has a gap/overlap.");
+  invariant(ends>starts,"Mahadasha has negative duration.");
+  const subs=major.children||[];
+  invariant(subs.length>0,"Missing Antardasha intervals.");
+  let cursor=starts;
+  for(const sub of subs){
+    const subStart=Date.parse(sub.startUTC),subEnd=Date.parse(sub.endUTC);
+    invariant(Math.abs(subStart-cursor)<toleranceMs,"Antardasha timeline has a gap/overlap.");
+    invariant(subEnd>subStart&&subStart>=starts-toleranceMs&&subEnd<=ends+toleranceMs,
+      "Antardasha spills outside parent Mahadasha.");
+    cursor=subEnd;
+  }
+  invariant(Math.abs(cursor-ends)<toleranceMs,"Antardasha segments do not cover the parent.");
+  lastMajorEnd=ends;
+}
+invariant(Math.abs(lastMajorEnd-(birthMs+120*365.25*dayMs))<dayMs,
+  "Vimshottari timeline is not 120 model-years long.");
+
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -274,6 +304,7 @@ console.log(JSON.stringify({
     "bs-provenance-and-patro",
     "strict-gregorian-validation",
     "account-export-auth-guard",
-    "privacy-center-ui"
+    "privacy-center-ui",
+    "vimshottari-major-minor-continuity"
   ]
 }));

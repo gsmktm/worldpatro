@@ -27,3 +27,8 @@ CI verifies date/timezone normalization for Nepal, nine grahas, seven divisions,
 ## Privacy CRUD
 
 Account holders may inspect a lightweight saved-Kundli list and permanently delete a selected report from their primary Firebase/Supabase storage through the authenticated /api/v1/reports/{id} endpoint. Backup/log retention and broader account-deletion policy are not yet automated.
+
+
+## Independent reference regression (2026)
+
+CI compares tropical geocentric Sun ecliptic longitude at four US Naval Observatory equinox/solstice UTC instants in 2026, with a documented tolerance of 0.12°. Source: https://aa.usno.navy.mil/calculated/seasons?year=2026&tz=0.00&tz_sign=1&tz_label=false&dst=false&submit=Get+Data . Also checks that major and sub Vimshottari intervals are contiguous and fully cover 120 model years. This is a limited independent seasonal reference check, **not** independent testing of planetary degrees, sidereal ayanamsa, Lagna or all Vargas.
