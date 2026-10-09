@@ -58,3 +58,10 @@ Agent invocations emit low-cardinality Vercel Custom Metrics:
 - `worldpatro.agent.delegations`
 
 Structured logs record request IDs, outcome, access mode, delegated agent roles and duration. User prompts, email addresses, user IDs, secrets and raw model output are deliberately excluded from logs and metric tags.
+
+
+## Browser request integrity
+
+For authenticated cookie-based agent access, World Patro rejects browser requests when `Sec-Fetch-Site` is `cross-site` or when an explicit `Origin` does not match the request/canonical site origin. This is a CSRF and AI-spend protection layer.
+
+`POST /api/v1/agents/run` also requires `Content-Type: application/json`; unsupported media types return HTTP 415 before authentication or model execution. Server-to-server API-key mode remains independent of browser-origin checks.
