@@ -37,3 +37,7 @@
 @media(max-width:1200px){.wbeStage,.gatesMain{grid-template-columns:1fr}.wbeWheel{max-width:620px}.wbePairs{grid-template-columns:repeat(3,1fr)}.gateDetail{position:static}.gatesGrid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:680px){.wbeIntro,.gatesSummary{padding:17px;align-items:flex-start}.wbeStat strong,.gatesSummary>strong{font-size:36px}.wbeControlsTop{flex-direction:column;align-items:flex-start}.wbeDetail{padding:17px}.wbePairs,.wbeFooterStats,.wbeAnchorList{grid-template-columns:1fr 1fr}.wbeSpokeButton{height:41px;width:41px}.wbeSpokeButton span{font-size:19px}.wbeSpokeButton small{font-size:7px}.gatesFilter{grid-template-columns:1fr 1fr}.gatesFilter label:first-child{grid-column:1/-1}.gatesGrid{grid-template-columns:repeat(2,1fr)}} 
 @media(max-width:410px){.wbePairs,.wbeAnchorList{grid-template-columns:1fr}.wbeSpokeButton{height:35px;width:35px}.wbeSpokeButton span{font-size:16px}.wbeSpokeButton small{font-size:6px}.wbeFooterStats{grid-template-columns:1fr 1fr}.gatesGrid{grid-template-columns:1fr 1fr}}
+
+.wbeHistory{display:grid;gap:8px;border:1px solid var(--line);border-radius:14px;padding:13px;background:rgba(4,17,28,.95)}
+.wbeHistory button{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;border:1px solid var(--lineSoft);border-radius:10px;padding:11px;background:#0a2133;color:#d6e3eb;cursor:pointer;text-align:left}
+.wbeHistory button small{font-size:10px;color:var(--muted)}.wbeHistory button strong{font-size:10px;color:var(--gold2)}

@@ -46,6 +46,8 @@ export default function WbeStudio() {
   const [scores, setScores] = useState<number[]>(initial);
   const [selected, setSelected] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [history, setHistory] = useState<Array<{id:string;title:string;scores:number[];createdAt:string|null}>>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   const [message, setMessage] = useState("");
   const [locale, setLocale] = useState<"en" | "ne">("en");
   const assessment = useMemo(() => assessWbe(scores), [scores]);
@@ -66,30 +68,49 @@ export default function WbeStudio() {
   async function save() {
     setSaving(true);
     setMessage("");
-    const snapshot = numericSnapshot(scores);
     try {
-      const response = await fetch("/api/v1/reports",{
+      const response=await fetch("/api/v1/wbe/snapshots",{
         method:"POST",
         headers:{"content-type":"application/json"},
-        body:JSON.stringify({
-          kind:"wbe",
-          title:"WBE-9 personal balance reflection",
-          requestContext:{scope:"self-reflection",edition:"wbe-ninefold-v1"},
-          result:snapshot,
-          calculationVersion:{engine:"symbolic-user-input-v1",measurement:"none"}
-        })
+        body:JSON.stringify({title:"WBE-9 personal reflection",scores})
       });
       if(response.status===401) {
-        setMessage("Please sign in and activate account storage before saving. Your current scores remain on this screen.");
+        setMessage("Sign in to save this reflection to your account.");
       } else if(!response.ok) {
-        setMessage("The report could not be saved. You can export a local JSON copy.");
+        setMessage("Storage is not active or a save failed. Use Export JSON for a local copy.");
       } else {
-        setMessage("Reflection saved to your account reports.");
+        setMessage("Saved privately to your account.");
+        await loadHistory(true);
       }
     } catch {
       setMessage("Storage is unavailable. Export a local copy instead.");
-    } finally {
-      setSaving(false);
+    } finally {setSaving(false);}
+  }
+
+  async function loadHistory(silent=false) {
+    setLoadingHistory(true);
+    try {
+      const response=await fetch("/api/v1/wbe/snapshots",{cache:"no-store"});
+      if(response.status===401){
+        if(!silent)setMessage("Sign in to read your saved reflections.");
+      } else if(!response.ok) {
+        if(!silent)setMessage("Account storage is not available yet.");
+      } else {
+        const body=await response.json();
+        const rows=Array.isArray(body.snapshots)?body.snapshots:[];
+        setHistory(rows);
+        if(!silent)setMessage(rows.length?String(rows.length)+" saved reflections loaded.":"No saved reflections yet.");
+      }
+    } catch {
+      if(!silent)setMessage("Could not load account history.");
+    } finally {setLoadingHistory(false);}
+  }
+
+  function restore(entry:{scores:number[];title:string}) {
+    if(entry.scores.length===9&&entry.scores.every(v=>Number.isInteger(v)&&v>=0&&v<=10)){
+      setScores([...entry.scores]);
+      setSelected(0);
+      setMessage("Loaded “"+entry.title+"” from your account. Saving again creates a new private snapshot.");
     }
   }
 
@@ -189,11 +210,19 @@ export default function WbeStudio() {
     <div className="wbeActions">
       <button className="primaryBtn" type="button" onClick={save} disabled={saving}>{saving?"Saving…":"Save reflection"}</button>
       <button className="ghost" type="button" onClick={exportJson}>Export JSON</button>
+      <button className="ghost" type="button" disabled={loadingHistory} onClick={()=>loadHistory()}>{loadingHistory?"Loading…":"Saved reflections"}</button>
       <button className="ghost" type="button" onClick={()=>{setScores(initial);setSelected(0);setMessage("");}}>Reset</button>
       <Link className="ghost" href="/app/gates">Explore all 729 gates →</Link>
       <Link className="ghost" href="/login">Account</Link>
     </div>
     {message && <p className="wbeMessage" role="status">{message}</p>}
+    {history.length>0&&<div className="wbeHistory" aria-label="Saved WBE reflections">
+      <div className="eyebrow">PRIVATE ACCOUNT HISTORY</div>
+      {history.map(item=><button type="button" key={item.id} onClick={()=>restore(item)}>
+        <span>{item.title}</span><small>{item.createdAt?new Date(item.createdAt).toLocaleDateString():"Saved reflection"}</small>
+        <strong>Load scores ↗</strong>
+      </button>)}
+    </div>}
     <div className="wbeDisclosure">Design heritage: uploaded Cosmic Balance mandala. Core pairings: WBE-9 Ninefold Pattern. The uploaded ZIP’s default “93% harmony,” planetary powers, decrees and seeded prayers were fictional examples; they are not imported as measured evidence or automatic authority.</div>
     <div className="wbeAnchorList" aria-label="Nine thematic pairings">{ANCHORS.map((a,i)=><button key={a.code} type="button" onClick={()=>setSelected(i)}><b>{String(i+1).padStart(2,"0")}</b> {a.graha}<span>{a.power}</span></button>)}</div>
   </section>;
