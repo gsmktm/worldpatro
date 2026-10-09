@@ -152,6 +152,18 @@ export default function KundliStudio() {
     {error&&<p role="alert" className="kundliError">{error}</p>}
     {notice&&<p role="status" className="kundliNotice">{notice}</p>}
 
+    <div className="kundliActions">
+      <button type="button" className="ghost" disabled={historyBusy} onClick={()=>loadHistory()}>
+        {historyBusy?"Loading saved charts…":"My saved charts · View / Delete"}
+      </button>
+    </div>
+    {history.length>0&&<div className="kundliHistory">
+      <div className="eyebrow">PRIVATE · MY SAVED KUNDLI REPORTS</div>
+      {history.map(item=><div key={item.id} className="kundliHistoryRow">
+        <div><strong>{item.title}</strong><small>{item.createdAt?new Date(item.createdAt).toLocaleString():"Saved report"}</small></div>
+        <button type="button" onClick={()=>deleteReport(item.id)} disabled={Boolean(deletingId)}>{deletingId===item.id?"Deleting…":"Delete permanently"}</button>
+      </div>)}
+    </div>}
     {chart&&<div className="kundliResult">
       <div className="kundliSummary">
         <div><span>Ascendant · Lagna</span><strong>{chart.ascendant.signName}</strong><small>{chart.ascendant.degreesInSign.toFixed(3)}° · {chart.ascendant.nakshatra.name}</small></div>
@@ -163,16 +175,9 @@ export default function KundliStudio() {
       <div className="kundliActions">
         <button type="button" className="primaryBtn" onClick={save}>Save privately</button>
         <button type="button" className="ghost" onClick={exportJson}>Export complete JSON</button>
-        <button type="button" className="ghost" disabled={historyBusy} onClick={()=>loadHistory()}>{historyBusy?"Loading…":"My saved charts"}</button>
         <a href="/login" className="ghost">Account</a>
       </div>
-      {history.length>0&&<div className="kundliHistory">
-        <div className="eyebrow">PRIVATE · MY SAVED KUNDLI REPORTS</div>
-        {history.map(item=><div key={item.id} className="kundliHistoryRow">
-          <div><strong>{item.title}</strong><small>{item.createdAt?new Date(item.createdAt).toLocaleString():"Saved report"}</small></div>
-          <button type="button" onClick={()=>deleteReport(item.id)} disabled={Boolean(deletingId)}>{deletingId===item.id?"Deleting…":"Delete permanently"}</button>
-        </div>)}
-      </div>}
+
 
       <div className="kundliColumns">
         <section className="kundliPanel"><div className="eyebrow">GRAHA TABLE</div><h3>Nine grahas · sidereal longitude</h3>
