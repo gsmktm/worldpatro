@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [main, production-v1, firebase-v1, firebase-config, world-os-v2, world-os-v2-meta]
+    branches: [main, production-v1, firebase-v1, firebase-config, world-os-v2, world-os-v2-meta, production-hardening-v2]
   pull_request:
 
 permissions:

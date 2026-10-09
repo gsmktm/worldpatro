@@ -1,6 +1,6 @@
 {
   "name": "worldpatro",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "engines": { "node": ">=22" },
   "scripts": {
@@ -12,6 +12,7 @@
   "dependencies": {
     "@supabase/ssr": "0.12.7",
     "@supabase/supabase-js": "2.117.3",
+    "@vercel/functions": "3.9.11",
     "ai": "7.0.130",
     "astronomy-engine": "2.1.19",
     "firebase": "12.19.0",

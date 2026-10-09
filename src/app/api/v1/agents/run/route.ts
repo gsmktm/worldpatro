@@ -1,11 +1,13 @@
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { generateText, isStepCount, tool } from "ai";
 import { z } from "zod";
 import { SUPERVISOR_MODEL, SUPERVISOR_SYSTEM, type AgentRole } from "@/lib/agents/contracts";
 import { runSpecialist, type AgentContext } from "@/lib/agents/specialists";
+import { AGENT_MAX_BODY_BYTES, authorizeAgentRequest } from "@/lib/agents/security";
 import { useFirebaseBackend } from "@/lib/firebase/config";
-import { getFirebaseUser } from "@/lib/firebase/user";
 import { serverNow, userCollection } from "@/lib/firebase/data";
+import { worldLog, worldMetric } from "@/lib/observability";
 
 export const maxDuration = 60;
 
@@ -21,10 +23,69 @@ const Input = z.object({
   }).default({})
 });
 
+function agentResponse(
+  payload: unknown,
+  status: number,
+  requestId: string,
+  startedAt: number
+) {
+  const durationMs = Math.round(performance.now() - startedAt);
+  return NextResponse.json(payload, {
+    status,
+    headers: {
+      "Cache-Control": "no-store",
+      "X-Request-Id": requestId,
+      "Server-Timing": `worldpatro-agent;dur=${durationMs}`
+    }
+  });
+}
+
 export async function POST(request: Request) {
-  const parsed = Input.safeParse(await request.json().catch(() => null));
+  const startedAt = performance.now();
+  const requestId = request.headers.get("x-request-id")?.slice(0, 100) || randomUUID();
+
+  const contentLength = Number(request.headers.get("content-length") || 0);
+  if (Number.isFinite(contentLength) && contentLength > AGENT_MAX_BODY_BYTES) {
+    worldMetric("worldpatro.agent.requests", 1, { outcome: "payload_too_large" });
+    return agentResponse({ error: "Agent request payload is too large." }, 413, requestId, startedAt);
+  }
+
+  const access = await authorizeAgentRequest(request);
+  if (!access.allowed) {
+    worldMetric("worldpatro.agent.requests", 1, { outcome: "unauthorized", mode: access.mode });
+    worldLog("agent.run.denied", { requestId, mode: access.mode, reason: access.reason });
+    return agentResponse({
+      error: access.reason === "api-key-required" ? "Agent API key required." : "Sign in to use the World Patro Conductor.",
+      accessMode: access.mode
+    }, 401, requestId, startedAt);
+  }
+
+  if (!process.env.VERCEL_OIDC_TOKEN && !process.env.AI_GATEWAY_API_KEY) {
+    worldMetric("worldpatro.agent.requests", 1, { outcome: "gateway_unavailable" });
+    return agentResponse({
+      error: "AI Gateway is not available in this runtime.",
+      recovery: "Calendar, Panchang, world-data and WBE APIs remain available independently."
+    }, 503, requestId, startedAt);
+  }
+
+  const raw = await request.text();
+  if (Buffer.byteLength(raw, "utf8") > AGENT_MAX_BODY_BYTES) {
+    worldMetric("worldpatro.agent.requests", 1, { outcome: "payload_too_large" });
+    return agentResponse({ error: "Agent request payload is too large." }, 413, requestId, startedAt);
+  }
+
+  let input: unknown = null;
+  try {
+    input = JSON.parse(raw);
+  } catch {
+    worldMetric("worldpatro.agent.requests", 1, { outcome: "invalid_json" });
+    return agentResponse({ error: "Invalid JSON request body." }, 400, requestId, startedAt);
+  }
+
+  const parsed = Input.safeParse(input);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid agent request", issues: parsed.error.issues }, { status: 400 });
+    worldMetric("worldpatro.agent.requests", 1, { outcome: "invalid_input" });
+    return agentResponse({ error: "Invalid agent request", issues: parsed.error.issues }, 400, requestId, startedAt);
   }
 
   const delegated: Array<{ role: AgentRole; name: string }> = [];
@@ -68,30 +129,54 @@ export async function POST(request: Request) {
         "WBE is symbolism.",
         "External operations require human confirmation."
       ],
+      requestId,
       generatedAt: new Date().toISOString()
     };
 
-    if (useFirebaseBackend()) {
-      const user = await getFirebaseUser();
-      if (user) {
-        await userCollection(user.uid, "agentRuns").add({
-          request: parsed.data.message,
-          context: parsed.data.context,
-          delegated,
-          answer: result.text,
-          supervisorModel: SUPERVISOR_MODEL,
-          createdAt: serverNow()
-        });
-      }
+    if (useFirebaseBackend() && access.user?.provider === "firebase") {
+      await userCollection(access.user.id, "agentRuns").add({
+        request: parsed.data.message,
+        context: parsed.data.context,
+        delegated,
+        answer: result.text,
+        supervisorModel: SUPERVISOR_MODEL,
+        requestId,
+        createdAt: serverNow()
+      });
     }
 
-    return NextResponse.json(payload);
+    const durationMs = Math.round(performance.now() - startedAt);
+    worldMetric("worldpatro.agent.requests", 1, { outcome: "success", mode: access.mode });
+    worldMetric("worldpatro.agent.duration_ms", durationMs, { outcome: "success" });
+    worldMetric("worldpatro.agent.delegations", delegated.length);
+    worldLog("agent.run.completed", {
+      requestId,
+      outcome: "success",
+      accessMode: access.mode,
+      authProvider: access.user?.provider || "none",
+      delegatedRoles: delegated.map(item => item.role),
+      durationMs
+    });
+
+    return agentResponse(payload, 200, requestId, startedAt);
   } catch (error) {
+    const durationMs = Math.round(performance.now() - startedAt);
     const message = error instanceof Error ? error.message : "Agent runtime failed.";
-    return NextResponse.json({
+    worldMetric("worldpatro.agent.requests", 1, { outcome: "error", mode: access.mode });
+    worldMetric("worldpatro.agent.duration_ms", durationMs, { outcome: "error" });
+    worldLog("agent.run.failed", {
+      requestId,
+      outcome: "error",
+      accessMode: access.mode,
+      errorName: error instanceof Error ? error.name : "UnknownError",
+      durationMs
+    });
+
+    return agentResponse({
       error: "World Patro agents are temporarily unavailable.",
-      detail: message,
+      detail: process.env.NODE_ENV === "development" ? message : undefined,
+      requestId,
       recovery: "Calendar, Panchang, world-data and WBE APIs remain available independently."
-    }, { status: 503 });
+    }, 503, requestId, startedAt);
   }
 }

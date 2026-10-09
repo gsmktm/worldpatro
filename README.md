@@ -195,3 +195,19 @@ World Patro v2 uses:
 - explicit provenance and truth-state labels
 
 The design goal is **calm authority**, not visual noise.
+
+
+## Production hardening v2.0.1
+
+The AI Conductor is **authenticated by default in production**. Public calendar, Panchang, WBE and public-source world APIs remain independently usable.
+
+Agent hardening includes:
+- 16 KiB request-body ceiling before model execution
+- authenticated/public/API-key access modes
+- request IDs and server timing
+- structured logs without prompts or personal identifiers
+- Vercel Custom Metrics for request count, duration and delegation count
+- no-store responses for agent status/runtime results
+- additional HSTS, COOP/CORP and DNS-prefetch security headers
+
+Platform-level Vercel Firewall configuration should still be enabled when the account scope permits it; application-level access controls do not replace WAF/DDoS protections.

@@ -37,3 +37,24 @@ Every answer preserves the distinction between FACT, AUTHORITY, ASTRONOMY, INTER
 - `POST /api/v1/agents/run` — bounded supervisor invocation.
 
 World Patro does not run background model loops on page load. AI cost occurs only after an explicit user request.
+
+
+## Production access and abuse controls
+
+World Patro v2.0.1 defaults the agent endpoint to **authenticated** access in production. This keeps public calendar and world-data APIs open while protecting AI Gateway spend.
+
+`WORLD_PATRO_AGENT_ACCESS_MODE` supports:
+- `authenticated` — default in production; requires a valid Firebase or Supabase user session.
+- `public` — explicit opt-in for anonymous AI access.
+- `api-key` — server-to-server access using `WORLD_PATRO_AGENT_API_KEY`.
+
+The agent endpoint rejects request bodies above 16 KiB before model execution. The response includes an `X-Request-Id` and `Server-Timing` value.
+
+## Observability
+
+Agent invocations emit low-cardinality Vercel Custom Metrics:
+- `worldpatro.agent.requests`
+- `worldpatro.agent.duration_ms`
+- `worldpatro.agent.delegations`
+
+Structured logs record request IDs, outcome, access mode, delegated agent roles and duration. User prompts, email addresses, user IDs, secrets and raw model output are deliberately excluded from logs and metric tags.
