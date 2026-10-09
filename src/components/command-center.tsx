@@ -2,12 +2,12 @@
 
 import { useEffect, useState, useTransition } from "react";
 import type { CalendarResult } from "@/lib/calendars";
-import { AgentConsole } from "@/components/agent-console";
+import { AgentConsole, type AgentRuntimeStatus } from "@/components/agent-console";
 
 type Snapshot = { canonical:{isoDate:string;generatedAt:string}; calendars:CalendarResult[] };
 type Indicator = { id:string; name:string; value:number|null; year:string|null; source:string };
 type CountrySnapshot = { iso3:string; indicators:Indicator[]; retrievedAt:string };
-type AgentStatus = { readyForGateway:boolean; specialists:Array<{role:string;name:string}> };
+type AgentStatus = AgentRuntimeStatus & { specialists:Array<{role:string;name:string}> };
 
 const number = new Intl.NumberFormat("en", { notation:"compact", maximumFractionDigits:2 });
 
@@ -67,7 +67,11 @@ export default function CommandCenter() {
 
     <section className="signalStrip">
       <Metric label="Calendars" value="9" meta={`${calculated} deterministic now`} />
-      <Metric label="Agents" value="7" meta={agentStatus?.readyForGateway ? "Gateway runtime ready" : "Gateway activates on Vercel runtime"} tone="gold" />
+      <Metric label="Agents" value="7" meta={agentStatus?.runtimeReady
+        ? "Conductor runtime ready"
+        : agentStatus?.readyForGateway
+          ? `Access · ${agentStatus.access.mode}`
+          : "Gateway activates on Vercel runtime"} tone="gold" />
       <Metric label="WBE" value="729" meta="9 anchor gates · symbolic" />
       <Metric label="Truth layers" value="7" meta="fact → authority → unknown" />
     </section>
@@ -91,7 +95,7 @@ export default function CommandCenter() {
         </div>
       </div>
 
-      <AgentConsole date={date}/>
+      <AgentConsole date={date} status={agentStatus}/>
     </section>
 
     <section className="intelGrid">
