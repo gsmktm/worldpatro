@@ -76,7 +76,9 @@ const visualPages = [
   ["/app/gates", "729 comparative gates"],
   ["/app/patro", "9 Calendars"],
   ["/app/panchang", "Vedic Panchang"],
-  ["/app/numerology", "Numerology laboratory"]
+  ["/app/numerology", "Numerology laboratory"],
+  ["/app/kundli", "Birth chart"],
+  ["/app/astrology", "Birth chart"]
 ];
 for (const [path, marker] of visualPages) {
   const page = await hit(path, undefined, 200);
@@ -129,6 +131,35 @@ const badDate = await json("/api/v1/numerology/calculate", {
 },400);
 invariant(Boolean(badDate.body.error),"Impossible calendar dates must fail validation.");
 
+
+const chartFixture={date:"2000-01-01",time:"12:00",timezone:"Asia/Kathmandu",
+latitude:27.7172,longitude:85.3240,elevation:1300,houseSystem:"whole_sign"};
+const kundli=await json("/api/v1/jyotish/kundli",{
+  method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(chartFixture)
+},200);
+invariant(kundli.body.chart?.canonical?.utc==="2000-01-01T06:15:00.000Z","Kathmandu birth time must resolve to 06:15Z");
+invariant(kundli.body.chart?.planets?.length===9,"Kundli requires nine grahas");
+invariant(kundli.body.chart?.divisional?.length===7,"Kundli requires seven documented Vargas");
+invariant(kundli.body.chart?.dasha?.periods?.length>=9,"Vimshottari chronology incomplete");
+invariant(kundli.body.chart.planets.every(p=>p.siderealLongitude>=0&&p.siderealLongitude<360),"Sidereal longitude out of range");
+invariant(kundli.body.saved===false,"Birth details must not save implicitly");
+invariant(kundli.body.chart.calculation.interpretationBoundary.includes("not proof"),"Truth boundary missing");
+const badBirth=await json("/api/v1/jyotish/kundli",{
+  method:"POST",headers:{"content-type":"application/json"},
+  body:JSON.stringify({...chartFixture,date:"2000-02-30"})
+},422);
+invariant(Boolean(badBirth.body.error),"Invalid Gregorian birth date accepted");
+for(const [date,time] of [["2026-03-08","02:30"],["2026-11-01","01:30"]]){
+  const dst=await json("/api/v1/jyotish/kundli",{
+    method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify({...chartFixture,date,time,timezone:"America/New_York"})
+  },422);
+  invariant(Boolean(dst.body.error),"DST gap or fold not rejected");
+}
+await json("/api/v1/jyotish/kundli",{
+  method:"POST",headers:{"content-type":"text/plain"},body:"{}"
+},415);
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -152,6 +183,13 @@ console.log(JSON.stringify({
     "wbe-cross-origin-403",
     "archive-numerology-ui",
     "numerology-calculation",
-    "numerology-invalid-date-400"
+    "numerology-invalid-date-400",
+    "kundli-kathmandu-timezone",
+    "kundli-nine-grahas-seven-vargas",
+    "kundli-vimshottari-chronology",
+    "kundli-nonpersistence-and-truth-boundary",
+    "kundli-date-validation",
+    "kundli-dst-validation",
+    "kundli-json-content-type"
   ]
 }));
