@@ -3,6 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import type { CalendarResult } from "@/lib/calendars";
 import { AgentConsole, type AgentRuntimeStatus } from "@/components/agent-console";
+import Link from "next/link";
 
 type Snapshot = { canonical:{isoDate:string;generatedAt:string}; calendars:CalendarResult[] };
 type Indicator = { id:string; name:string; value:number|null; year:string|null; source:string };
@@ -75,6 +76,8 @@ export default function CommandCenter() {
       <Metric label="WBGR-109 · WENS" value="1799 BS" meta="729 generated gates · nine anchors · symbolic" />
       <Metric label="Truth layers" value="7" meta="fact → authority → unknown" />
     </section>
+
+    <div className="wensCommandLink"><Link className="ghost" href="/app/wens">◈ Open WENS / Hanuman Dhoka 0° →</Link><span>Nine traditions · Nine Navagraha · Nine themes · Calculated astronomy / symbolic gates</span></div>
 
     <section className="commandGrid">
       <div className="patroDeck">

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./styles/wbe-studio.css";
+import "./styles/wens-studio.css";
 import "./styles/patro-studio.css";
 import "./styles/numerology-studio.css";
 import "./styles/kundli-studio.css";
