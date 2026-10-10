@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, production-v1, firebase-v1, firebase-config, world-os-v2, world-os-v2-meta, production-hardening-v2, production-hardening-v2-1, production-smoke-v2, public-api-integrations-v1, nepal-authority-privacy-v1, astronomy-golden-gate-v1, admin-console-fullstack-v1, admin-bootstrap-publication-v1, patro-linked-fullstack-v1, all-modules-functional-v1]
+    branches: [main, production-v1, firebase-v1, firebase-config, world-os-v2, world-os-v2-meta, production-hardening-v2, production-hardening-v2-1, production-smoke-v2, public-api-integrations-v1, nepal-authority-privacy-v1, astronomy-golden-gate-v1, admin-console-fullstack-v1, admin-bootstrap-publication-v1, patro-linked-fullstack-v1, all-modules-functional-v1, wbgr-109-wens-brand-v1]
   pull_request:
 
 concurrency:

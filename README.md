@@ -1,6 +1,6 @@
 # World Patro · Global Time & Intelligence OS
 
-**World Patro** is a Nepal-origin, globally neutral full-stack operating system for time, calendar truth, astronomical sacred time, public-source world intelligence, evidence workflows, WBE-9 symbolism and bounded AI orchestration.
+**World Patro** is a Nepal-origin, globally neutral full-stack operating system for time, calendar truth, astronomical sacred time, public-source world intelligence, evidence workflows, WBGR-109 / WENS symbolism and bounded AI orchestration.
 
 > **Spirit:** From the Himalayas · Nepal → the World. Quiet center, clear method, source before claim.
 
@@ -8,7 +8,7 @@
 
 1. **No fabricated dates or sources.**
 2. **Authority beats algorithmic guesswork** for official or observational calendars.
-3. **FACT, AUTHORITY, ASTRONOMY, INTERPRETATION, WBE SYMBOLISM, SCENARIO and UNKNOWN are separate truth states.**
+3. **FACT, AUTHORITY, ASTRONOMY, INTERPRETATION, WBGR-109 / WENS SYMBOLISM, SCENARIO and UNKNOWN are separate truth states.**
 4. **Every factual record can carry provenance, retrieval time and verification state.**
 5. **Firebase is the preferred authenticated persistence layer; Supabase remains a supported fallback.**
 6. **Consequential workflow actions require explicit human confirmation.**
@@ -297,3 +297,11 @@ World Patro now derives BS/AD correspondences **only** inside Bhadra 2083 (17 Au
 This release adds dedicated working screens for `/app/world` (country indicator and USGS data), `/app/research` (notebooks and evidence notes), `/app/alerts` (watchlists and notification acknowledgements), `/app/workflows` (human-review transition controls), `/app/consult` (consent-aware consultation requests) and `/app/agents` (Conductor runtime and all six subagent profiles). `/app/sources` renders the built-in verified provider catalogue independently from any unpublished editorial database. `/app/system` and `GET /api/v1/platform/modules` report the routes, capabilities and server-side activation gates.
 
 Firebase Admin-powered user-collection adapters are added for research items, consultation requests and notification acknowledgements. These require a verified Firebase session and configured `FIREBASE_SERVICE_ACCOUNT_JSON_BASE64`. Neither a consultation request nor a workflow status change is an external booking/payment/action. No bot is given publication authority, and agent execution remains gated by the configured AI Gateway and authentication mode. See `docs/MODULE_OPERATIONAL_AUDIT.md`.
+
+## WBGR-109 · 1799 BS · WENS
+
+World Patro's symbolic balance module is publicly renamed **WBGR-109 · 1799 BS · WENS** throughout the landing page, command dashboard, WBE legacy routes and specialist-agent descriptions.
+
+This does not alter the original mathematical model: 9 traditions × 9 grahas × 9 themes = 729 combinations and nine anchor gates. 1799 BS is treated as the user-defined designation, **not** an official date or a count of 1,799 gates.
+
+New endpoints: /api/v1/wbgr, /api/v1/wbgr/gates, /api/v1/wbgr/assess, /api/v1/wbgr/snapshots. The original /api/v1/wbe endpoints and existing kind=wbe saved records remain compatible. New API gate codes include the older legacyCode value for references and search. See docs/WBGR_109_WENS.md.

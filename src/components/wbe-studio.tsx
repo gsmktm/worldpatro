@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ANCHORS, assessWbe, GRAHAS, POWERS, TRADITIONS } from "@/lib/wbe";
+import { WBGR } from "@/lib/wbgr";
 
 const CHANNELS = [
   { short:"Surya", glyph:"☉", color:"#eebc66", note:"Dharma · right order", action:"Clarify one responsibility; serve with accountability." },
@@ -34,7 +35,7 @@ function point(i: number, radius: number) {
 function numericSnapshot(scores: number[]) {
   const assessed = assessWbe(scores);
   return {
-    framework:"WBE-9 symbolic / self-reported reflection",
+    framework:WBGR.title,
     createdAt:new Date().toISOString(),
     scores,
     assessment:assessed,
@@ -69,10 +70,10 @@ export default function WbeStudio() {
     setSaving(true);
     setMessage("");
     try {
-      const response=await fetch("/api/v1/wbe/snapshots",{
+      const response=await fetch("/api/v1/wbgr/snapshots",{
         method:"POST",
         headers:{"content-type":"application/json"},
-        body:JSON.stringify({title:"WBE-9 personal reflection",scores})
+        body:JSON.stringify({title:"WBGR-109 · WENS personal reflection",scores})
       });
       if(response.status===401) {
         setMessage("Sign in to save this reflection to your account.");
@@ -90,7 +91,7 @@ export default function WbeStudio() {
   async function loadHistory(silent=false) {
     setLoadingHistory(true);
     try {
-      const response=await fetch("/api/v1/wbe/snapshots",{cache:"no-store"});
+      const response=await fetch("/api/v1/wbgr/snapshots",{cache:"no-store"});
       if(response.status===401){
         if(!silent)setMessage("Sign in to read your saved reflections.");
       } else if(!response.ok) {
@@ -119,7 +120,7 @@ export default function WbeStudio() {
     const url = URL.createObjectURL(new Blob([data],{type:"application/json"}));
     const link = document.createElement("a");
     link.href=url;
-    link.download="worldpatro-wbe9-reflection.json";
+    link.download="worldpatro-wbgr109-wens-reflection.json";
     link.click();
     URL.revokeObjectURL(url);
     setMessage("Local reflection exported; no server action was performed.");
@@ -128,11 +129,11 @@ export default function WbeStudio() {
   return <section className="wbeStudio" aria-label="Ninefold balance studio">
     <div className="wbeIntro">
       <div>
-        <div className="eyebrow">WBE-9 · 9 × 9 × 9</div>
-        <h2>Nine spokes. One still center.</h2>
-        <p>Adapted from the uploaded Cosmic Balance design: a symbolic interfaith mandala for reflection, never a scientific claim or a doctrine about any religion.</p>
+        <div className="eyebrow">WBGR-109 · 1799 BS · WENS</div>
+        <h2>WBGR-109 · WENS Balance Studio</h2>
+        <p>WENS edition, designated 1799 BS. Nine-spoke symbolic reflection; this is not a verified Bikram Sambat date, empirical score or religious doctrine.</p>
       </div>
-      <div className="wbeStat"><strong>729</strong><span>comparative gates</span></div>
+      <div className="wbeStat"><strong>109</strong><span>WBGR identity · 729 generated symbolic gates</span></div>
     </div>
 
     <div className="wbeControlsTop">
@@ -212,18 +213,18 @@ export default function WbeStudio() {
       <button className="ghost" type="button" onClick={exportJson}>Export JSON</button>
       <button className="ghost" type="button" disabled={loadingHistory} onClick={()=>loadHistory()}>{loadingHistory?"Loading…":"Saved reflections"}</button>
       <button className="ghost" type="button" onClick={()=>{setScores(initial);setSelected(0);setMessage("");}}>Reset</button>
-      <Link className="ghost" href="/app/gates">Explore all 729 gates →</Link>
+      <Link className="ghost" href="/app/gates">Explore WBGR-109 gates →</Link>
       <Link className="ghost" href="/login">Account</Link>
     </div>
     {message && <p className="wbeMessage" role="status">{message}</p>}
-    {history.length>0&&<div className="wbeHistory" aria-label="Saved WBE reflections">
+    {history.length>0&&<div className="wbeHistory" aria-label="Saved WBGR-109 WENS reflections">
       <div className="eyebrow">PRIVATE ACCOUNT HISTORY</div>
       {history.map(item=><button type="button" key={item.id} onClick={()=>restore(item)}>
         <span>{item.title}</span><small>{item.createdAt?new Date(item.createdAt).toLocaleDateString():"Saved reflection"}</small>
         <strong>Load scores ↗</strong>
       </button>)}
     </div>}
-    <div className="wbeDisclosure">Design heritage: uploaded Cosmic Balance mandala. Core pairings: WBE-9 Ninefold Pattern. The uploaded ZIP’s default “93% harmony,” planetary powers, decrees and seeded prayers were fictional examples; they are not imported as measured evidence or automatic authority.</div>
+    <div className="wbeDisclosure">Design heritage: uploaded Cosmic Balance mandala. Current brand: WBGR-109 · 1799 BS · WENS; legacy WBE-9 calculations and saved records remain compatible. The uploaded ZIP’s default “93% harmony,” planetary powers, decrees and seeded prayers were fictional examples; they are not imported as measured evidence or automatic authority.</div>
     <div className="wbeAnchorList" aria-label="Nine thematic pairings">{ANCHORS.map((a,i)=><button key={a.code} type="button" onClick={()=>setSelected(i)}><b>{String(i+1).padStart(2,"0")}</b> {a.graha}<span>{a.power}</span></button>)}</div>
   </section>;
 }

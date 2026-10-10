@@ -4,7 +4,7 @@ const pillars = [
   ["TIME","9 calendars + Panchang","One canonical moment, many legitimate methods."],
   ["INTELLIGENCE","Sources before claims","Public data, evidence and freshness before conclusions."],
   ["CONDUCTOR","Supervisor + 6 specialists","Bounded agents that delegate rather than hallucinate omniscience."],
-  ["BALANCE","WBE-9 · 729 Gates","A symbolic mandala kept visibly separate from empirical fact."]
+  ["BALANCE","WBGR-109 · 1799 BS · WENS","WENS symbolic framework with the original 729 computed combinations retained."]
 ];
 
 export default function Landing() {
@@ -28,6 +28,6 @@ export default function Landing() {
         <span>{label}</span><h3>{title}</h3><p>{description}</p>
       </article>)}
     </section>
-    <footer className="landingFooter"><span>WORLD PATRO</span><span>FACT · AUTHORITY · ASTRONOMY · INTERPRETATION · WBE · SCENARIO · UNKNOWN</span></footer>
+    <footer className="landingFooter"><span>WORLD PATRO</span><span>FACT · AUTHORITY · ASTRONOMY · INTERPRETATION · WBGR-109 / WENS · SCENARIO · UNKNOWN</span></footer>
   </main>;
 }

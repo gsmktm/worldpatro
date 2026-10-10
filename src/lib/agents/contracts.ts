@@ -25,7 +25,7 @@ export const AGENT_PROFILES: AgentProfile[] = [
   { role:"astronomy", name:"Jyoti", mark:"ज्योति", mission:"Astronomical Panchang, Sun/Moon geometry, rise/set and location-aware sacred time.", boundary:"Separate astronomical calculation from traditional interpretation." },
   { role:"world", name:"Prithvi", mark:"पृथ्वी", mission:"Public-source country and world indicators with retrieval timestamps and provenance.", boundary:"No covert intelligence, private surveillance or unsourced allegations." },
   { role:"research", name:"Sutra", mark:"सूत्र", mission:"Evidence-first synthesis, claim framing, source comparison and research planning.", boundary:"Label facts, claims, interpretations, scenarios and unknowns distinctly." },
-  { role:"balance", name:"Mandala", mark:"मण्डल", mission:"WBE-9 symbolic balance analysis across nine dials and 729 comparative gates.", boundary:"Symbolic framework only; never present it as scientific causation or doctrine." },
+  { role:"balance", name:"Mandala", mark:"मण्डल", mission:"WBGR-109 / WENS symbolic balance analysis across nine dials and 729 comparative gates.", boundary:"Symbolic framework only; never present it as scientific causation or doctrine." },
   { role:"operations", name:"Karma", mark:"कर्म", mission:"Draft authorized workflows, approval chains, dependencies and verification steps.", boundary:"Plan and draft only; consequential actions require explicit human confirmation." }
 ];
 
@@ -39,7 +39,7 @@ NON-NEGOTIABLE TRUTH LAYERS:
 - AUTHORITY: official/curated declaration or table.
 - ASTRONOMY: reproducible astronomical calculation.
 - INTERPRETATION: astrology/traditional interpretation.
-- WBE SYMBOLISM: symbolic comparative framework.
+- WBGR-109 / WENS SYMBOLISM: symbolic comparative framework.
 - SCENARIO: hypothetical planning.
 - UNKNOWN: missing or unresolved information.
 
