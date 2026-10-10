@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     worldMetric("worldpatro.agent.requests", 1, { outcome: "gateway_unavailable" });
     return agentResponse({
       error: "AI Gateway is not available in this runtime.",
-      recovery: "Calendar, Panchang, world-data and WBE APIs remain available independently."
+      recovery: "Calendar, Panchang, world-data and WBGR-109 / WENS APIs remain available independently."
     }, 503, requestId, startedAt);
   }
 
@@ -122,7 +122,7 @@ export async function POST(request: Request) {
         astronomyAgent: delegate("astronomy", "Delegate Panchang, Sun or Moon, sunrise or sunset, Nakshatra or astronomical sacred-time questions to Jyoti."),
         worldAgent: delegate("world", "Delegate public country indicators and world-fact grounding to Prithvi."),
         researchAgent: delegate("research", "Delegate evidence framing, source comparison and research decomposition to Sutra."),
-        balanceAgent: delegate("balance", "Delegate WBE-9 symbolic balance analysis to Mandala."),
+        balanceAgent: delegate("balance", "Delegate WBGR-109 · 1799 BS · WENS symbolic balance analysis to Mandala."),
         operationsAgent: delegate("operations", "Delegate workflow drafting, approvals and verification planning to Karma. This agent cannot execute external actions.")
       },
       stopWhen: isStepCount(7)
@@ -187,7 +187,7 @@ export async function POST(request: Request) {
       error: "World Patro agents are temporarily unavailable.",
       detail: process.env.NODE_ENV === "development" ? message : undefined,
       requestId,
-      recovery: "Calendar, Panchang, world-data and WBE APIs remain available independently."
+      recovery: "Calendar, Panchang, world-data and WBGR-109 / WENS APIs remain available independently."
     }, 503, requestId, startedAt);
   }
 }
