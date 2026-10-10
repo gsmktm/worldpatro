@@ -285,3 +285,8 @@ World Patro now derives BS/AD correspondences **only** inside Bhadra 2083 (17 Au
 - Approved sources: `/app/sources`; approved authority notices: `/app/authorities`.
 - Firebase Admin role provisioning is an explicit offline, trusted-only action: `node scripts/grant-firebase-role.mjs <uid> admin --confirm-world-patro`. Requires a secure `FIREBASE_SERVICE_ACCOUNT_JSON_BASE64` environment variable for the **world-patro** Firebase project; the script rejects the wrong Firebase project and revokes existing refresh tokens after role changes.
 - User sessions must re-authenticate after role changes.
+
+
+## Linked Patro full-stack workspace
+
+/app/patro and /app/panchang now share one date/location context through GET /api/v1/patro/day, including 9 calendars and astronomical Panchang at timezone-resolved local noon. A 42-day calendar grid, verified AD↔BS tool, four city presets, JSON/ICS export, sharing, printing, source notices and links to all platform modules are wired. Optional authenticated Panchang report storage uses existing /api/v1/reports. Unsupported BS/Nepal Sambat/holiday coverage remains clearly labeled. See docs/PATRO_FULLSTACK.md.
