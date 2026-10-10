@@ -34,6 +34,8 @@ assert.equal(missing.response.status, 404, "Unknown modules must not render a mi
 const app = await hit("/app");
 assert.ok(app.body.includes('href="/app/wens"'), "WENS navigation link missing");
 assert.ok(app.body.includes('href="/app/system"'), "System status navigation link missing");
+assert.ok(app.body.includes('href="#world-patro-main"'), "Keyboard skip-navigation link missing");
+assert.ok(app.body.includes('id="world-patro-main"'), "Accessible main-content target missing");
 
 const registry = new Set(inventory.modules.flatMap(m => m.api));
 for (const api of registry) {

@@ -15,3 +15,15 @@
 
 .agentGate{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;margin:8px 0 12px;padding:9px 10px;border:1px solid rgba(228,179,93,.22);border-radius:10px;background:rgba(101,72,23,.12);font-size:9px;color:#8298a9}.agentGate strong{color:var(--gold2);font-size:9px}.agentGate a,.agentError a{color:var(--gold2);text-decoration:underline;text-underline-offset:2px}.liveBadge.gated{color:#d4ae68;border-color:rgba(215,169,79,.24);background:rgba(101,72,23,.12)}.liveBadge.gated i{background:var(--amber);box-shadow:0 0 8px rgba(228,179,93,.45)}.agentError{display:flex;justify-content:space-between;gap:12px;align-items:center}
 @media(max-width:680px){.agentGate{grid-template-columns:1fr}.agentGate a{justify-self:start}}
+
+
+/* Accessible global navigation state for every World Patro workspace. */
+.skipToContent{position:fixed;top:8px;left:12px;z-index:1000;transform:translateY(-160%);border:2px solid var(--gold2);background:#081d2e;color:#f6e4bf;border-radius:10px;padding:11px 15px;font-size:13px;font-weight:750;box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.skipToContent:focus{transform:translateY(0)}
+.navItem[aria-current="page"]{background:linear-gradient(90deg,rgba(215,169,79,.21),rgba(215,169,79,.04));color:#f4dfb1;box-shadow:inset 3px 0 0 #d7a94f;font-weight:700}
+.navItem[aria-current="page"] .navDot{background:#e8c676;box-shadow:0 0 0 3px rgba(215,169,79,.1)}
+.commandNav[aria-current="page"],.workSystemNav[aria-current="page"],.topChip[aria-current="page"]{border-color:rgba(232,198,118,.73);color:#f2dfb8;background:rgba(215,169,79,.18)}
+.mobileDock a[aria-current="page"]{color:#f2d18a;background:rgba(215,169,79,.16);border-radius:10px}
+.os a:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+#world-patro-main:focus{outline:none}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.os :is(a,button){transition:none!important}}
