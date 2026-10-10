@@ -73,7 +73,7 @@ function labelDay(date:string,locale:"en"|"ne"){
 }
 function getMonth(date:string){
   const d=new Date(date+"T12:00:00Z");
-  return [d.getUTCFullYear(),d.getUTCMonth()] as const;
+  return [d.getUTCFullYear(),d.getUTCMonth()] as [number,number];
 }
 function monthDays(year:number,month:number){
   const first=new Date(Date.UTC(year,month,1,12));
