@@ -344,8 +344,8 @@ invariant(allModuleUrls.size===19&&[...allModuleUrls].every(x=>x.startsWith("/ap
 const expectedModulePaths=[
   ["/app/world","World Intelligence"],
   ["/app/research","Research Workspace"],
-  ["/app/alerts","Watchlists & Alerts"],
-  ["/app/workflows","Order & Workflow Center"],
+  ["/app/alerts","Watchlists"],
+  ["/app/workflows","Order"],
   ["/app/consult","Astrologer Consultations"],
   ["/app/agents","World Patro Agent Conductor"],
   ["/app/sources","Source Registry"],
