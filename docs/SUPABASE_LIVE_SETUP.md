@@ -49,3 +49,9 @@ This configuration is separate from **live database validation**. It does not es
 ## Identity provider selection
 
 World Patro intentionally displays **Supabase Auth only** at `/login`. Firebase Web configuration must not hijack or block the sign-in page. The obsolete Firebase session creation endpoint rejects requests when Supabase is the selected backend. Neither the previously exposed Firebase service-account JSON nor a Firebase Admin secret is required for Supabase sign-in. Revoke the exposed Firebase key through Google Cloud IAM; never recycle it into production.
+
+## Account recovery and confirmation
+
+The user account flow is exclusively Supabase Auth: `/login` (email/password), `/login/recovery` (password reset email), `/login/new-password` (session-verified new password), `/app/account` (verified account overview and sign out). The `/auth/confirm` callback supports Supabase OTP token hashes and PKCE authorization codes and allows only same-site relative redirect paths.
+
+In the target Supabase project, configure **Authentication → URL Configuration** with production Site URL `https://worldpatro.vercel.app` and allowed redirect destinations for the domain and `/auth/confirm`. Confirm email/registration settings and the applicable email template. Deploy after any Vercel environment variable changes. A successful CI test is not a real Auth email-delivery test.

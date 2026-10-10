@@ -13,12 +13,14 @@ function SupabaseLogin({ error, message }: { error?: string; message?: string })
       <input id="supabase-email" name="email" type="email" placeholder="you@example.com" required maxLength={254} autoComplete="email" />
       <label htmlFor="supabase-password">Password</label>
       <input id="supabase-password" name="password" type="password" required minLength={8} autoComplete="current-password" />
+      <p className="loginInputHelp">New accounts require a password with at least 12 characters.</p>
       <div className="loginFormActions">
         <button type="submit" className="primaryBtn" formAction={login}>Sign in</button>
         <button type="submit" className="ghost" formAction={signup}>Create account</button>
       </div>
     </form>
-    <p className="loginFootnote">Powered by Supabase Authentication. New accounts may require email confirmation. Your personal records remain protected by database row-level security.</p>
+    <div className="loginUtilities"><Link href="/login/recovery">Forgot password?</Link><Link href="/app/system">Platform status ↗</Link></div>
+    <p className="loginFootnote">Powered by Supabase Authentication. New accounts may require email confirmation. Account data access is protected by row-level security once the database policies are activated.</p>
   </div>;
 }
 
