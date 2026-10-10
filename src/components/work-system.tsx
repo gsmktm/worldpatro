@@ -9,7 +9,7 @@ type Module={
 type Payload={
   total:number;modules:Module[];categories:Array<{title:string;count:number}>;
   agentSpecialists:Array<{name:string;role:string;mission:string}>;
-  infrastructure:{dataBackend:string;firebaseWebConfigured:boolean;firebaseAdminConfigured:boolean;gatewayConfigured:boolean;agentAccess:string};caveat:string;
+  infrastructure:{dataBackend:string;supabaseConfigured:boolean;firebaseWebConfigured:boolean;firebaseAdminConfigured:boolean;gatewayConfigured:boolean;agentAccess:string};caveat:string;
 };
 export default function SystemOverview(){
   const [snapshot,setSnapshot]=useState<Payload|null>(null);
@@ -38,7 +38,7 @@ export default function SystemOverview(){
     {snapshot&&<div className="workInfra">
       <div><span>Modules</span><strong>{snapshot.total}</strong></div>
       <div><span>Backend</span><strong>{snapshot.infrastructure.dataBackend}</strong></div>
-      <div><span>Firebase Admin</span><strong>{snapshot.infrastructure.firebaseAdminConfigured?"Configured":"Pending"}</strong></div>
+      <div><span>Supabase API</span><strong>{snapshot.infrastructure.supabaseConfigured?"Configured":"Pending"}</strong></div>
       <div><span>Agent gateway</span><strong>{snapshot.infrastructure.gatewayConfigured?"Detected":"Not detected"}</strong></div>
     </div>}
     <DatabaseHealth />
