@@ -4,13 +4,13 @@ const origin = process.env.BASE_URL || "http://127.0.0.1:3100";
 const [healthResponse, loginResponse, firebaseResponse, recoveryResponse, accountResponse] = await Promise.all([
   fetch(origin + "/api/v1/health", {cache:"no-store"}),
   fetch(origin + "/login", {cache:"no-store"}),
-  fetch(origin + "/login/recovery", {cache:"no-store"}),
-  fetch(origin + "/app/account", {cache:"no-store"}),
   fetch(origin + "/api/auth/firebase-session", {
     method: "POST",
     headers: {"content-type":"application/json"},
     body: JSON.stringify({idToken:"not-a-real-firebase-token"})
-  })
+  }),
+  fetch(origin + "/login/recovery", {cache:"no-store"}),
+  fetch(origin + "/app/account", {cache:"no-store"})
 ]);
 assert.equal(healthResponse.status, 200);
 assert.equal(loginResponse.status, 200);
