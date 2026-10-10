@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { GATES, GRAHAS, POWERS, TRADITIONS } from "@/lib/wbe";
+import { WBGR,wbgrGateCode,displayWbgrGate } from "@/lib/wbgr";
 
 const PAGE_SIZE = 24;
 
@@ -20,7 +21,7 @@ export default function GatesStudio() {
       &&(graha<0||g===graha)
       &&(power<0||p===power)
       &&(!anchorsOnly||item.anchor)
-      &&(!q.trim()||[item.code,item.tradition,item.graha,item.power,item.domain].some(v=>v.toLowerCase().includes(q.toLowerCase().trim())));
+      &&(!q.trim()||[item.code,wbgrGateCode(item.code),item.tradition,item.graha,item.power,item.domain].some(v=>v.toLowerCase().includes(q.toLowerCase().trim())));
   }),[q,tradition,graha,power,anchorsOnly]);
   const pageCount=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));
   const current=Math.min(page,pageCount);
@@ -29,7 +30,7 @@ export default function GatesStudio() {
 
   function setFilter(fn:()=>void){fn();setPage(1);}
   return <section className="gatesExplorer">
-    <div className="gatesSummary"><div><div className="eyebrow">9 RELIGIONS × 9 GRAHAS × 9 POWERS</div><h2>729 comparative gates</h2><p>Every gate is a generated symbolic combination. Only nine are chosen as keynotes; no tradition is reduced to one planet or virtue.</p></div><strong>9³</strong></div>
+    <div className="gatesSummary"><div><div className="eyebrow">{WBGR.title}</div><h2>WBGR-109 Gate Explorer</h2><p>WENS edition, designated 1799 BS. This existing engine has 729 generated symbolic combinations and nine keynote anchors; 1799 BS is not the count of gates or an officially verified calendar date.</p></div><strong>9³</strong></div>
     <div className="gatesFilter">
       <label>Search gates<input value={q} onChange={e=>setFilter(()=>setQ(e.target.value))} placeholder="Search by code, tradition, graha or theme" /></label>
       <label>Tradition<select value={tradition} onChange={e=>setFilter(()=>setTradition(Number(e.target.value)))}>
@@ -47,7 +48,7 @@ export default function GatesStudio() {
       <div className="gatesResults">
         <div className="gatesMeta">{filtered.length} gates match · page {current} / {pageCount}</div>
         <div className="gatesGrid">{visible.map(item=><button key={item.code} className="gateTile" type="button" aria-pressed={selectedCode===item.code} onClick={()=>setSelectedCode(item.code)}>
-          <span>{item.code}{item.anchor?" · KEYNOTE":""}</span><strong>{item.power}</strong><small>{item.graha}</small><small>{item.tradition}</small>
+          <span>{wbgrGateCode(item.code)}{item.anchor?" · KEYNOTE":""}</span><strong>{item.power}</strong><small>{item.graha}</small><small>{item.tradition}</small>
         </button>)}</div>
         {filtered.length===0 && <p role="status">No matching gates. Change or clear the filters.</p>}
         <div className="gatesPagination">
@@ -58,14 +59,14 @@ export default function GatesStudio() {
       </div>
       <aside className="gateDetail">
         <div className="eyebrow">SELECTED GATE</div>
-        <h3>{selected?.code}</h3>
+        <h3>{selected?wbgrGateCode(selected.code):"—"}</h3>
         <div><span>Tradition</span><b>{selected?.tradition}</b></div>
         <div><span>Graha</span><b>{selected?.graha}</b></div>
         <div><span>Power/theme</span><b>{selected?.power}</b></div>
         <div><span>World domain</span><b>{selected?.domain}</b></div>
         <p>A thematic lens for discussion or self-reflection. This combination does not assert that a faith is governed by a planetary body.</p>
         <button type="button" className="ghost" onClick={()=>{
-          if(selected) navigator.clipboard?.writeText(JSON.stringify(selected,null,2));
+          if(selected) navigator.clipboard?.writeText(JSON.stringify(displayWbgrGate(selected),null,2));
         }}>Copy this gate</button>
       </aside>
     </div>

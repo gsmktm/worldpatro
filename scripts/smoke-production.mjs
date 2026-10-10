@@ -72,8 +72,8 @@ await json("/api/v1/agents/run", {
 
 
 const visualPages = [
-  ["/app/wbe", "Nine spokes"],
-  ["/app/gates", "729 comparative gates"],
+  ["/app/wbe", "WBGR-109"],
+  ["/app/gates", "WBGR-109 Gate Explorer"],
   ["/app/patro", "Nine Calendars"],
   ["/app/panchang", "Vedic Panchang"],
   ["/app/numerology", "Numerology laboratory"],
@@ -376,6 +376,33 @@ await json("/api/v1/notifications/abcde12345",{
 const statusAgent=await json("/api/v1/agents/status",undefined,200);
 invariant(statusAgent.body.specialists?.length===6,"Agent specialist status API changed.");
 
+
+const wbgrIdentity=await json("/api/v1/wbgr",undefined,200);
+invariant(wbgrIdentity.body.title==="WBGR-109 · 1799 BS · WENS","WBGR identity mismatch.");
+invariant(wbgrIdentity.body.gateCount===729&&wbgrIdentity.body.anchorCount===9,"Legacy ninefold invariants changed.");
+const wbgrList=await json("/api/v1/wbgr/gates?limit=9",undefined,200);
+invariant(wbgrList.body.total===729&&wbgrList.body.gates.length===9,"WBGR gate count is not 729.");
+invariant(wbgrList.body.gates[0].code==="WBGR-109-01-01-01","New display gate code missing.");
+invariant(wbgrList.body.gates[0].legacyCode==="WBE-01-01-01","Legacy gate code linkage missing.");
+const wbgrAnchors=await json("/api/v1/wbgr/gates?anchors=true",undefined,200);
+invariant(wbgrAnchors.body.total===9,"WBGR anchor count changed.");
+for(const term of ["WBE-01-01-01","WBGR-109-01-01-01"]){
+  const found=await json("/api/v1/wbgr/gates?q="+term,undefined,200);
+  invariant(found.body.total===1,"WBGR code search failed: "+term);
+}
+await json("/api/v1/wbgr/gates?page=abc",undefined,400);
+await json("/api/v1/wbgr/gates?limit=101",undefined,400);
+for(const path of ["/api/v1/wbgr/assess","/api/v1/wbe/assess"]){
+  const result=await json(path,{method:"POST",headers:{"content-type":"application/json"},
+  body:JSON.stringify({scores:[5,5,5,5,5,5,5,5,5]})},200);
+  invariant(result.body.assessment.length===9,"WBGR or legacy assessment regression.");
+}
+for(const [url,marker] of [["/","WBGR-109"],["/app/wbe","1799 BS"],["/app/gates","WBGR-109 Gate Explorer"]]){
+  const found=await hit(url,undefined,200);invariant(found.text.includes(marker),"Brand missing from "+url);
+}
+const privateWBGR=await fetch(new URL("/api/v1/wbgr/snapshots",base));
+invariant([401,503].includes(privateWBGR.status),"WBGR account records must remain protected.");
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -394,6 +421,10 @@ console.log(JSON.stringify({
     "patro-date-studio",
     "panchang-date-studio",
     "729-and-9-keynote-gates",
+    "wbgr-109-1799-bs-wens-brand",
+    "wbgr-gate-compatibility-and-search",
+    "wbgr-new-and-legacy-assessments",
+    "wbgr-private-snapshots-guard",
     "wbe-invalid-score-400",
     "wbe-content-type-415",
     "wbe-cross-origin-403",

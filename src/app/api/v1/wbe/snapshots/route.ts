@@ -9,7 +9,7 @@ import { assessWbe } from "@/lib/wbe";
 export const dynamic="force-dynamic";
 const Input=z.object({
   scores:z.array(z.number().int().min(0).max(10)).length(9),
-  title:z.string().trim().min(1).max(90).default("WBE-9 reflection")
+  title:z.string().trim().min(1).max(90).default("WBGR-109 · WENS reflection")
 }).strict();
 
 function checkOrigin(request:Request) {
@@ -38,7 +38,7 @@ export async function GET(){
     const user=await getFirebaseUser();
     if(!user)return response({error:"Authentication required."},401);
     const reports=await listUserDocs(user.uid,"reports",100);
-    return response({backend:"firebase",snapshots:reports.filter(r=>r.kind==="wbe").map(r=>normalize(String(r.id),String(r.title||"WBE-9 reflection"),r.result,r.createdAt)).filter(Boolean).slice(0,20)});
+    return response({backend:"firebase",snapshots:reports.filter(r=>r.kind==="wbe").map(r=>normalize(String(r.id),String(r.title||"WBGR-109 · WENS reflection"),r.result,r.createdAt)).filter(Boolean).slice(0,20)});
   }
   const auth=await requireUser();
   if(auth.error||!auth.supabase||!auth.userId)return auth.error!;
@@ -61,7 +61,7 @@ export async function POST(request:Request){
   const result={
     scores,
     assessment:assessWbe(scores),
-    framework:"WBE-9 symbolic user reflection",
+    framework:"WBGR-109 · 1799 BS · WENS symbolic user reflection",
     empirical:false,
     provenance:"USER_REPORTED"
   };

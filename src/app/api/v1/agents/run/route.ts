@@ -137,7 +137,7 @@ export async function POST(request: Request) {
       truthBoundary: [
         "Facts/calculations must be source- or method-backed.",
         "Astrology is interpretation.",
-        "WBE is symbolism.",
+        "WBGR-109 / WENS is symbolism.",
         "External operations require human confirmation."
       ],
       requestId,

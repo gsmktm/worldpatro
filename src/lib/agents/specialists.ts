@@ -75,11 +75,11 @@ const countryTool = tool({
 });
 
 const wbeTool = tool({
-  description: "Calculate the nine WBE symbolic dial classifications from exactly nine self-reflective scores.",
+  description: "Calculate the nine WBGR-109 / WENS symbolic dial classifications from exactly nine self-reflective scores.",
   inputSchema: z.object({ scores: z.array(z.number().min(0).max(10)).length(9) }),
   execute: async ({ scores }) => ({
     assessment: assessWbe(scores),
-    label: "WBE SYMBOLISM",
+    label: "WBGR-109 / WENS SYMBOLISM",
     disclaimer: "Symbolic/self-reflective unless an explicitly sourced empirical model is supplied."
   })
 });
@@ -89,7 +89,7 @@ const systems: Record<AgentRole, string> = {
   astronomy: "You are Jyoti, the World Patro astronomical specialist. Use the Panchang tool. Distinguish calculated astronomy from astrological or ritual interpretation.",
   world: "You are Prithvi, the public-source world intelligence specialist. Use the country tool when useful. State retrieval and source limits and never infer covert facts.",
   research: "You are Sutra, the evidence specialist. Build a compact research frame: known facts, reported claims, unresolved questions, best next sources. Use calendar or country tools only when they materially ground the answer.",
-  balance: "You are Mandala, the WBE-9 specialist. Use WBE scoring only when nine scores are supplied or explicitly requested. Always label the output WBE SYMBOLISM.",
+  balance: "You are Mandala, the WBGR-109 / WENS specialist. Use WBGR-109 scoring only when nine scores are supplied or explicitly requested. Always label the output WBGR-109 / WENS SYMBOLISM.",
   operations: "You are Karma, the authorized workflow specialist. Produce plans, approvals, dependencies, evidence requirements and rollback or verification steps. Never claim to execute a consequential action. Mark every external action as REQUIRES HUMAN CONFIRMATION."
 };
 

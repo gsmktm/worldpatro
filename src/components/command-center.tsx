@@ -72,7 +72,7 @@ export default function CommandCenter() {
         : agentStatus?.readyForGateway
           ? `Access · ${agentStatus.access.mode}`
           : "Gateway activates on Vercel runtime"} tone="gold" />
-      <Metric label="WBE" value="729" meta="9 anchor gates · symbolic" />
+      <Metric label="WBGR-109 · WENS" value="1799 BS" meta="729 generated gates · nine anchors · symbolic" />
       <Metric label="Truth layers" value="7" meta="fact → authority → unknown" />
     </section>
 
@@ -122,7 +122,7 @@ export default function CommandCenter() {
           <span><b>AUTHORITY</b> official / curated release</span>
           <span><b>ASTRONOMY</b> reproducible calculation</span>
           <span><b>INTERPRETATION</b> astrology / tradition</span>
-          <span><b>WBE</b> symbolic framework</span>
+          <span><b>WBGR-109 / WENS</b> symbolic framework</span>
           <span><b>SCENARIO</b> planning / hypothetical</span>
           <span><b>UNKNOWN</b> unresolved</span>
         </div>

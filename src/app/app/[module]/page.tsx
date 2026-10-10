@@ -38,9 +38,9 @@ export default async function ModulePage({params}:{params:Promise<{module:string
       <article className="featureCard"><h3>Functions</h3><ul>{feature.functions.map(x=><li key={x}>{x}</li>)}</ul></article>
       <article className="featureCard"><h3>Data & persistence</h3><ul>{(feature.tables?.length?feature.tables:["No persistence required for this core module"]).map(x=><li key={x}>{x}</li>)}</ul></article>
       <article className="featureCard"><h3>Execution flow</h3><ol><li>Resolve canonical context</li><li>Validate method / authority profile</li><li>Calculate or retrieve source-backed data</li><li>Attach provenance and uncertainty</li><li>Save / watch / export when authorized</li></ol></article>
-      <article className="featureCard"><h3>Trust boundary</h3><ul><li>Facts require sources or reproducible methods</li><li>Official declarations override prediction where applicable</li><li>Astrology is labeled interpretation</li><li>WBE is labeled symbolism</li><li>Unsupported data is never guessed</li></ul></article>
+      <article className="featureCard"><h3>Trust boundary</h3><ul><li>Facts require sources or reproducible methods</li><li>Official declarations override prediction where applicable</li><li>Astrology is labeled interpretation</li><li>WBGR-109 / WENS is labeled symbolism</li><li>Unsupported data is never guessed</li></ul></article>
     </section>}
 
-    {module==="wbe" ? <section className="featureCard featureWide"><h3>9 Anchor Gates</h3><div className="chips">{ANCHORS.map(g=><span className="chip" key={g.code}>{g.graha} · {g.tradition} · {g.power}</span>)}</div><p className="muted">The complete cube contains 729 Gates. These pairings are symbolic lenses, not doctrinal claims.</p><Link className="ghost" href="/api/v1/wbe/gates?anchors=true">Open API</Link></section> : null}
+    {module==="wbe" ? <section className="featureCard featureWide"><h3>9 Anchor Gates</h3><div className="chips">{ANCHORS.map(g=><span className="chip" key={g.code}>{g.graha} · {g.tradition} · {g.power}</span>)}</div><p className="muted">The complete cube contains 729 Gates. These pairings are symbolic lenses, not doctrinal claims.</p><Link className="ghost" href="/api/v1/wbgr/gates?anchors=true">Open API</Link></section> : null}
   </div>;
 }
