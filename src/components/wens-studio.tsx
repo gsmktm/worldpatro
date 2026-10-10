@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { GATES, GRAHAS, POWERS, TRADITIONS } from "@/lib/wbe";
 import { WBGR109, WENS_DISCLOSURE, WENS_LAYERS, WENS_ORIGIN } from "@/lib/wens";
+import { displayWbgrGate } from "@/lib/wbgr";
 
 type Calendar = {id:string;name:string;value:string;status:string;provenance:string};
 type Graha = {key:string;name:string;siderealLongitude:number;sign:string;degreesInSign:number;nakshatra:string;retrograde:boolean;isMeanLunarNode:boolean;domain:string};
@@ -73,7 +74,7 @@ export default function WensStudio(){
   const registry=useMemo(()=>{
     const base=registryView==="curated"?WBGR109:GATES;
     const search=registryQuery.trim().toLowerCase();
-    return search?base.filter(g=>[g.code,g.tradition,g.graha,g.power,g.domain].some(s=>s.toLowerCase().includes(search))):base;
+    return search?base.filter(g=>[g.code,displayWbgrGate(g).code,g.tradition,g.graha,g.power,g.domain].some(s=>s.toLowerCase().includes(search))):base;
   },[registryView,registryQuery]);
   const totalPages=Math.max(1,Math.ceil(registry.length/9));
   const page=Math.min(registryPage,totalPages);
@@ -83,7 +84,7 @@ export default function WensStudio(){
     <section className="wensHero">
       <div className="wensStars" aria-hidden="true"/>
       <div className="wensHeroText">
-        <div className="eyebrow">WORLD PATRO · WENS / WBGR-109 · NEPAL → WORLD</div>
+        <div className="eyebrow">WORLD PATRO · WBGR-109 · 1799 BS · WENS · NEPAL → WORLD</div>
         <h1>One world. <em>Many ways of knowing.</em></h1>
         <p>World Equilibrium & Navagraha System — a Nepal-origin interface uniting real calendar time, computed graha positions, nine distinct traditions and a deliberately symbolic balance registry.</p>
         <div className="wensHeroActions">
@@ -152,8 +153,8 @@ export default function WensStudio(){
         <div className="wensDimension"><h3><span>03</span> Power themes</h3><div role="group" aria-label="Choose a human-value theme">{POWERS.map((value,i)=><button type="button" aria-pressed={selectedPower===i} key={value} onClick={()=>setSelectedPower(i)}><b>{String(i+1).padStart(2,"0")}</b>{value}</button>)}</div></div>
       </div>
       <div className="wensGateReveal">
-        <div><span>COMPARATIVE GATE · {registryCodes.has(gate.code)?"WBGR-109 CURATED":"FULL CUBE"}</span><h3>{gate.code}</h3><p>{gate.tradition} <span>×</span> {gate.graha} <span>×</span> {gate.power}</p><small>Domain: {gate.domain}. This pairing is a symbolic question, not a religious ruling or causal astronomical result.</small></div>
-        <button type="button" className="ghost" onClick={()=>void navigator.clipboard?.writeText(JSON.stringify({...gate,origin:WENS_ORIGIN.id,boundary:WENS_DISCLOSURE.symbolic},null,2))}>Copy gate JSON</button>
+        <div><span>COMPARATIVE GATE · {registryCodes.has(gate.code)?"WBGR-109 CURATED":"FULL CUBE"}</span><h3>{displayWbgrGate(gate).code}</h3><p>{gate.tradition} <span>×</span> {gate.graha} <span>×</span> {gate.power}</p><small>Domain: {gate.domain}. This pairing is a symbolic question, not a religious ruling or causal astronomical result.</small></div>
+        <button type="button" className="ghost" onClick={()=>void navigator.clipboard?.writeText(JSON.stringify({...displayWbgrGate(gate),origin:WENS_ORIGIN.id,boundary:WENS_DISCLOSURE.symbolic},null,2))}>Copy gate JSON</button>
       </div>
     </section>
 
@@ -168,7 +169,7 @@ export default function WensStudio(){
         const parts=item.code.split("-").slice(1).map(Number);
         setSelectedTradition(parts[0]-1);setSelectedGraha(parts[1]-1);setSelectedPower(parts[2]-1);
         document.getElementById("wens-cockpit")?.scrollIntoView({behavior:"smooth"});
-      }}><strong>{item.code}</strong><span>{item.power}</span><small>{item.tradition} · {item.graha}</small></button>)}</div>
+      }}><strong>{displayWbgrGate(item).code}</strong><span>{item.power}</span><small>{item.tradition} · {item.graha}</small></button>)}</div>
       {registry.length===0&&<p className="wensFine">No matching gates. Edit the search above.</p>}
       <div className="wensRegistryPages"><button disabled={page===1} onClick={()=>setRegistryPage(page-1)}>← Previous</button><span>{page} / {totalPages}</span><button disabled={page>=totalPages} onClick={()=>setRegistryPage(page+1)}>Next →</button></div>
     </section>
