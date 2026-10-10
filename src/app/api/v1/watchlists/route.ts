@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readMutationJson } from "@/lib/http/write-guard";
 import { z } from "zod";
 import { useFirebaseBackend } from "@/lib/firebase/config";
 import { getFirebaseUser } from "@/lib/firebase/user";
@@ -27,7 +28,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const parsed = Watchlist.safeParse(await request.json().catch(() => null));
+  const body = await readMutationJson(request, 16384);
+  if (!body.ok) return body.response;
+  const parsed = Watchlist.safeParse(body.data);
   if (!parsed.success) return NextResponse.json({ error: "Invalid watchlist", issues: parsed.error.issues }, { status: 400 });
 
   if (useFirebaseBackend()) {
