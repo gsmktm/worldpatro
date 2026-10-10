@@ -3,6 +3,7 @@ import { makeBirthChart } from "@/lib/jyotish/birth-chart";
 import { buildPatroDay, PatroValidationError, readPatroQuery } from "@/lib/patro-day";
 import { WENS_DISCLOSURE, WENS_GRAHAS, WENS_LAYERS, WENS_ORIGIN, WENS_POWERS, WENS_TRADITIONS, WBGR109, datedRegistryGate } from "@/lib/wens";
 import { GATES } from "@/lib/wbe";
+import { displayWbgrGate } from "@/lib/wbgr";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -54,7 +55,7 @@ export function GET(request:NextRequest) {
       navagraha,
       traditions:WENS_TRADITIONS,
       powers:WENS_POWERS,
-      gates:{all:GATES.length,registry:WBGR109.length,keynotes:9,gateOfDate:datedRegistryGate(query.date)},
+      gates:{all:GATES.length,registry:WBGR109.length,keynotes:9,gateOfDate:displayWbgrGate(datedRegistryGate(query.date))},
       observanceData:{status:"authority-dependent",endpoint:"/api/v1/religions/observances",warning:WENS_DISCLOSURE.authority},
       truthBoundary:WENS_DISCLOSURE,
       calculation:chart.calculation,
