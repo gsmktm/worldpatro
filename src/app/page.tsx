@@ -4,7 +4,7 @@ const pillars = [
   ["TIME","9 calendars + Panchang","One canonical moment, many legitimate methods."],
   ["INTELLIGENCE","Sources before claims","Public data, evidence and freshness before conclusions."],
   ["CONDUCTOR","Supervisor + 6 specialists","Bounded agents that delegate rather than hallucinate omniscience."],
-  ["BALANCE","WBGR-109 · 1799 BS · WENS","WENS symbolic framework with the original 729 computed combinations retained."]
+  ["BALANCE","WBGR-109 · 1799 BS · WENS","Nine traditions, nine grahas and nine themes; 109 curated paths across 729 symbolic gates."]
 ];
 
 export default function Landing() {
@@ -18,6 +18,7 @@ export default function Landing() {
       <p>Calendar truth, astronomical sacred time, public-source intelligence, evidence workflows and bounded AI — composed as one quiet command system.</p>
       <div className="ctaRow">
         <Link className="primary" href="/app">Enter Command Center</Link>
+        <Link className="ghost" href="/app/wens">Explore WENS</Link>
         <Link className="ghost" href="/app/agents">Meet the Agents</Link>
         <Link className="ghost" href="/app/patro">Open 9 Calendars</Link>
       </div>

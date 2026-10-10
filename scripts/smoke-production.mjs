@@ -336,10 +336,10 @@ invariant(linkedPanchang.text.includes("Vedic Panchang"),"Date-linked Panchang s
 
 
 const platform=await json("/api/v1/platform/modules",undefined,200);
-invariant(platform.body.total===19,"Platform Command Map requires all 19 listed modules.");
+invariant(platform.body.total===20,"Platform Command Map requires all 20 listed modules.");
 invariant(platform.body.agentSpecialists?.length===6,"Agent supervisor must declare exactly six bounded specialist roles.");
 const allModuleUrls=new Set(platform.body.modules.map(m=>m.url));
-invariant(allModuleUrls.size===19&&[...allModuleUrls].every(x=>x.startsWith("/app/")),
+invariant(allModuleUrls.size===20&&[...allModuleUrls].every(x=>x.startsWith("/app/")),
   "Module links must be unique internal World Patro routes.");
 const expectedModulePaths=[
   ["/app/world","World Intelligence"],
@@ -465,7 +465,7 @@ console.log(JSON.stringify({
     "panchang-legacy-api-compatibility",
     "patro-invalid-date-timezone-coordinates",
     "patro-linked-module-sections",
-    "all-19-module-links-and-statuses",
+    "all-20-module-links-and-statuses",
     "six-agent-role-mapping",
     "interactive-world-and-private-workspaces",
     "built-in-source-registry",

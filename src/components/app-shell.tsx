@@ -4,7 +4,7 @@ import { FEATURES } from "@/lib/features";
 const groups = [
   { label: "TIME", slugs: ["patro","panchang","astrology","kundli","muhurat","numerology","religions"] },
   { label: "INTELLIGENCE", slugs: ["world","research","sources","alerts"] },
-  { label: "BALANCE", slugs: ["wbe","gates"] },
+  { label: "BALANCE", slugs: ["wens","wbe","gates"] },
   { label: "OPERATIONS", slugs: ["agents","workflows","admin","privacy","consult","learn"] }
 ];
 
@@ -23,7 +23,7 @@ export function AppShell({ children }:{ children:React.ReactNode }) {
         <small>One moment · whole system</small>
       </Link>
 
-      <Link href="/app/system" className="workSystemNav">◎ All 19 modules · System status →</Link>
+      <Link href="/app/system" className="workSystemNav">◎ All 20 modules · System status →</Link>
       <nav className="sideNav" aria-label="World Patro modules">
         {groups.map(group => <div className="navGroup" key={group.label}>
           <div className="navLabel">{group.label}</div>
@@ -53,7 +53,8 @@ export function AppShell({ children }:{ children:React.ReactNode }) {
           <span className="topChip">🇳🇵 Kathmandu</span>
           <span className="topChip">Asia/Kathmandu</span>
           <Link href="/app/system" className="topChip">All modules</Link>
-          <Link href="/app/agents" className="topChip gold">✦ Agents</Link>
+          <Link href="/app/wens" className="topChip gold">◈ WENS</Link>
+          <Link href="/app/agents" className="topChip">✦ Agents</Link>
           <Link href="/login" className="avatarButton" aria-label="Account">G</Link>
         </div>
       </header>

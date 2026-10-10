@@ -51,3 +51,4 @@ jobs:
           fi
 
           BASE_URL=http://127.0.0.1:3100 node scripts/smoke-production.mjs
+          BASE_URL=http://127.0.0.1:3100 node scripts/validate-wens.mjs
