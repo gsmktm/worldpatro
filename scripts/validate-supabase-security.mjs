@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const core=readFileSync(new URL("../supabase/migrations/20261009000000_world_patro_core.sql",import.meta.url),"utf8");
+const correction=readFileSync(new URL("../supabase/production_security_hardening.sql",import.meta.url),"utf8");
+assert.match(core,/grant update\(display_name,locale,timezone,home_lat,home_lon\) on public\.profiles to authenticated/i);
+assert.match(core,/grant update\(read_at,acknowledged_at\) on public\.notifications to authenticated/i);
+assert.match(core,/grant update\(title,description,priority,jurisdiction,related_entity_id,due_at,requires_human_confirmation,evidence_bundle\) on public\.workflow_orders to authenticated/i);
+assert.doesNotMatch(core,/grant select,update on public\.profiles/i);
+assert.doesNotMatch(core,/grant select,insert,update,delete on [^;]*public\.workflow_orders/i);
+assert.doesNotMatch(core,/create policy "workflow orders own" on public\.workflow_orders for all/i);
+assert.match(core,/status='draft' and approval_state='\{\}'::jsonb/);
+assert.match(correction,/revoke update,delete on public\.workflow_orders/i);
+console.log("Supabase SQL privilege rules verified statically; live database permission checks required.");

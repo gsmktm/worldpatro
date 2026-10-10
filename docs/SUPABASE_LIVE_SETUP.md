@@ -55,3 +55,9 @@ World Patro intentionally displays **Supabase Auth only** at `/login`. Firebase 
 The user account flow is exclusively Supabase Auth: `/login` (email/password), `/login/recovery` (password reset email), `/login/new-password` (session-verified new password), `/app/account` (verified account overview and sign out). The `/auth/confirm` callback supports Supabase OTP token hashes and PKCE authorization codes and allows only same-site relative redirect paths.
 
 In the target Supabase project, configure **Authentication → URL Configuration** with production Site URL `https://worldpatro.vercel.app` and allowed redirect destinations for the domain and `/auth/confirm`. Confirm email/registration settings and the applicable email template. Deploy after any Vercel environment variable changes. A successful CI test is not a real Auth email-delivery test.
+
+## Privilege hardening required before private-workspace launch
+
+The fresh-install SQL now limits owner-update privileges on `profiles` (excluding `role`), `notifications` (read/acknowledged timestamps only) and `workflow_orders` (draft fields only). Clients cannot directly set workflow status or create approved orders: transitions must use the audited `transition_workflow_order` RPC.
+
+If the original core schema was already installed, back up the database and review/run `supabase/production_security_hardening.sql` through the **correct project's SQL Editor**. Check effective privileges and test authenticated/anonymous access. This corrective script has NOT been applied or verified against the specified Supabase project.
