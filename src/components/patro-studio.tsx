@@ -104,7 +104,6 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
   const [saving,setSaving]=useState(false);
   const [historyBusy,setHistoryBusy]=useState(false);
   const request=useRef<AbortController|null>(null);
-  const initialized=useRef(false);
 
   function update(key:keyof Inputs,value:string){
     setForm(prev=>({...prev,[key]:value}));setNotice("");
@@ -139,8 +138,6 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     }finally{if(!ctrl.signal.aborted)setBusy(false);}
   }
   useEffect(()=>{
-    if(initialized.current)return;
-    initialized.current=true;
     const params=new URLSearchParams(window.location.search);
     const def=todayDefaults();
     const initial:Inputs={
