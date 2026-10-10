@@ -23,6 +23,7 @@ export function AppShell({ children }:{ children:React.ReactNode }) {
         <small>One moment · whole system</small>
       </Link>
 
+      <Link href="/app/system" className="workSystemNav">◎ All 19 modules · System status →</Link>
       <nav className="sideNav" aria-label="World Patro modules">
         {groups.map(group => <div className="navGroup" key={group.label}>
           <div className="navLabel">{group.label}</div>
@@ -51,6 +52,7 @@ export function AppShell({ children }:{ children:React.ReactNode }) {
         <div className="topContext">
           <span className="topChip">🇳🇵 Kathmandu</span>
           <span className="topChip">Asia/Kathmandu</span>
+          <Link href="/app/system" className="topChip">All modules</Link>
           <Link href="/app/agents" className="topChip gold">✦ Agents</Link>
           <Link href="/login" className="avatarButton" aria-label="Account">G</Link>
         </div>

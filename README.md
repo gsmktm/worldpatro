@@ -290,3 +290,10 @@ World Patro now derives BS/AD correspondences **only** inside Bhadra 2083 (17 Au
 ## Linked Patro full-stack workspace
 
 /app/patro and /app/panchang now share one date/location context through GET /api/v1/patro/day, including 9 calendars and astronomical Panchang at timezone-resolved local noon. A 42-day calendar grid, verified AD↔BS tool, four city presets, JSON/ICS export, sharing, printing, source notices and links to all platform modules are wired. Optional authenticated Panchang report storage uses existing /api/v1/reports. Unsupported BS/Nepal Sambat/holiday coverage remains clearly labeled. See docs/PATRO_FULLSTACK.md.
+
+
+## All 19 linked modules — operational workspaces
+
+This release adds dedicated working screens for `/app/world` (country indicator and USGS data), `/app/research` (notebooks and evidence notes), `/app/alerts` (watchlists and notification acknowledgements), `/app/workflows` (human-review transition controls), `/app/consult` (consent-aware consultation requests) and `/app/agents` (Conductor runtime and all six subagent profiles). `/app/sources` renders the built-in verified provider catalogue independently from any unpublished editorial database. `/app/system` and `GET /api/v1/platform/modules` report the routes, capabilities and server-side activation gates.
+
+Firebase Admin-powered user-collection adapters are added for research items, consultation requests and notification acknowledgements. These require a verified Firebase session and configured `FIREBASE_SERVICE_ACCOUNT_JSON_BASE64`. Neither a consultation request nor a workflow status change is an external booking/payment/action. No bot is given publication authority, and agent execution remains gated by the configured AI Gateway and authentication mode. See `docs/MODULE_OPERATIONAL_AUDIT.md`.

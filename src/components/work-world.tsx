@@ -34,7 +34,7 @@ export default function WorldWorkbench(){
       setEarthquakes(Array.isArray(entries)?entries.map((q:Record<string,unknown>)=>{
         const p=(q.properties||{}) as Record<string,unknown>;
         return {id:String(q.id||""),place:String(p.place||q.place||"Unknown area"),
-          mag:Number(p.mag??q.magnitude??0),url:typeof p.url==="string"?p.url:undefined};
+          mag:Number(p.mag??q.magnitude??0),url:typeof q.detailUrl==="string"?q.detailUrl:typeof p.url==="string"?p.url:undefined};
       }):[]);
       setQuakeMeta("USGS feed · events within 800 km of Kathmandu during the last 7 days.");
     }catch(e){setQuakeMeta(e instanceof Error?e.message:"USGS unavailable.");}
