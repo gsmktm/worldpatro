@@ -41,7 +41,8 @@ assert.equal(cube.body.gates.length,1);
 const filtered=await get("/api/v1/wens/gates?view=all&tradition=1&graha=2&power=3");
 assert.equal(filtered.status,200);
 assert.equal(filtered.body.total,1);
-assert.equal(filtered.body.gates[0].code,"WBE-01-02-03");
+assert.equal(filtered.body.gates[0].code,"WBGR-109-01-02-03");
+assert.equal(filtered.body.gates[0].legacyCode,"WBE-01-02-03");
 
 const badDate=await get("/api/v1/wens/snapshot?date=2026-02-30");
 assert.equal(badDate.status,400);
