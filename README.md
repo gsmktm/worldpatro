@@ -10,7 +10,7 @@
 2. **Authority beats algorithmic guesswork** for official or observational calendars.
 3. **FACT, AUTHORITY, ASTRONOMY, INTERPRETATION, WBGR-109 / WENS SYMBOLISM, SCENARIO and UNKNOWN are separate truth states.**
 4. **Every factual record can carry provenance, retrieval time and verification state.**
-5. **Firebase is the preferred authenticated persistence layer; Supabase remains a supported fallback.**
+5. **Supabase is the primary authenticated persistence layer; the Firebase adapter is legacy and disabled unless deliberately selected.**
 6. **Consequential workflow actions require explicit human confirmation.**
 7. **Agents orchestrate trusted tools; they are not a second truth system.**
 

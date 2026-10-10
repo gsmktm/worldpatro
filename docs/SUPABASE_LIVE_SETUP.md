@@ -22,7 +22,7 @@ This configuration is separate from **live database validation**. It does not es
 4. Confirm `public.calendar_profiles` exists, is included in the Data API exposed schemas, has `SELECT` grant for `anon`, and has the existing read-only, active-record RLS policy. Never disable RLS as a shortcut.
 5. Deploy World Patro with the existing URL and publishable key. Check `GET /api/v1/supabase/status` and the dashboard at `/app/system`. Only `connected: true` plus `status: "connected"` confirms a successful anonymous query to `calendar_profiles`.
 6. Test Auth login, user-owned reports, drafts, editorial permissions, administrator app_metadata roles, audit logs and workflow transitions with actual test accounts (positive and negative access tests). Confirm server writes cannot be reached anonymously.
-7. Only after these tests and a rollback plan are complete, deliberately set `WORLD_PATRO_DATA_BACKEND=supabase` for the desired environment and redeploy. Preserve Firebase records and credentials until migration/reconciliation is complete.
+7. `WORLD_PATRO_DATA_BACKEND=supabase` is now selected in Vercel as explicitly requested. Deploy to apply it; production readiness still requires the schema, RLS and sign-in tests above. Preserve any existing Firebase records until separately reviewed for migration/reconciliation.
 
 ## Diagnostics
 
@@ -45,3 +45,19 @@ This configuration is separate from **live database validation**. It does not es
 - Admin roles are issued from trusted Supabase `app_metadata`, not editable user metadata.
 - The status endpoint performs only a bounded, read-only request and returns neither credentials nor database rows.
 - A successful health probe must not be presented as proof of complete database or operational readiness.
+
+## Identity provider selection
+
+World Patro intentionally displays **Supabase Auth only** at `/login`. Firebase Web configuration must not hijack or block the sign-in page. The obsolete Firebase session creation endpoint rejects requests when Supabase is the selected backend. Neither the previously exposed Firebase service-account JSON nor a Firebase Admin secret is required for Supabase sign-in. Revoke the exposed Firebase key through Google Cloud IAM; never recycle it into production.
+
+## Account recovery and confirmation
+
+The user account flow is exclusively Supabase Auth: `/login` (email/password), `/login/recovery` (password reset email), `/login/new-password` (session-verified new password), `/app/account` (verified account overview and sign out). The `/auth/confirm` callback supports Supabase OTP token hashes and PKCE authorization codes and allows only same-site relative redirect paths.
+
+In the target Supabase project, configure **Authentication → URL Configuration** with production Site URL `https://worldpatro.vercel.app` and allowed redirect destinations for the domain and `/auth/confirm`. Confirm email/registration settings and the applicable email template. Deploy after any Vercel environment variable changes. A successful CI test is not a real Auth email-delivery test.
+
+## Privilege hardening required before private-workspace launch
+
+The fresh-install SQL now limits owner-update privileges on `profiles` (excluding `role`), `notifications` (read/acknowledged timestamps only) and `workflow_orders` (draft fields only). Clients cannot directly set workflow status or create approved orders: transitions must use the audited `transition_workflow_order` RPC.
+
+If the original core schema was already installed, back up the database and review/run `supabase/production_security_hardening.sql` through the **correct project's SQL Editor**. Check effective privileges and test authenticated/anonymous access. This corrective script has NOT been applied or verified against the specified Supabase project.

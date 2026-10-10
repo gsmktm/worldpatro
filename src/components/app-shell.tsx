@@ -59,7 +59,7 @@ export function AppShell({ children }:{ children:React.ReactNode }) {
           <Link href="/app/system" className="topChip" aria-current={pathname==="/app/system"?"page":undefined}>All modules</Link>
           <Link href="/app/wens" className="topChip gold" aria-current={pathname==="/app/wens"?"page":undefined}>◈ WENS</Link>
           <Link href="/app/agents" className="topChip" aria-current={pathname==="/app/agents"?"page":undefined}>✦ Agents</Link>
-          <Link href="/login" className="avatarButton" aria-label="Account">G</Link>
+          <Link href="/app/account" className="avatarButton" aria-label="My World Patro account" aria-current={pathname==="/app/account"?"page":undefined}>◎</Link>
         </div>
       </header>
       <main id="world-patro-main" tabIndex={-1} className="workspace">{children}</main>
@@ -68,7 +68,7 @@ export function AppShell({ children }:{ children:React.ReactNode }) {
         <Link href="/app/patro" aria-current={pathname==="/app/patro"?"page":undefined}>◫<small>Patro</small></Link>
         <Link href="/app/agents" aria-current={pathname==="/app/agents"?"page":undefined}>✦<small>Agents</small></Link>
         <Link href="/app/research" aria-current={pathname==="/app/research"?"page":undefined}>⌕<small>Research</small></Link>
-        <Link href="/login">◎<small>Account</small></Link>
+        <Link href="/app/account" aria-current={pathname==="/app/account"?"page":undefined}>◎<small>Account</small></Link>
       </nav>
     </div>
   </div>;
