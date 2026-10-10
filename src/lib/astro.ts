@@ -26,11 +26,35 @@ function lahiriAyanamsa(date: Date) {
   return 23.8531972 + precessionArcSec / 3600;
 }
 
-function hhmm(date: Date | null, tz: string) {
-  if (!date) return null;
-  return new Intl.DateTimeFormat("en-GB", {
-    timeZone: tz, hour: "2-digit", minute: "2-digit", hour12: false
+function hhmm(date:Date|null,tz:string){
+  if(!date)return null;
+  return new Intl.DateTimeFormat("en-GB",{
+    timeZone:tz,hour:"2-digit",minute:"2-digit",hour12:false
   }).format(date);
+}
+function localISO(date:Date,tz:string){
+  const parts=new Intl.DateTimeFormat("en-US",{
+    timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit"
+  }).formatToParts(date);
+  const p=Object.fromEntries(parts.map(item=>[item.type,item.value]));
+  return p.year+"-"+p.month+"-"+p.day;
+}
+
+/** Returns only an event on the requested IANA local civil date, never one from a nearby UTC date. */
+function riseSetOnLocalDay(body:Astro.Body,observer:Astro.Observer,direction:1|-1,
+                            midday:Date,tz:string){
+  const target=localISO(midday,tz);
+  // Start 36h before local noon to cover large UTC offsets and historical offsets.
+  let cursor=new Date(midday.getTime()-36*3600000);
+  for(let attempt=0;attempt<5;attempt++){
+    const found=Astro.SearchRiseSet(body,observer,direction,Astro.MakeTime(cursor),4);
+    if(!found)return null;
+    const civil=localISO(found.date,tz);
+    if(civil===target)return found.date;
+    if(civil>target)return null;
+    cursor=new Date(found.date.getTime()+1000);
+  }
+  return null;
 }
 
 export type PanchangInput = {
@@ -56,16 +80,14 @@ export function calculatePanchang(input: PanchangInput) {
   const paksha = tithiNumber <= 15 ? "Shukla" : "Krishna";
   const nakshatraIndex = Math.floor(moonSidereal / (360 / 27));
   const yogaIndex = Math.floor(norm(sunSidereal + moonSidereal) / (360 / 27));
-  const observer = new Astro.Observer(lat, lon, elevation);
-  const dayStart = new Date(date);
-  dayStart.setUTCHours(0, 0, 0, 0);
-  const sunrise = Astro.SearchRiseSet(Astro.Body.Sun, observer, 1, Astro.MakeTime(dayStart), 2);
-  const sunset = Astro.SearchRiseSet(Astro.Body.Sun, observer, -1, Astro.MakeTime(dayStart), 2);
-  const moonrise = Astro.SearchRiseSet(Astro.Body.Moon, observer, 1, Astro.MakeTime(dayStart), 2);
-  const moonset = Astro.SearchRiseSet(Astro.Body.Moon, observer, -1, Astro.MakeTime(dayStart), 2);
+  const observer=new Astro.Observer(lat,lon,elevation);
+  const sunrise=riseSetOnLocalDay(Astro.Body.Sun,observer,1,date,tz);
+  const sunset=riseSetOnLocalDay(Astro.Body.Sun,observer,-1,date,tz);
+  const moonrise=riseSetOnLocalDay(Astro.Body.Moon,observer,1,date,tz);
+  const moonset=riseSetOnLocalDay(Astro.Body.Moon,observer,-1,date,tz);
 
   return {
-    method: "Astronomy Engine 2.1.19 + Lahiri/Chitrapaksha approximation",
+    method: "Astronomy Engine 2.1.19 + Lahiri/Chitrapaksha approximation; tithi/nakshatra/yoga sampled at the requested instant",
     interpretationBoundary: "Astronomical quantities are calculated; auspicious/inauspicious meaning is traditional interpretation.",
     ayanamsa: Number(ayanamsa.toFixed(6)),
     sun: { tropicalLongitude: Number(sunTropical.toFixed(6)), siderealLongitude: Number(sunSidereal.toFixed(6)) },
@@ -74,12 +96,12 @@ export function calculatePanchang(input: PanchangInput) {
     nakshatra: { number: nakshatraIndex + 1, name: NAKSHATRAS[nakshatraIndex] },
     yoga: { number: yogaIndex + 1, name: YOGAS[yogaIndex] },
     sunTimes: {
-      sunrise: hhmm(sunrise ? sunrise.date : null, tz),
-      sunset: hhmm(sunset ? sunset.date : null, tz)
+      sunrise: hhmm(sunrise,tz),
+      sunset: hhmm(sunset,tz)
     },
     moonTimes: {
-      moonrise: hhmm(moonrise ? moonrise.date : null, tz),
-      moonset: hhmm(moonset ? moonset.date : null, tz)
+      moonrise: hhmm(moonrise,tz),
+      moonset: hhmm(moonset,tz)
     },
     location: { lat, lon, elevation, tz },
     provenance: {
