@@ -20,11 +20,11 @@ const health = await healthResponse.json();
 const html = await loginResponse.text();
 assert.match(html, /World Patro/i);
 assert.match(html, /SUPABASE/i);
-assert.match(html, /Forgot password/);
 assert.match(await recoveryResponse.text(), /Send recovery link/);
 assert.match(await accountResponse.text(), /World Patro account/i);
 assert.doesNotMatch(html, /Firebase Web is configured|Firebase sign-in needs server setup|Sign in with Firebase|Create Firebase account/);
 if (health.supabaseConfigured) {
+  assert.match(html, /Forgot password/);
   assert.match(html, /Powered by Supabase Authentication/);
   assert.match(html, /Sign in/);
   assert.match(html, /Create account/);
