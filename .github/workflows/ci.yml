@@ -54,3 +54,4 @@ jobs:
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-wens.mjs
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-route-graph.mjs
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-supabase-health.mjs
+          BASE_URL=http://127.0.0.1:3100 node scripts/validate-auth-availability.mjs
