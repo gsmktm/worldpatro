@@ -29,7 +29,7 @@ export default function PrivateWorkbench({kind}:{kind:ModuleKind}){
   const [selected,setSelected]=useState("");
   const [title,setTitle]=useState("");
   const [details,setDetails]=useState("");
-  const [option,setOption]=useState("normal");
+  const [option,setOption]=useState(kind==="consult"?"chat":"normal");
   const [busy,setBusy]=useState(false);
   const [notice,setNotice]=useState("");
   const [error,setError]=useState("");
