@@ -1,17 +1,72 @@
-
-.patroStudio{display:grid;gap:14px;margin-top:14px}.patroToolbar,.panchangPanel{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(14,41,59,.92),rgba(4,16,27,.94));padding:18px;box-shadow:var(--shadow)}
-.patroToolbarTop{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:14px}.patroToolbarTop h2{font:500 33px Georgia,serif;color:var(--ivory);margin:7px 0 0}.patroToolbarTop>span{font-size:10px;color:var(--muted)}
-.patroForm{display:grid;grid-template-columns:1.6fr .7fr .7fr 1fr .8fr auto;gap:9px;align-items:end}.patroForm label{display:grid;gap:6px;font-size:10px;color:#a7b8c5}
-.patroForm input,.patroForm select{min-width:0;width:100%;background:#04101c;border:1px solid var(--lineSoft);border-radius:9px;color:#ebf2f5;padding:11px;font-size:12px}
-.patroForm>button{height:41px;white-space:nowrap;cursor:pointer}.patroDateNav{display:flex;gap:4px}.patroDateNav button{border:1px solid var(--lineSoft);border-radius:8px;background:#0e2b3a;color:var(--gold2);cursor:pointer;min-width:30px}
-.patroProvenanceBar{margin-top:11px;display:flex;justify-content:space-between;align-items:center;gap:10px;color:#7a90a2;font-size:9px;flex-wrap:wrap}.patroProvenanceBar button{color:var(--gold2);background:transparent;border:0;text-decoration:underline;cursor:pointer}.patroError{color:var(--gold2);font-size:11px;padding-top:10px}
-.patroStudioGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.patroStudioCard{min-width:0;background:linear-gradient(145deg,#0b2437,#06121f);border:1px solid var(--lineSoft);border-radius:14px;padding:17px;min-height:215px}.patroStudioCard.primary{border-color:rgba(215,169,79,.62)}
-.patroCardTop{display:flex;justify-content:space-between;align-items:center;gap:10px}.patroCardTop>span{font-size:30px}.patroCardTop small{font-size:8px;max-width:145px;line-height:1.4;text-align:right}.patroCardTop .calculated{color:var(--green)}.patroCardTop .requires{color:var(--amber)}
-.patroStudioCard h3{font:500 21px Georgia,serif;margin:14px 0 8px;color:var(--ivory)}.patroCardValue{font-size:16px;line-height:1.35;color:var(--gold2);min-height:43px}.patroStudioCard>p,.patroStudioCard details p{font-size:10px;color:#8198a9;line-height:1.65}
-.patroStudioCard details{margin-top:11px;border-top:1px solid var(--lineSoft);padding-top:9px;color:#a8bac5;font-size:10px}.patroStudioCard summary{cursor:pointer;color:#c2d1da}.patroStudioCard details span{font-size:9px;color:var(--amber)}
-.panchangPanel h3{font:500 29px Georgia,serif;margin:7px 0 13px}.panchangTiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.panchangTiles>div{background:rgba(3,16,27,.73);border:1px solid var(--lineSoft);padding:12px;border-radius:11px}.panchangTiles span,.panchangTiles small{display:block;color:#7a90a1;font-size:9px}.panchangTiles strong{display:block;color:var(--gold2);font:500 19px Georgia,serif;margin:6px 0}.panchangPanel>p,.panchangPanel>small{color:#8da2b1;font-size:10px;line-height:1.6}.patroNotice{border-top:1px solid var(--lineSoft);padding:14px;color:#71899b;font-size:11px;line-height:1.7}
-@media(max-width:1150px){.patroForm{grid-template-columns:repeat(3,1fr)}.patroStudioGrid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:680px){.patroForm{grid-template-columns:1fr 1fr}.patroForm label:first-child{grid-column:1/-1}.patroStudioGrid{grid-template-columns:1fr}.panchangTiles{grid-template-columns:1fr 1fr}.patroToolbarTop{align-items:start;flex-direction:column}}
-
-.patroAuthorityLink{font-size:10px;color:var(--gold2);text-decoration:underline;text-underline-offset:3px}
-.patroCoverage{display:block;font-size:9px;line-height:1.5;color:#8ab5ae;margin-top:6px}
+/* The integrated World Patro page uses the existing theme variables and safe responsive grids. */
+.patroStudio{display:grid;gap:17px;margin:0 0 30px}
+.patroStudio button{cursor:pointer}
+.patroStudio button:disabled{cursor:not-allowed;opacity:.5}
+.patroHero,.patroControl,.patroPanchang,.patroMonth,.patroConverter,.patroModules,.patroAccount{border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,rgba(13,42,61,.96),rgba(4,17,30,.96));box-shadow:var(--shadow)}
+.patroHero{padding:26px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;overflow:hidden}
+.patroHero:after{position:absolute;content:"";height:260px;width:260px;border-radius:50%;right:-100px;top:-100px;background:radial-gradient(circle,rgba(202,164,94,.13),transparent 70%);pointer-events:none}
+.patroHero h1{font:500 clamp(28px,4vw,49px) Georgia,serif;margin:9px 0 10px;color:var(--ivory);line-height:1.13}
+.patroHero p{font-size:12px;line-height:1.8;color:#9eb6c5;max-width:690px}
+.patroHeroMeta{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}.patroHeroMeta span{font-size:9px;letter-spacing:.08em;color:var(--gold2);padding:7px 10px;border:1px solid rgba(209,166,83,.27);border-radius:30px}
+.patroHeroSeal{position:relative;z-index:1;min-width:180px;height:180px;border:1px solid rgba(204,171,97,.45);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:inset 0 0 0 10px rgba(196,155,75,.04),0 12px 36px rgba(0,0,0,.25)}
+.patroHeroSeal b{font:500 74px Georgia,serif;color:var(--gold2)}.patroHeroSeal span{font-size:10px;color:#c1b89d}.patroHeroSeal small{font-size:8px;letter-spacing:.22em;color:#8ea6b7}
+.patroSectionNav{display:flex;flex-wrap:wrap;gap:7px}.patroSectionNav a{padding:8px 13px;border:1px solid var(--lineSoft);border-radius:30px;background:#071c2c;color:#b3c6d4;font-size:11px;text-decoration:none}
+.patroSectionNav a:hover{color:var(--gold2);border-color:var(--gold)}
+.patroControl{padding:19px}.patroControlHead{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:15px}
+.patroControlHead h2{font:500 clamp(20px,2.6vw,30px) Georgia,serif;color:var(--ivory);margin:7px 0}
+.patroTextButton{border:1px solid var(--lineSoft);background:#102e41;color:var(--gold2);border-radius:9px;padding:10px 12px;font-size:11px}
+.patroControlGrid{display:grid;grid-template-columns:1.65fr 1.25fr 1.3fr repeat(3,.75fr) .9fr auto;gap:9px;align-items:end}
+.patroControlGrid>label{display:grid;gap:7px;font-size:10px;color:#9cb1c0;min-width:0}
+.patroControlGrid input,.patroControlGrid select,.patroConverter input{background:#041422;border:1px solid var(--lineSoft);border-radius:8px;color:#e5eefa;padding:10px;min-width:0;width:100%;height:40px;font-size:11px}
+.patroDateInput{display:flex;gap:3px;min-width:0}.patroDateInput button,.patroMonthArrows button{background:#0b293d;border:1px solid var(--lineSoft);color:var(--gold2);padding:6px 10px;border-radius:7px}
+.patroDateInput input{min-width:125px}.patroCalculate{height:40px;min-width:135px;white-space:nowrap}
+.patroCommandStrip{margin-top:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--lineSoft);padding-top:12px;color:#9aaebd;font-size:10px}
+.patroCommandStrip b{color:var(--gold2)}.patroCommandButtons{display:flex;gap:5px;flex-wrap:wrap}.patroCommandButtons button{border:1px solid var(--lineSoft);background:rgba(4,20,31,.88);color:#b5c8d5;border-radius:7px;padding:7px 10px;font-size:10px}
+.patroError,.patroNoticeInline{border-radius:8px;padding:10px 12px;font-size:11px;line-height:1.6;margin:12px 0 0}.patroError{color:#ffc1c0;background:rgba(157,48,58,.17)}.patroNoticeInline{color:#aae4c9;background:rgba(55,115,81,.15)}
+.patroSectionTitle{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:14px}.patroSectionTitle h2{font:500 clamp(22px,2.8vw,31px) Georgia,serif;color:var(--ivory);margin:7px 0 0}.patroSectionTitle>span{font-size:10px;color:var(--muted)}
+.patroSectionTitle>a,.patroConverter>a,.patroTechnical>a{color:var(--gold2);font-size:11px;text-decoration:underline}
+.patroStudioGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.patroStudioCard{min-width:0;min-height:220px;display:flex;flex-direction:column;background:linear-gradient(145deg,#0c283b,#061625);border:1px solid var(--lineSoft);border-radius:14px;padding:16px;position:relative}
+.patroStudioCard.primary{border-color:rgba(215,169,79,.65);background:linear-gradient(145deg,#1e3441,#081822)}
+.patroCardTop{display:flex;align-items:center;justify-content:space-between;gap:8px}.patroCalendarIcon{font-size:29px}.patroStatus{border:1px solid var(--lineSoft);border-radius:30px;padding:6px 8px;text-transform:capitalize;font-size:9px}
+.patroStatus.ok{color:#a6d7c1}.patroStatus.pending{color:#ddb977}
+.patroStudioCard h3{font:500 20px Georgia,serif;margin:14px 0 8px;color:var(--ivory)}
+.patroCardValue{font:500 17px Georgia,serif;color:var(--gold2);line-height:1.35;min-height:47px}
+.patroStudioCard>p{font-size:10px;line-height:1.65;color:#8fa4b3}
+.patroAuthorityLink{display:block;color:var(--gold2);font-size:10px;margin:4px 0;text-decoration:underline}
+.patroCoverage{color:#90b3a2;font-size:9px;display:block;line-height:1.5}
+.patroCardBottom{margin-top:auto;border-top:1px solid var(--lineSoft);padding-top:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.patroCardBottom>a{color:var(--gold2);text-decoration:none;font-size:10px}.patroCardBottom details{font-size:10px;color:#a0b3c0;max-width:100%}
+.patroCardBottom summary{cursor:pointer}.patroCardBottom details p{line-height:1.65}
+.patroLoading,.patroEmpty{padding:14px;background:#071b2b;border:1px solid var(--lineSoft);border-radius:10px;color:#9eb3c2;font-size:11px}
+.patroPanchang{padding:19px}.patroPanchangGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.patroPanchangGrid>div{background:#081d2d;border:1px solid var(--lineSoft);border-radius:10px;padding:16px;min-width:0}
+.patroPanchangGrid span,.patroPanchangGrid small{display:block;color:#8da2b2;font-size:10px}.patroPanchangGrid strong{display:block;font:500 clamp(16px,2vw,23px) Georgia,serif;color:var(--gold2);margin:8px 0}
+.patroTechnical{margin-top:14px;border-top:1px solid var(--lineSoft);padding-top:12px;color:#95adbd;font-size:11px;line-height:1.6}
+.patroTechnical summary{color:var(--gold2);cursor:pointer}.patroTechnical p{max-width:1000px}
+.patroSecondaryGrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:12px}
+.patroMonth,.patroConverter{padding:19px;min-width:0}.patroMonthArrows{display:flex;gap:6px}
+.patroMonth h3{color:var(--gold2);font:500 21px Georgia,serif}
+.patroMonthGrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.patroMonthGrid .patroMonthDow{text-align:center;font-size:10px;color:#7891a3;padding:5px}
+.patroMonthGrid button{border:1px solid var(--lineSoft);border-radius:7px;padding:10px 2px;min-width:0;color:#c1d1dc;background:#081c2b;font-size:12px}
+.patroMonthGrid button.dim{color:#526d7f;background:#051421}.patroMonthGrid button.chosen,.patroMonthGrid button[aria-pressed=true]{background:rgba(213,170,88,.18);color:var(--gold2);border-color:var(--gold)}
+.patroCaption{font-size:10px;color:#7e96a7;line-height:1.5}
+.patroConverter h2,.patroAccount h2{font:500 27px Georgia,serif;color:var(--ivory);margin:8px 0}
+.patroConverter>p,.patroAccount p{font-size:11px;color:#90a8b7;line-height:1.7}
+.patroBsCurrent{display:grid;grid-template-columns:1fr 1.5fr;gap:9px;background:#061928;border:1px solid var(--lineSoft);border-radius:11px;padding:13px;margin:17px 0}
+.patroBsCurrent span{font-size:10px;color:#88a0b0}.patroBsCurrent strong{font-size:14px;color:var(--gold2)}
+.patroConverter form{margin-bottom:14px}.patroConverter form label{display:block;font-size:10px;color:#9eb5c3;margin-bottom:6px}.patroConverter form>div{display:flex;gap:8px}
+.patroConverter form input{flex:1}.patroConverter form button{white-space:nowrap}
+.patroBsMessage{font-size:11px;color:var(--gold2);line-height:1.65}
+.patroModules{padding:19px}.patroModuleGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.patroModuleGrid>a{display:flex;align-items:center;gap:12px;background:#071d2d;border:1px solid var(--lineSoft);border-radius:11px;text-decoration:none;padding:13px;min-width:0;color:#c6d5dd}
+.patroModuleGrid>a:hover{border-color:var(--gold)}.patroModuleIcon{font:500 23px Georgia,serif;color:var(--gold2);width:28px;text-align:center;flex-shrink:0}
+.patroModuleGrid a span:nth-child(2){min-width:0;flex:1}.patroModuleGrid strong,.patroModuleGrid small{display:block}.patroModuleGrid strong{font-size:12px}.patroModuleGrid small{font-size:9px;color:#8ca3b1;margin-top:5px;line-height:1.4}.patroModuleGrid b{font-size:12px;color:var(--gold2);font-weight:400}
+.patroAccount{padding:20px;display:flex;justify-content:space-between;gap:20px;align-items:center}.patroAccount>div:first-child{max-width:850px}.patroAccountButtons{display:flex;flex-wrap:wrap;gap:8px}.patroAccountButtons button{cursor:pointer}.patroAccountEmblem{font:500 82px Georgia,serif;color:rgba(219,179,106,.35);padding:25px}
+.patroSaved{display:grid;gap:6px;margin-top:13px}.patroSaved>div{border:1px solid var(--lineSoft);padding:8px;border-radius:8px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:7px}.patroSaved strong,.patroSaved small{font-size:10px;color:#bdccda}
+.patroFooter{padding:15px 0;border-top:1px solid var(--line);color:#829bad;font-size:11px;line-height:1.6}.patroFooter>div{display:flex;flex-wrap:wrap;gap:16px}.patroFooter a{color:var(--gold2)}
+@media(max-width:1250px){.patroControlGrid{grid-template-columns:repeat(4,minmax(0,1fr))}.patroStudioGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:920px){.patroSecondaryGrid{grid-template-columns:1fr}.patroModuleGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:660px){.patroHero{padding:20px}.patroHeroSeal{display:none}.patroControlGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.patroStudioGrid,.patroModuleGrid{grid-template-columns:1fr}.patroPanchangGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.patroControlHead{align-items:flex-start;flex-direction:column}.patroAccountEmblem{display:none}.patroAccount{padding:15px}}
+@media print{.side,.topbar,.mobileDock,.patroSectionNav,.patroControl,.patroModuleGrid,.patroAccountButtons,.patroMonthArrows,.patroCardBottom{display:none!important}.patroStudio{color:black}.patroStudioCard,.patroPanchang,.patroMonth,.patroConverter,.patroHero{color:black;background:white;box-shadow:none;border-color:#777}.patroStudioCard h3,.patroCardValue,.patroPanchangGrid strong,.patroHero h1{color:#111}}

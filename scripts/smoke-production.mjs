@@ -74,7 +74,7 @@ await json("/api/v1/agents/run", {
 const visualPages = [
   ["/app/wbe", "Nine spokes"],
   ["/app/gates", "729 comparative gates"],
-  ["/app/patro", "9 Calendars"],
+  ["/app/patro", "Nine Calendars"],
   ["/app/panchang", "Vedic Panchang"],
   ["/app/numerology", "Numerology laboratory"],
   ["/app/kundli", "Birth chart"],
@@ -307,6 +307,33 @@ for(const kind of ["source","authority"]){
   invariant(result.body.records.every(r=>r.status==="published"),"Unpublished "+kind+" record leaked.");
 }
 
+
+const linkedDay=await json("/api/v1/patro/day?date=2026-10-09&lat=27.7172&lon=85.3240&elevation=1400&tz=Asia%2FKathmandu&locale=en",undefined,200);
+invariant(linkedDay.body.calendars?.length===9,"Patro snapshot must contain nine calendars.");
+invariant(linkedDay.body.canonical?.instantUsed==="2026-10-09T06:15:00.000Z","Nepal local-noon instant is incorrect.");
+invariant(linkedDay.body.calendars.some(c=>c.id==="bs"&&c.status==="authority-sourced"),"Published BS date missing.");
+invariant(linkedDay.body.panchang?.tithi?.name&&linkedDay.body.panchang?.nakshatra?.name,"Patro Panchang values missing.");
+invariant(linkedDay.body.panchang?.sunTimes?.sunrise&&linkedDay.body.panchang?.sunTimes?.sunset,"Local sunrise/sunset missing.");
+invariant(linkedDay.body.links?.muhurat==="/app/muhurat","Module linking contract missing.");
+const oldPanchang=await json("/api/v1/panchang/day?date=2026-10-09&lat=27.7172&lon=85.3240&elevation=1400&tz=Asia%2FKathmandu",undefined,200);
+invariant(oldPanchang.body.tithi?.number===linkedDay.body.panchang.tithi.number,"Old Panchang API disagrees.");
+invariant(oldPanchang.body.sunTimes?.sunrise===linkedDay.body.panchang.sunTimes.sunrise,"Panchang sunrise mismatch.");
+const nyDay=await json("/api/v1/patro/day?date=2026-10-09&lat=40.7128&lon=-74.0060&elevation=10&tz=America%2FNew_York",undefined,200);
+invariant(nyDay.body.canonical?.instantUsed==="2026-10-09T16:00:00.000Z","New York local-noon instant is incorrect.");
+invariant(nyDay.body.panchang?.sunTimes?.sunrise&&nyDay.body.panchang?.sunTimes?.sunset,"New York local-day rise/set missing.");
+for(const path of [
+  "/api/v1/patro/day?date=2026-02-30",
+  "/api/v1/patro/day?date=2026-10-09&tz=Invalid%2FTimezone",
+  "/api/v1/patro/day?date=2026-10-09&lat=88",
+  "/api/v1/panchang/day?date=2026-02-30"
+])await json(path,undefined,400);
+const integratedPage=await hit("/app/patro",undefined,200);
+for(const label of ["Date navigator","Verified AD","Connected functions","Save private report","World Patro"]){
+  invariant(integratedPage.text.includes(label),"Linked Patro section missing "+label);
+}
+const linkedPanchang=await hit("/app/panchang?date=2026-10-09",undefined,200);
+invariant(linkedPanchang.text.includes("Vedic Panchang"),"Date-linked Panchang studio missing.");
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -359,6 +386,11 @@ console.log(JSON.stringify({
     "editorial-content-frontend",
     "source-registry-publication",
     "authority-notices-publication",
-    "published-only-source-provenance"
+    "published-only-source-provenance",
+    "patro-single-snapshot-consistency",
+    "patro-nepal-and-new-york-local-time",
+    "panchang-legacy-api-compatibility",
+    "patro-invalid-date-timezone-coordinates",
+    "patro-linked-module-sections"
   ]
 }));
