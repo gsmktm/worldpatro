@@ -9,7 +9,7 @@ export const dynamic="force-dynamic";
 const GROUPS=[
  {name:"TIME",slugs:["patro","panchang","astrology","kundli","muhurat","numerology","religions"]},
  {name:"INTELLIGENCE",slugs:["world","research","sources","alerts"]},
- {name:"BALANCE",slugs:["wbe","gates"]},
+ {name:"BALANCE",slugs:["wens","wbe","gates"]},
  {name:"OPERATIONS",slugs:["agents","workflows","admin","privacy","consult","learn"]}
 ] as const;
 const authSlugs=new Set(["research","alerts","workflows","privacy","consult"]);
