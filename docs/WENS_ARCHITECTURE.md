@@ -1,5 +1,7 @@
 # WENS · World Equilibrium & Navagraha System
 
+**Branding:** WBGR-109 · 1799 BS · WENS. The 1799 BS text is a user-supplied edition/designation, not a verified calendar-conversion claim. A newly curated 109-item path within 729 gates is editorial, not a derived natural constant.
+
 **Scope:** World Patro cultural-astronomical *interface*, not a replacement global time standard, faith authority, geopolitics engine or scientific theory.
 
 ## System composition
