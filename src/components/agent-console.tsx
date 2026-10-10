@@ -39,7 +39,7 @@ export function AgentConsole({
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
 
-  const runtimeReady = Boolean(status?.runtimeReady);
+  const runtimeReady = Boolean(status?.runtimeReady && status?.access.mode !== "api-key");
   const accessLabel =
     status?.access.mode === "authenticated"
       ? "account-gated"
@@ -51,11 +51,11 @@ export function AgentConsole({
     ? "Checking agent runtime…"
     : !status.readyForGateway
       ? "AI Gateway runtime is not available yet."
+      : status.access.mode === "api-key"
+        ? "API-key-only execution is not available from the public browser. Use an authorized server/API client."
       : status.access.mode === "authenticated" && !status.access.authenticatedBackendReady
         ? "Authenticated agent access is waiting for Firebase Admin or Supabase Auth activation."
-        : status.access.mode === "api-key" && !status.access.apiKeyConfigured
-          ? "API-key mode is selected, but no server API key is configured."
-          : "";
+        : "";
 
   function run(message: string) {
     const trimmed = message.trim();
