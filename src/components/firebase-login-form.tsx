@@ -4,7 +4,10 @@ import { FormEvent, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  inMemoryPersistence,
+  setPersistence,
+  signOut
 } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase/client";
 
@@ -36,6 +39,8 @@ export default function FirebaseLoginForm() {
 
     try {
       const auth = getFirebaseAuth();
+      // Server httpOnly cookie owns the session; do not persist a parallel browser login.
+      await setPersistence(auth, inMemoryPersistence);
       const credential = mode === "signup"
         ? await createUserWithEmailAndPassword(auth, email, password)
         : await signInWithEmailAndPassword(auth, email, password);
@@ -46,6 +51,7 @@ export default function FirebaseLoginForm() {
 
       const idToken = await credential.user.getIdToken(true);
       await establishServerSession(idToken);
+      await signOut(auth);
       window.location.assign("/app");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Authentication failed.");
@@ -54,13 +60,17 @@ export default function FirebaseLoginForm() {
     }
   }
 
-  return <form onSubmit={submit}>
-    <input name="email" type="email" placeholder="Email" required autoComplete="email"/>
-    <input name="password" type="password" placeholder="Password" minLength={8} required autoComplete={mode === "signup" ? "new-password" : "current-password"}/>
-    <button className="primaryBtn" disabled={busy}>{busy ? "Working…" : mode === "signup" ? "Create Firebase account" : "Sign in with Firebase"}</button>
-    <button type="button" onClick={() => setMode(mode === "login" ? "signup" : "login")}>
-      {mode === "login" ? "Create account" : "I already have an account"}
-    </button>
-    {message && <p className="error">{message}</p>}
+  return <form className="loginFields" onSubmit={submit}>
+    <label htmlFor="firebase-email">Email address</label>
+    <input id="firebase-email" name="email" type="email" placeholder="you@example.com" required autoComplete="email"/>
+    <label htmlFor="firebase-password">Password</label>
+    <input id="firebase-password" name="password" type="password" placeholder="Password" minLength={8} required autoComplete={mode === "signup" ? "new-password" : "current-password"}/>
+    <div className="loginFormActions">
+      <button className="primaryBtn" disabled={busy}>{busy ? "Working…" : mode === "signup" ? "Create Firebase account" : "Sign in with Firebase"}</button>
+      <button type="button" className="ghost" disabled={busy} onClick={() => setMode(mode === "login" ? "signup" : "login")}>
+        {mode === "login" ? "Create account" : "I already have an account"}
+      </button>
+    </div>
+    {message && <p className="error" role="alert">{message}</p>}
   </form>;
 }

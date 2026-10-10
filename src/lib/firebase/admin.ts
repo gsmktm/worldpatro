@@ -18,6 +18,10 @@ function readServiceAccount(): ServiceAccountShape {
   if (!parsed.project_id || !parsed.client_email || !parsed.private_key) {
     throw new Error("Firebase service-account JSON is incomplete.");
   }
+  // Prevent a service account from an unrelated project verifying/minting World Patro sessions.
+  if (parsed.project_id !== process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
+    throw new Error("Firebase service-account project does not match the configured web project.");
+  }
 
   return parsed as ServiceAccountShape;
 }

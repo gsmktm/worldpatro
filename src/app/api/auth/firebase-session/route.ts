@@ -20,6 +20,13 @@ export async function POST(request: Request) {
   try {
     const adminAuth = getFirebaseAdminAuth();
     const decoded = await adminAuth.verifyIdToken(body.idToken, true);
+    // Firebase recommends minting session cookies only from a recent user sign-in.
+    // Refreshing an ID token does not reset auth_time and cannot bypass this check.
+    if (typeof decoded.auth_time !== "number" ||
+        decoded.auth_time * 1000 > Date.now() + 60_000 ||
+        Date.now() - decoded.auth_time * 1000 > 5 * 60_000) {
+      return NextResponse.json({ error: "Recent sign-in required." }, { status: 401 });
+    }
     const sessionCookie = await adminAuth.createSessionCookie(body.idToken, { expiresIn: FIVE_DAYS_MS });
 
     const response = NextResponse.json({
