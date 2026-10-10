@@ -9,6 +9,7 @@ import "./styles/muhurat-studio.css";
 import "./styles/privacy-studio.css";
 import "./styles/admin-console.css";
 import "./styles/work-modules.css";
+import "./styles/system-live.css";
 
 export const metadata: Metadata = {
   title: { default:"World Patro", template:"%s · World Patro" },

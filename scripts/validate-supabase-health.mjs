@@ -1,0 +1,16 @@
+import assert from "node:assert/strict";
+const base = process.env.BASE_URL || "http://127.0.0.1:3100";
+const r = await fetch(new URL("/api/v1/supabase/status", base), {cache:"no-store"});
+assert.equal(r.status, 200, "Connection diagnostics endpoint must remain operational even without config");
+assert.match(r.headers.get("cache-control") || "", /no-store/, "Never cache database diagnostics");
+const data = await r.json();
+const statuses = new Set(["connected","not-configured","invalid-config","invalid-credentials","schema-missing","permission-denied","upstream-error","network-error"]);
+assert.equal(data.service, "supabase");
+assert.ok(statuses.has(data.status), "Unknown database connection state");
+assert.equal(typeof data.connected, "boolean");
+assert.equal(data.databaseVerified, data.connected);
+assert.equal(data.connected, data.status === "connected");
+assert.match(data.scope, /read-only/i);
+assert.ok(!("key" in data) && !("rows" in data) && !("data" in data), "Public diagnostics must not reveal secrets or records");
+assert.ok(data.checkedAt && !Number.isNaN(Date.parse(data.checkedAt)));
+console.log("Supabase live diagnostics contract valid:", data.status);

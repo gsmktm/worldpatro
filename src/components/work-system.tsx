@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import DatabaseHealth from "@/components/database-health";
 import {useEffect,useState} from "react";
 type Module={
   slug:string;title:string;group:string;url:string;api:string[];
@@ -40,6 +41,7 @@ export default function SystemOverview(){
       <div><span>Firebase Admin</span><strong>{snapshot.infrastructure.firebaseAdminConfigured?"Configured":"Pending"}</strong></div>
       <div><span>Agent gateway</span><strong>{snapshot.infrastructure.gatewayConfigured?"Detected":"Not detected"}</strong></div>
     </div>}
+    <DatabaseHealth />
     <div className="workToolbar"><label htmlFor="filter-modules">Find a module</label>
       <input id="filter-modules" value={filter} onChange={e=>setFilter(e.target.value)} placeholder="Panchang, agent, sources…"/>
       <button className="ghost" disabled={fetching} onClick={load}>{fetching?"Checking…":"Refresh availability"}</button>

@@ -2,6 +2,7 @@
 
 import {useEffect,useMemo,useState,useTransition,type FormEvent} from "react";
 import Link from "next/link";
+import DatabaseHealth from "@/components/database-health";
 import type {AdminKind,AdminRecord,AdminState} from "@/lib/admin/contracts";
 const KINDS:[AdminKind,string][]=[
   ["source","Source Registry"],["authority","Calendar Authority"],["observance","Religious Observances"],["article","Learning Articles"]
@@ -135,6 +136,7 @@ export default function AdminConsole(){
       <Link className="ghost" href="/app/authorities">Authority notices ↗</Link>
       </div>
     </div>
+    <DatabaseHealth compact />
     {readOnly&&<p className="adminWarning">This role has read-only oversight. Editing and publication require the server-granted administrator role.</p>}
     {overview&&<div className="adminMetrics">
       {(["total","draft","inReview","published","archived"] as const).map(key=><article key={key}>
