@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GATES } from "@/lib/wbe";
-import { WBGR109, selectWensGate, WENS_DISCLOSURE } from "@/lib/wens";
+import { WBGR109, WENS_DISCLOSURE } from "@/lib/wens";
+import { displayWbgrGate } from "@/lib/wbgr";
 
 export function GET(request:NextRequest) {
   const params=request.nextUrl.searchParams;
@@ -21,12 +22,6 @@ export function GET(request:NextRequest) {
   let rows=view==="all"?GATES:WBGR109;
   if(indexes.some(x=>x!==null)){
     rows=rows.filter(g=>{
-      const source=selectWensGate(
-        indexes[0]===null?0:indexes[0]-1,
-        indexes[1]===null?0:indexes[1]-1,
-        indexes[2]===null?0:indexes[2]-1
-      );
-      void source; // selection is validated; use codes for actual filtering below.
       const parts=g.code.split("-").slice(1).map(Number);
       return indexes.every((value,index)=>value===null||parts[index]===value);
     });
@@ -34,7 +29,7 @@ export function GET(request:NextRequest) {
   if(search)rows=rows.filter(g=>[g.code,g.tradition,g.graha,g.power,g.domain].some(v=>v.toLowerCase().includes(search)));
   return NextResponse.json({
     view,registered:WBGR109.length,fullCube:GATES.length,total:rows.length,page,limit,
-    gates:rows.slice((page-1)*limit,page*limit),
+    gates:rows.slice((page-1)*limit,page*limit).map(displayWbgrGate),
     disclosure:WENS_DISCLOSURE.symbolic
   },{headers:{"Cache-Control":"public, s-maxage=300"}});
 }
