@@ -334,6 +334,48 @@ for(const label of ["Date navigator","Verified AD","Connected functions","Save p
 const linkedPanchang=await hit("/app/panchang?date=2026-10-09",undefined,200);
 invariant(linkedPanchang.text.includes("Vedic Panchang"),"Date-linked Panchang studio missing.");
 
+
+const platform=await json("/api/v1/platform/modules",undefined,200);
+invariant(platform.body.total===19,"Platform Command Map requires all 19 listed modules.");
+invariant(platform.body.agentSpecialists?.length===6,"Agent supervisor must declare exactly six bounded specialist roles.");
+const allModuleUrls=new Set(platform.body.modules.map(m=>m.url));
+invariant(allModuleUrls.size===19&&[...allModuleUrls].every(x=>x.startsWith("/app/")),
+  "Module links must be unique internal World Patro routes.");
+const expectedModulePaths=[
+  ["/app/world","World Intelligence"],
+  ["/app/research","Research Workspace"],
+  ["/app/alerts","Watchlists"],
+  ["/app/workflows","Order"],
+  ["/app/consult","Astrologer Consultations"],
+  ["/app/agents","World Patro Agent Conductor"],
+  ["/app/sources","Source Registry"],
+  ["/app/system","Platform Command Map"]
+];
+for(const [path,marker] of expectedModulePaths){
+  const p=await hit(path,undefined,200);
+  invariant(p.text.includes(marker),path+" missing interactive module interface.");
+}
+const publicSources=await json("/api/v1/sources",undefined,200);
+invariant(publicSources.body.sources?.length>=2,"Source registry lost its built-in public providers.");
+for(const path of ["/api/v1/research/items?notebookId=sample", "/api/v1/consultations"]){
+  const r=await fetch(new URL(path,base));
+  invariant([401,503].includes(r.status),"Private resource unexpectedly exposed: "+path);
+}
+for(const path of ["/api/v1/research/items","/api/v1/consultations"]){
+  await json(path,{
+    method:"POST",
+    headers:{"content-type":"application/json","origin":"https://cross-origin.invalid","sec-fetch-site":"cross-site"},
+    body:"{}"
+  },403);
+}
+await json("/api/v1/notifications/abcde12345",{
+  method:"PATCH",
+  headers:{"content-type":"application/json","origin":"https://cross-origin.invalid","sec-fetch-site":"cross-site"},
+  body:JSON.stringify({read:true})
+},403);
+const statusAgent=await json("/api/v1/agents/status",undefined,200);
+invariant(statusAgent.body.specialists?.length===6,"Agent specialist status API changed.");
+
 console.log(JSON.stringify({
   ok: true,
   checks: [
@@ -391,6 +433,12 @@ console.log(JSON.stringify({
     "patro-nepal-and-new-york-local-time",
     "panchang-legacy-api-compatibility",
     "patro-invalid-date-timezone-coordinates",
-    "patro-linked-module-sections"
+    "patro-linked-module-sections",
+    "all-19-module-links-and-statuses",
+    "six-agent-role-mapping",
+    "interactive-world-and-private-workspaces",
+    "built-in-source-registry",
+    "account-data-owner-guards",
+    "cross-origin-private-mutations"
   ]
 }));
