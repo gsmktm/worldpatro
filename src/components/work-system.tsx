@@ -28,7 +28,7 @@ export default function SystemOverview(){
   const visible=snapshot?.modules.filter(m=>
     !filter||[m.title,m.group,m.slug].some(s=>s.toLowerCase().includes(filter.toLowerCase())))||[];
   return <section className="moduleWorkbench">
-    <div className="workHero"><div className="eyebrow">ONE SYSTEM · 19 LINKED FUNCTIONS</div>
+    <div className="workHero"><div className="eyebrow">ONE SYSTEM · {snapshot?.total ?? "…"} LINKED FUNCTIONS</div>
       <h1>Platform Command Map</h1>
       <p>A live inventory of modules, linked APIs and their readiness gates. “Available” means the application route exists and its core implementation is present—not that every provider is reachable or every private operation has been authenticated and tested.</p>
       <div className="workModuleLinks"><Link href="/app/patro">Open nine calendars →</Link><Link href="/app/agents">Open supervisor →</Link><Link href="/app/admin">Open admin →</Link></div>

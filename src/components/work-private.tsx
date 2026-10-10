@@ -48,6 +48,8 @@ export default function PrivateWorkbench({kind}:{kind:ModuleKind}){
         const extra=await api("/api/v1/astrologers");setSecondary(asRows(extra.astrologers));
       }
     }catch(e){
+      // Never retain another session's previously displayed private records on refresh failure.
+      setRows([]);setSecondary([]);setSelected("");
       const message=e instanceof Error?e.message:"Unable to load.";
       setError(message);
       setStatus(/sign in|authenticat/i.test(message)?"login":"setup");

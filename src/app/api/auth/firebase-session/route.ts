@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server";
+import { readMutationJson, requireSameOrigin } from "@/lib/http/write-guard";
 import { getFirebaseAdminAuth } from "@/lib/firebase/admin";
 import { firebaseSessionCookieName, isFirebaseAdminConfigured } from "@/lib/firebase/config";
 
 const FIVE_DAYS_MS = 5 * 24 * 60 * 60 * 1000;
 
 export async function POST(request: Request) {
+  const input = await readMutationJson(request, 32768);
+  if (!input.ok) return input.response;
   if (!isFirebaseAdminConfigured()) {
     return NextResponse.json({ error: "Firebase Admin is not configured." }, { status: 503 });
   }
 
-  const body = await request.json().catch(() => null) as { idToken?: string } | null;
-  if (!body?.idToken) {
+  const body = input.data as { idToken?: unknown } | null;
+  if (typeof body?.idToken !== "string" || body.idToken.length < 20 || body.idToken.length > 16384) {
     return NextResponse.json({ error: "idToken is required." }, { status: 400 });
   }
 
@@ -38,7 +41,9 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
   const response = NextResponse.json({ ok: true });
   response.cookies.set(firebaseSessionCookieName, "", {
     httpOnly: true,

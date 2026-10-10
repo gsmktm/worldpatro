@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readMutationJson } from "@/lib/http/write-guard";
 import { z } from "zod";
 import { useFirebaseBackend } from "@/lib/firebase/config";
 import { getFirebaseUser } from "@/lib/firebase/user";
@@ -18,7 +19,7 @@ export async function GET() {
   }
 
   const supabase=await createClient();
-  if(!supabase) return NextResponse.json({configured:false,orders:[]});
+  if(!supabase) return NextResponse.json({error:"Account storage is not configured.",configured:false},{status:503});
   const {data:claims}=await supabase.auth.getClaims(); const userId=claims?.claims?.sub;
   if(!userId) return NextResponse.json({error:"Authentication required"},{status:401});
   const {data,error}=await supabase.from("workflow_orders").select("*").eq("owner_user_id",userId).order("created_at",{ascending:false}).limit(100);
@@ -27,7 +28,9 @@ export async function GET() {
 }
 
 export async function POST(request:Request) {
-  const parsed=CreateOrder.safeParse(await request.json().catch(()=>null));
+  const body = await readMutationJson(request, 8192);
+  if (!body.ok) return body.response;
+  const parsed=CreateOrder.safeParse(body.data);
   if(!parsed.success) return NextResponse.json({error:"Invalid order",issues:parsed.error.issues},{status:400});
 
   if (useFirebaseBackend()) {
@@ -38,11 +41,15 @@ export async function POST(request:Request) {
       dueAt: parsed.data.dueAt ?? null, status: "draft", requiresHumanConfirmation: true,
       createdAt: serverNow(), updatedAt: serverNow()
     };
-    const ref = await userCollection(user.uid, "workflowOrders").add(order);
-    await userCollection(user.uid, "notifications").add({
-      topic:"workflow",severity:parsed.data.priority==="critical"?"important":"notice",
+    const ref = userCollection(user.uid, "workflowOrders").doc();
+    const notificationRef = userCollection(user.uid, "notifications").doc();
+    const batch = ref.firestore.batch();
+    batch.set(ref, order);
+    batch.set(notificationRef, {
+      topic:"workflow",severity:["high","critical"].includes(parsed.data.priority)?"important":"notice",
       title:"Workflow created",body:parsed.data.title,orderId:ref.id,createdAt:serverNow()
     });
+    await batch.commit();
     return NextResponse.json({ backend:"firebase", order:{id:ref.id,...order,createdAt:null,updatedAt:null}},{status:201});
   }
 
