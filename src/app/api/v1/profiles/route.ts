@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readMutationJson } from "@/lib/http/write-guard";
 import { z } from "zod";
 import { getFirebaseUser } from "@/lib/firebase/user";
 import { listUserDocs, serverNow, userCollection } from "@/lib/firebase/data";
@@ -32,7 +33,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const parsed = BirthProfileInput.safeParse(await request.json().catch(() => null));
+  const body = await readMutationJson(request, 16384);
+  if (!body.ok) return body.response;
+  const parsed = BirthProfileInput.safeParse(body.data);
   if (!parsed.success) return NextResponse.json({ error: "Invalid birth profile", issues: parsed.error.issues }, { status: 400 });
   const v = parsed.data;
 
