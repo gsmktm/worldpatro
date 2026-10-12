@@ -44,9 +44,35 @@ assert.equal(filtered.body.total,1);
 assert.equal(filtered.body.gates[0].code,"WBGR-109-01-02-03");
 assert.equal(filtered.body.gates[0].legacyCode,"WBE-01-02-03");
 
+// Public registry must search both the new WBGR ID and its legacy WBE alias.
+const modern=await get("/api/v1/wens/gates?view=all&q=WBGR-109-01-02-03");
+assert.equal(modern.status,200);
+assert.equal(modern.body.total,1);
+assert.equal(modern.body.gates[0].legacyCode,"WBE-01-02-03");
+const legacy=await get("/api/v1/wens/gates?view=all&q=WBE-01-02-03");
+assert.equal(legacy.status,200);
+assert.equal(legacy.body.total,1);
+assert.equal(legacy.body.gates[0].code,"WBGR-109-01-02-03");
+const oldApi=await get("/api/v1/wbe/gates?q=WBE-01-02-03");
+assert.equal(oldApi.status,200);
+assert.equal(oldApi.body.total,1);
+const modernApi=await get("/api/v1/wbgr/gates?q=WBGR-109-01-02-03");
+assert.equal(modernApi.status,200);
+assert.equal(modernApi.body.total,1);
+for(const query of ["page=0","page=-1","page=1.5","page=","limit=0","limit=1e2","limit=110"]){
+ const invalid=await get("/api/v1/wens/gates?"+query);
+ assert.equal(invalid.status,400,"Invalid pagination accepted: "+query);
+}
+const wensPage=await fetch(origin+"/app/wens");
+const wensHtml=await wensPage.text();
+assert.equal(wensPage.status,200);
+assert.ok(wensHtml.includes("WBGR-109"));
+assert.ok(wensHtml.includes("1799 BS"));
+assert.ok(wensHtml.includes("WENS"));
+
 const badDate=await get("/api/v1/wens/snapshot?date=2026-02-30");
 assert.equal(badDate.status,400);
 const badFilter=await get("/api/v1/wens/gates?graha=10");
 assert.equal(badFilter.status,400);
 
-console.log("WENS acceptance checks: passed — 9 calendars, 9 grahas, 9 traditions, 109 curated, 729 full, UNESCO origin and validation.");
+console.log("WENS acceptance checks: passed — 9 calendars, 9 grahas, 109 registry, 729 gates, dual-code search, strict pagination, branding and authority boundaries.");
