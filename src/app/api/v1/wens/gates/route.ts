@@ -7,7 +7,9 @@ export function GET(request:NextRequest) {
   const params=request.nextUrl.searchParams;
   const numberParam=(key:string,fallback:number)=> {
     const raw=params.get(key);
-    return raw===null?fallback:Number(raw);
+    if(raw===null)return fallback;
+    if(!/^[1-9][0-9]*$/.test(raw))return NaN;
+    return Number(raw);
   };
   const page=numberParam("page",1);
   const limit=numberParam("limit",27);
@@ -26,7 +28,12 @@ export function GET(request:NextRequest) {
       return indexes.every((value,index)=>value===null||parts[index]===value);
     });
   }
-  if(search)rows=rows.filter(g=>[g.code,g.tradition,g.graha,g.power,g.domain].some(v=>v.toLowerCase().includes(search)));
+  // Accept both legacy and modern WBGR codes; keep stored identities unchanged.
+  if(search)rows=rows.filter(g=>{
+    const display=displayWbgrGate(g);
+    return [g.code,display.code,g.tradition,g.graha,g.power,g.domain]
+      .some(v=>v.toLowerCase().includes(search));
+  });
   return NextResponse.json({
     view,registered:WBGR109.length,fullCube:GATES.length,total:rows.length,page,limit,
     gates:rows.slice((page-1)*limit,page*limit).map(displayWbgrGate),

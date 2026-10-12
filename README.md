@@ -305,3 +305,7 @@ World Patro's symbolic balance module is publicly renamed **WBGR-109 · 1799 BS 
 This does not alter the original mathematical model: 9 traditions × 9 grahas × 9 themes = 729 combinations and nine anchor gates. 1799 BS is treated as the user-defined designation, **not** an official date or a count of 1,799 gates.
 
 New endpoints: /api/v1/wbgr, /api/v1/wbgr/gates, /api/v1/wbgr/assess, /api/v1/wbgr/snapshots. The original /api/v1/wbe endpoints and existing kind=wbe saved records remain compatible. New API gate codes include the older legacyCode value for references and search. See docs/WBGR_109_WENS.md.
+
+
+## WENS v2 integrity follow-up
+The WENS registry search API now finds both WBGR-109 and historical WBE gate codes without migrating stored records; malformed pagination is rejected. The WENS UI cancels stale date calculations, supports shareable dates, links the selected registry card to the balance editor, and labels municipality-sourced dates separately from unsupported calendars. Its WBGR-109 identity remains a symbolic framework; the original 729 comparisons are not silently replaced.

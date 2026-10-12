@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GATES, GRAHAS, POWERS, TRADITIONS } from "@/lib/wbe";
 import { WBGR109, WENS_DISCLOSURE, WENS_LAYERS, WENS_ORIGIN } from "@/lib/wens";
 import { displayWbgrGate } from "@/lib/wbgr";
@@ -49,24 +49,44 @@ export default function WensStudio(){
   const [registryQuery,setRegistryQuery]=useState("");
   const [registryPage,setRegistryPage]=useState(1);
   const [expandedTruth,setExpandedTruth]=useState(false);
+  const activeRequest=useRef<AbortController|null>(null);
 
   const load=useCallback(async(selected:string)=>{
-    if(!selected)return;
+    const dateValue=new Date(selected+"T12:00:00.000Z");
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(selected)
+      ||!Number.isFinite(dateValue.valueOf())
+      ||dateValue.toISOString().slice(0,10)!==selected
+      ||Number(selected.slice(0,4))<1900||Number(selected.slice(0,4))>2100){
+      setError("Choose a valid Gregorian date between 1900 and 2100.");
+      return;
+    }
+    activeRequest.current?.abort();
+    const controller=new AbortController();
+    activeRequest.current=controller;
     setLoading(true);
     setError("");
+    setSnapshot(null);
     try{
-      const response=await fetch("/api/v1/wens/snapshot?date="+encodeURIComponent(selected),{cache:"no-store"});
+      const response=await fetch("/api/v1/wens/snapshot?date="+encodeURIComponent(selected),{
+        cache:"no-store",signal:controller.signal
+      });
       const body=await response.json();
       if(!response.ok)throw new Error(body.error||"Cannot calculate this date.");
+      if(controller.signal.aborted)return;
       setSnapshot(body as Snapshot);
-    }catch(e){setError(e instanceof Error?e.message:"WENS is unavailable.");}
-    finally{setLoading(false);}
+      window.history.replaceState(null,"",window.location.pathname+"?date="+encodeURIComponent(selected)+window.location.hash);
+    }catch(e){
+      if(!controller.signal.aborted)setError(e instanceof Error?e.message:"WENS is unavailable.");
+    }finally{
+      if(!controller.signal.aborted)setLoading(false);
+    }
   },[]);
 
   useEffect(()=>{
-    const today=nepalDate();
-    setDate(today);
-    void load(today);
+    const selected=new URLSearchParams(window.location.search).get("date")||nepalDate();
+    setDate(selected);
+    void load(selected);
+    return ()=>activeRequest.current?.abort();
   },[load]);
 
   const gate=GATES[selectedTradition*81+selectedGraha*9+selectedPower];
@@ -110,7 +130,13 @@ export default function WensStudio(){
       <div className="wensHeaderRow"><div><div className="eyebrow">01 · TIME & NAVAGRAHA</div><h2>Live calculation desk</h2><p>Choose a Gregorian date. Graha positions and the nine calendar profiles are calculated for 12:00 civil time at the Hanuman Dhoka reference.</p></div>
         <div className="wensDateControl">
           <label htmlFor="wens-date">Canonical date · Kathmandu</label>
-          <input id="wens-date" type="date" min="1900-01-01" max="2100-12-31" value={date} onChange={e=>setDate(e.target.value)}/>
+          <input id="wens-date" type="date" min="1900-01-01" max="2100-12-31" value={date} onChange={e=>{
+            activeRequest.current?.abort();
+            setLoading(false);
+            setSnapshot(null);
+            setDate(e.target.value);
+            setError("");
+          }}/>
           <button type="button" disabled={loading||!date} onClick={()=>void load(date)}>{loading?"Calculating…":"Synchronize ↗"}</button>
         </div>
       </div>
@@ -135,9 +161,9 @@ export default function WensStudio(){
         </article>
 
         <article className="wensPanel wensCalendars">
-          <div className="wensPanelTop"><span>NINE CALENDAR LENSES</span><Link href="/app/patro">Full Patro ↗</Link></div>
+          <div className="wensPanelTop"><span>NINE CALENDAR LENSES</span><Link href={"/app/patro"+(snapshot?"?date="+snapshot.instant.date:"")}>Full Patro ↗</Link></div>
           <div className="wensCalendarList">{(snapshot?.calendarProfiles??[]).map((entry,i)=><div key={entry.id}>
-            <span>{String(i+1).padStart(2,"0")}</span><div><strong>{entry.name}</strong><small>{entry.value}</small></div><i title={entry.provenance}>{entry.status==="calculated"?"CALCULATED":"REVIEW"}</i>
+            <span>{String(i+1).padStart(2,"0")}</span><div><strong>{entry.name}</strong><small>{entry.value}</small></div><i title={entry.provenance}>{entry.status==="calculated"?"CALCULATED":entry.status==="authority-sourced"?"MUNICIPAL SOURCE":"SOURCE NEEDED"}</i>
           </div>)}</div>
           {!snapshot&&<p className="wensFine">Calendars will appear after the first synchronization.</p>}
           {snapshot&&<div className="wensPanchang"><div><small>TITHI</small><strong>{snapshot.panchang.tithi.paksha} · {snapshot.panchang.tithi.name}</strong></div><div><small>NAKSHATRA</small><strong>{snapshot.panchang.nakshatra.name}</strong></div><div><small>SUNRISE</small><strong>{snapshot.panchang.sunTimes.sunrise??"Unavailable"}</strong></div></div>}
@@ -145,7 +171,7 @@ export default function WensStudio(){
       </div>
     </section>
 
-    <section className="wensWorkspace">
+    <section className="wensWorkspace" id="wens-balance">
       <div className="wensHeaderRow"><div><div className="eyebrow">02 · COMPARATIVE BALANCE ENGINE</div><h2>9 × 9 × 9 · one selected gate</h2><p>Choose each dimension independently. These are editorial reflection lenses; no planet owns a religion, and no tradition is ranked.</p></div><span className="wensCount">729 <small>combinations</small></span></div>
       <div className="wensDimensions">
         <div className="wensDimension"><h3><span>01</span> Traditions</h3><div role="group" aria-label="Choose a religious tradition">{TRADITIONS.map((value,i)=><button type="button" aria-pressed={selectedTradition===i} key={value} onClick={()=>setSelectedTradition(i)}><b>{String(i+1).padStart(2,"0")}</b>{value}</button>)}</div></div>
@@ -168,7 +194,7 @@ export default function WensStudio(){
       <div className="wensRegistryGrid">{registryItems.map(item=><button type="button" key={item.code} onClick={()=>{
         const parts=item.code.split("-").slice(1).map(Number);
         setSelectedTradition(parts[0]-1);setSelectedGraha(parts[1]-1);setSelectedPower(parts[2]-1);
-        document.getElementById("wens-cockpit")?.scrollIntoView({behavior:"smooth"});
+        document.getElementById("wens-balance")?.scrollIntoView({behavior:"smooth"});
       }}><strong>{displayWbgrGate(item).code}</strong><span>{item.power}</span><small>{item.tradition} · {item.graha}</small></button>)}</div>
       {registry.length===0&&<p className="wensFine">No matching gates. Edit the search above.</p>}
       <div className="wensRegistryPages"><button disabled={page===1} onClick={()=>setRegistryPage(page-1)}>← Previous</button><span>{page} / {totalPages}</span><button disabled={page>=totalPages} onClick={()=>setRegistryPage(page+1)}>Next →</button></div>
@@ -179,7 +205,7 @@ export default function WensStudio(){
         <button type="button" className="ghost" aria-expanded={expandedTruth} onClick={()=>setExpandedTruth(v=>!v)}>{expandedTruth?"Hide methodology ↑":"Read full methodology ↓"}</button></div>
       <div className="wensLayerGrid">{WENS_LAYERS.map(l=><article key={l.id}><span>{l.category}</span><h3>{l.title}</h3><p>{l.summary}</p></article>)}</div>
       {expandedTruth&&<div className="wensTruthList">{Object.entries(WENS_DISCLOSURE).map(([name,description])=><p key={name}><strong>{name.toUpperCase()}</strong> {description}</p>)}<p><a href={WENS_ORIGIN.geographicReference} target="_blank" rel="noopener noreferrer">UNESCO geographic source ↗</a></p></div>}
-      <div className="wensFooterActions"><button type="button" className="primaryBtn" disabled={!snapshot} onClick={()=>snapshot&&revealJson({...snapshot,selectedGate:gate})}>Export calculated snapshot JSON ↓</button><Link className="ghost" href="/app/religions">Verified religious observances ↗</Link><Link className="ghost" href="/app/wbe">WBE-9 reflection ↗</Link><Link className="ghost" href="/app/sources">Source registry ↗</Link></div>
+      <div className="wensFooterActions"><button type="button" className="primaryBtn" disabled={!snapshot} onClick={()=>snapshot&&revealJson({...snapshot,selectedGate:displayWbgrGate(gate)})}>Export calculated snapshot JSON ↓</button><Link className="ghost" href="/app/religions">Verified religious observances ↗</Link><Link className="ghost" href="/app/wbe">WBGR-109 reflection ↗</Link><Link className="ghost" href="/app/sources">Source registry ↗</Link></div>
       {snapshot&&<p className="wensFine">Data resolved for {snapshot.instant.date} at {snapshot.instant.timezone}. WBGR daily editorial gate: {snapshot.gates.gateOfDate.code}. Last calculated: {new Date(snapshot.updatedAt).toLocaleString()}.</p>}
     </section>
   </div>;
