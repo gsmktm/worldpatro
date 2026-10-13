@@ -28,6 +28,8 @@ export function AppShell({ children }:{ children:React.ReactNode }) {
       </Link>
 
       <Link href="/app/system" className="workSystemNav" aria-current={pathname==="/app/system"?"page":undefined}>◎ All 20 modules · System status →</Link>
+      <Link href="/app/jyotish-explorer" className="workSystemNav" aria-current={pathname==="/app/jyotish-explorer"?"page":undefined}>✧ Jyotish Observatory · 10 tools →</Link>
+      <Link href="/app/people" className="workSystemNav" aria-current={pathname?.startsWith("/app/people")?"page":undefined}>◈ Public Lives Atlas · Evidence →</Link>
       <nav className="sideNav" aria-label="World Patro modules">
         {groups.map(group => <div className="navGroup" key={group.label}>
           <div className="navLabel">{group.label}</div>

@@ -18,6 +18,8 @@ export default function Landing() {
       <p>Calendar truth, astronomical sacred time, public-source intelligence, evidence workflows and bounded AI — composed as one quiet command system.</p>
       <div className="ctaRow">
         <Link className="primary" href="/app">Enter Command Center</Link>
+        <Link className="ghost" href="/app/jyotish-explorer">Jyotish Observatory</Link>
+        <Link className="ghost" href="/app/people">Public Lives Atlas</Link>
         <Link className="ghost" href="/app/wens">Explore WENS</Link>
         <Link className="ghost" href="/app/agents">Meet the Agents</Link>
         <Link className="ghost" href="/app/patro">Open 9 Calendars</Link>
