@@ -1,0 +1,123 @@
+/* World Patro Jyotish Observatory: independent Nepal-first UI */
+.jm{--jgold:#dbb570;--jtext:#f3e8d4;--jmuted:#9bafbc;--jline:rgba(225,181,108,.22);display:grid;gap:26px;padding:0 0 44px}
+.jm h1,.jm h2,.jm h3{font-family:Georgia,serif;letter-spacing:-.03em}
+.jm h2{font-weight:400;color:var(--jtext);font-size:clamp(27px,3vw,38px);margin:7px 0}
+.jm p{line-height:1.6}
+.jmKicker{font-size:9px;letter-spacing:.22em;color:var(--jgold);font-weight:850}
+.jmHero{overflow:hidden;position:relative;isolation:isolate;background:radial-gradient(circle at 87% 32%,rgba(213,154,64,.19),transparent 28%),linear-gradient(130deg,#112e42,#071521 70%,#15121b);border:1px solid rgba(230,186,109,.37);border-radius:24px;padding:26px 30px 0}
+.jmHero:before{content:"";z-index:-1;position:absolute;inset:auto 0 0;height:32%;opacity:.4;background:linear-gradient(0deg,#040c15,transparent);clip-path:polygon(0 78%,14% 62%,24% 70%,37% 30%,48% 70%,59% 50%,70% 77%,82% 24%,94% 62%,100% 50%,100% 100%,0 100%)}
+.jmHeroEyebrow{display:flex;align-items:center;gap:10px;color:#adbfc7;font-size:9px;letter-spacing:.13em;font-weight:800}
+.jmOm{display:grid;place-items:center;width:42px;height:42px;background:rgba(227,177,85,.1);border:1px solid var(--jline);border-radius:12px;color:#eccb87;font-size:25px}
+.jmHeroColumns{min-height:334px;display:grid;grid-template-columns:1.5fr .7fr;gap:10px;align-items:center}
+.jmHero h1{font-weight:400;font-size:clamp(39px,5vw,67px);line-height:1.09;margin:14px 0;color:#fcf3e6}
+.jmHero h1 em{font-style:normal;color:#e7bc75}
+.jmIntro{font-size:13px;max-width:620px;color:#adc0cb}
+.jmHeroActions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px;padding-bottom:20px}
+.jmGoldButton,.jmOutlineButton{display:inline-flex;justify-content:center;align-items:center;gap:12px;min-height:42px;padding:11px 16px;border-radius:9px;font-size:11px;font-weight:800;text-decoration:none;cursor:pointer}
+.jmGoldButton{background:linear-gradient(120deg,#f0d89d,#c69244);color:#1a1b20;border:1px solid #eec680}
+.jmOutlineButton{background:#0b1b29;color:#ebcf98;border:1px solid rgba(222,174,91,.35)}
+.jmGoldButton:hover:not(:disabled),.jmOutlineButton:hover{filter:brightness(1.13)}
+.jmGoldButton:disabled{opacity:.6;cursor:wait}
+.jmMandala{position:relative;justify-self:center;display:grid;place-items:center;width:220px;height:220px;border-radius:50%;border:1px solid #6b5a3e;background:repeating-conic-gradient(rgba(213,177,113,.1) 0deg 2deg,transparent 2deg 30deg),radial-gradient(circle,rgba(211,167,99,.16),transparent 75%);box-shadow:0 0 0 22px rgba(225,184,111,.027),inset 0 0 55px #071521}
+.jmMandala:before,.jmMandala:after{content:"";position:absolute;inset:20px;border:1px dashed rgba(224,185,107,.6);border-radius:50%}
+.jmMandala:after{inset:48px;border-style:solid}
+.jmMandala span{font:65px Georgia,serif;color:#efcb8a}
+.jmMandala i{position:absolute;inset:0;transform:rotate(45deg)}
+.jmMandala i:before{content:"✦";position:absolute;left:50%;top:-10px;color:#e7c88f}
+.jmMandala i:nth-of-type(2){transform:rotate(165deg)}.jmMandala i:nth-of-type(3){transform:rotate(285deg)}
+.jmHeroFoot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;border-top:1px solid var(--jline);padding:14px 0;color:#adbbc2;font-size:9px}
+.jmMetrics{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.jmMetrics div{border:1px solid var(--jline);border-radius:13px;background:linear-gradient(130deg,#102838,#081622);padding:17px;display:grid;gap:5px}
+.jmMetrics strong{color:#f0d298;font:32px Georgia,serif}
+.jmMetrics span{font-size:10px;color:#9db0bd}
+.jmDirectory,.jmLab,.jmTransit{display:grid;gap:18px;scroll-margin-top:95px}
+.jmSectionTop{display:flex;justify-content:space-between;align-items:end;gap:14px}
+.jmSectionTop p:not(.jmKicker){font-size:12px;color:var(--jmuted);margin:0}
+.jmSectionNumber{color:#dabb87;white-space:nowrap;letter-spacing:.09em;font-size:9px;border:1px solid var(--jline);border-radius:50px;padding:9px}
+.jmFilters{display:flex;gap:11px;flex-wrap:wrap;align-items:center}
+.jmSearch{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;background:#0b1f2f;border:1px solid var(--jline);border-radius:10px;padding:0 12px;color:var(--jgold);font-size:20px}
+.jmSearch input{width:100%;min-width:0;background:transparent;border:0;outline:0;color:#f1e9d9;padding:13px 0;font-size:12px}
+.jmSearch:focus-within{border-color:#e2b771}
+.jmTabs,.jmModePicker{display:flex;flex-wrap:wrap;gap:6px}
+.jmTabs button,.jmModePicker button{cursor:pointer;border:1px solid var(--jline);background:#0b1d2c;color:#a9bbca;border-radius:9px;padding:9px 12px;font-size:10px}
+.jmTabs button[aria-pressed=true],.jmModePicker button[aria-pressed=true]{background:rgba(225,170,77,.19);border-color:#dbb570;color:#f7dba2}
+.jmToolGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.jmTool{min-width:0;min-height:210px;display:flex;flex-direction:column;border:1px solid var(--jline);border-radius:14px;background:linear-gradient(140deg,#102b3c,#081721);padding:15px;transition:transform .2s,border-color .2s}
+.jmTool:hover{border-color:#b68d51;transform:translateY(-2px)}
+.jmToolUpper{display:flex;justify-content:space-between;align-items:start;gap:8px}
+.jmGlyph{width:39px;height:39px;display:grid;place-items:center;border-radius:10px;background:rgba(212,168,84,.15);border:1px solid var(--jline);color:#e3ba79;font:25px Georgia,serif}
+.jmToolStatus{font-size:8px;color:#92cdb1}
+.jmTool h3{font-size:17px;font-weight:400;line-height:1.2;color:#f6e8d2;margin:17px 0 7px}
+.jmTool p{font-size:10px;color:#8da7b6;margin:0 0 10px}
+.jmToolBottom{margin-top:auto;border-top:1px solid rgba(255,255,255,.08);padding-top:10px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.jmToolBottom small{font-size:8px;color:#7c96a6}.jmToolBottom button,.jmToolBottom a{cursor:pointer;border:0;background:none;color:#f1ce90;font-size:10px;padding:3px;text-align:right}
+.jmToolBottom button:hover,.jmToolBottom a:hover{text-decoration:underline}
+.jmEmpty,.jmLoading{font-size:12px;color:var(--jmuted);border:1px dashed var(--jline);border-radius:12px;padding:22px}
+.jmLab,.jmTransit{background:linear-gradient(150deg,#0e2536,#071420);border:1px solid var(--jline);padding:23px;border-radius:20px}
+.jmLabColumns{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(250px,.85fr);gap:14px}
+.jmFormPanel,.jmResultPanel{min-width:0;border-radius:13px;border:1px solid var(--jline);padding:20px;background:#071624}
+.jmFormPanel h3,.jmResultPanel h3{color:#efdbba;font-size:27px;font-weight:400;margin:14px 0 6px}
+.jmFormHelp,.jmFine{font-size:10px;color:#91a9b7;line-height:1.65}
+.jmModePicker button{font-size:9px;padding:8px}
+.jmForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:16px}
+.jmForm label,.jmTransitDate{display:grid;gap:7px;font-size:10px;color:#a7b9c2}
+.jmForm label:nth-child(3),.jmPair,.jmForm button{grid-column:1/-1}
+.jmPair{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.jmForm input,.jmForm select,.jmTransitDate input{min-width:0;width:100%;padding:11px;border:1px solid var(--jline);border-radius:9px;background:#0b2433;color:#f6f0e8;font-size:12px}
+.jmForm input:focus,.jmForm select:focus,.jmTransitDate input:focus{outline:1px solid #dfb875}
+.jmForm button{width:100%}
+.jmResultPanel{display:flex;flex-direction:column;min-height:376px;background:radial-gradient(circle at 70% 32%,rgba(200,149,70,.08),transparent 35%),#071521}
+.jmPanelHead{display:flex;justify-content:space-between;gap:10px;padding-bottom:13px;border-bottom:1px solid var(--jline);color:#a1b2be;font-size:9px;letter-spacing:.08em}
+.jmLiveDot{color:#91d0ad}
+.jmResultEmpty{margin:auto;text-align:center;max-width:250px}
+.jmResultEmpty>span{font-size:45px;color:#e9c68e}
+.jmResultEmpty p,.jmResultContent p{font-size:12px;color:#aebfca}
+.jmResultContent h3{font-size:36px}
+.jmBigDegree{font:28px Georgia,serif!important;color:#e9c68c!important}.jmBigDegree span{font:9px system-ui,sans-serif;color:#90a6b6}
+.jmMiniTable{display:grid;gap:0;max-height:260px;overflow:auto;margin:12px 0}
+.jmMiniTable div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(255,255,255,.07);padding:8px 0;font-size:10px}
+.jmMiniTable span{color:#96adbc}.jmMiniTable strong{color:#e4c99b;text-align:right}
+.jmResultContent .jmOutlineButton{margin-top:10px}
+.jmError{font-size:12px;color:#ffbdbb;background:rgba(154,37,56,.18);padding:12px;border-radius:10px;border:1px solid rgba(236,112,117,.3)}
+.jmTransitDate{width:min(220px,100%)}
+.jmTransitGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.jmTransitGrid article{min-width:0;border:1px solid var(--jline);border-radius:13px;padding:13px;background:#0b1d2b}
+.jmTransitGrid article>div{display:flex;align-items:center;gap:8px;color:#a8bbc5;font-size:10px}
+.jmPlanetSymbol{color:#e6c085;font-size:22px;width:25px}
+.jmTransitGrid article>div small{margin-left:auto;color:#e1bb7b;border:1px solid var(--jline);border-radius:50%;padding:3px}
+.jmTransitGrid strong{display:flex;justify-content:space-between;gap:6px;color:#edddc2;font:24px Georgia,serif;margin:10px 0 4px}
+.jmTransitGrid em{font:13px system-ui,sans-serif;color:#bca77d;font-style:normal}
+.jmTransitGrid article p{font-size:10px;margin:0;color:#94aabc}
+.jmClosing{display:grid;grid-template-columns:65px minmax(0,1fr) auto;gap:17px;align-items:center;background:linear-gradient(120deg,#192d38,#081521);border:1px solid var(--jline);border-radius:15px;padding:22px}
+.jmClosing>span{color:#e6bd79;font-size:43px}
+.jmClosing h2{font-size:24px}.jmClosing p{font-size:11px;color:#95aab9;margin:0;max-width:650px}
+.jmPeopleGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.jmPeopleCategories{margin-top:-7px}
+.jmPersonCard{min-width:0;display:grid;grid-template-columns:85px 1fr;gap:12px;border:1px solid var(--jline);border-radius:14px;background:linear-gradient(130deg,#102838,#081723);padding:13px}
+.jmPersonPortrait{position:relative;overflow:hidden;border-radius:10px;min-height:200px;display:grid;place-items:center;background:radial-gradient(circle at 50% 18%,rgba(220,175,102,.29),transparent 40%),linear-gradient(155deg,#244455,#091826)}
+.jmPersonPortrait:after{content:"";position:absolute;inset:12px;border:1px solid var(--jline);border-radius:40px 40px 8px 8px}
+.jmPersonPortrait span{color:#e9c98f;font:30px Georgia,serif}.jmPersonPortrait i{position:absolute;bottom:12px;color:#cdaa71}
+.jmPersonInfo{display:flex;flex-direction:column;min-width:0}
+.jmPersonInfo small{font-size:9px;color:#ddbb83;letter-spacing:.06em}
+.jmPersonInfo h3{color:#f3e5d5;font:19px Georgia,serif;margin:10px 0 3px}
+.jmPersonInfo p{font-size:10px;color:#a1b1bf;margin:6px 0}.jmPersonInfo .jmNameNe{color:#dec18e;font-size:12px}
+.jmPersonFact{display:flex;justify-content:space-between;gap:8px;border-top:1px solid rgba(255,255,255,.07);padding:8px 0;font-size:9px}
+.jmPersonFact span{color:#879ca9}.jmPersonFact strong{color:#dfc398;text-align:right}
+.jmPersonInfo>a{font-size:10px;color:#e8c98a;margin-top:auto;padding-top:10px}
+.jmPagination{display:flex;justify-content:center;align-items:center;gap:12px;font-size:10px;color:#92a6b5}
+.jmPagination button{cursor:pointer;border:1px solid var(--jline);border-radius:8px;background:#0b2232;color:#e8c88d;padding:9px}
+.jmPagination button:disabled{opacity:.4;cursor:default}
+.jmBreadcrumb{display:flex;gap:9px;font-size:11px;color:#9dafbe}.jmBreadcrumb a{color:#e9c993}
+.jmProfileHead,.jmProfileFacts,.jmProfileBoundary{border:1px solid var(--jline);background:linear-gradient(135deg,#112d3e,#081824);border-radius:15px;padding:24px}
+.jmProfileHead h1{color:#f3dfb9;font:44px Georgia,serif;margin:18px 0 0}.jmProfileHead h2{font-size:22px;color:#e3c693}
+.jmProfileHead p,.jmProfileFacts p,.jmProfileBoundary p{font-size:12px;color:#9eb4c1}
+.jmProfileGrid{display:grid;grid-template-columns:1.12fr .88fr;gap:13px}
+.jmProfileFacts dl div{display:grid;grid-template-columns:130px 1fr;gap:12px;border-bottom:1px solid rgba(255,255,255,.09);padding:11px 0;font-size:12px}
+.jmProfileFacts dt{color:#809cab}.jmProfileFacts dd{margin:0;color:#f3e6cd;overflow-wrap:anywhere}
+.jmSource{display:inline-block;color:#e7c88b;font-size:11px;text-decoration:underline;overflow-wrap:anywhere}
+.jmBigOm{text-align:center;font-size:60px;color:#e9c68c}
+@media(max-width:1250px){.jmToolGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.jmPeopleGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:950px){.jmLabColumns,.jmProfileGrid{grid-template-columns:1fr}.jmHeroColumns{grid-template-columns:1fr .5fr}.jmMandala{width:165px;height:165px}.jmMetrics{grid-template-columns:repeat(2,1fr)}.jmClosing{grid-template-columns:55px 1fr}.jmClosing>a{grid-column:2;justify-self:start}}
+@media(max-width:680px){.jmHero{padding:19px 19px 0}.jmHeroColumns{display:block;min-height:0}.jmHero h1{font-size:40px}.jmMandala{display:none}.jmHeroFoot{font-size:8px}.jmMetrics div{padding:12px}.jmMetrics strong{font-size:24px}.jmSectionTop{align-items:start}.jmSectionNumber{display:none}.jmToolGrid,.jmPeopleGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.jmTool{padding:11px;min-height:195px}.jmTool h3{font-size:15px}.jmTool p{font-size:9px}.jmTabs{width:100%}.jmTabs button{flex:1}.jmLab,.jmTransit{padding:14px}.jmFormPanel,.jmResultPanel{padding:14px}.jmTransitGrid{grid-template-columns:repeat(2,1fr)}.jmPersonCard{grid-template-columns:1fr}.jmPersonPortrait{min-height:92px}.jmProfileFacts dl div{grid-template-columns:1fr;gap:4px}.jmClosing{grid-template-columns:1fr}.jmClosing>a{grid-column:1}.jmPeopleCategories{margin-top:0}}
+@media(max-width:380px){.jmToolGrid,.jmPeopleGrid,.jmTransitGrid,.jmForm{grid-template-columns:1fr}.jmForm label,.jmPair,.jmForm button{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){.jmTool{transition:none}.jmTool:hover{transform:none}}
