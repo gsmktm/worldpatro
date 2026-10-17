@@ -360,7 +360,14 @@ create policy "research items own" on public.research_items for all to authentic
 create policy "watchlists own" on public.watchlists for all to authenticated using ((select auth.uid())=user_id) with check ((select auth.uid())=user_id);
 create policy "notifications own read" on public.notifications for select to authenticated using ((select auth.uid())=user_id);
 create policy "notifications own update" on public.notifications for update to authenticated using ((select auth.uid())=user_id) with check ((select auth.uid())=user_id);
-create policy "workflow orders own" on public.workflow_orders for all to authenticated using ((select auth.uid())=owner_user_id) with check ((select auth.uid())=owner_user_id);
+-- Require ownership, draft-only insert/edit; state changes exclusively via transition_workflow_order RPC.
+create policy "workflow orders own read" on public.workflow_orders
+for select to authenticated using ((select auth.uid())=owner_user_id);
+create policy "workflow orders own create draft" on public.workflow_orders
+for insert to authenticated with check ((select auth.uid())=owner_user_id and status='draft' and approval_state='{}'::jsonb);
+create policy "workflow orders own edit draft" on public.workflow_orders
+for update to authenticated using ((select auth.uid())=owner_user_id and status='draft')
+with check ((select auth.uid())=owner_user_id and status='draft');
 create policy "workflow events via owned order" on public.workflow_events for select to authenticated using (exists(select 1 from public.workflow_orders o where o.id=order_id and o.owner_user_id=(select auth.uid())));
 create policy "wbe own or anonymous insert" on public.wbe_assessments for insert to authenticated with check (user_id is null or user_id=(select auth.uid()));
 create policy "wbe own read" on public.wbe_assessments for select to authenticated using (user_id=(select auth.uid()));
@@ -368,8 +375,13 @@ create policy "consultations own" on public.consultations for all to authenticat
 
 -- Explicit Data API grants (required for current Supabase defaults).
 grant select on public.calendar_profiles,public.source_registry,public.authority_releases,public.entities,public.events,public.claims,public.evidence,public.religious_observances,public.astrologers,public.articles to anon,authenticated;
-grant select,update on public.profiles,public.notifications to authenticated;
-grant select,insert,update,delete on public.birth_profiles,public.saved_reports,public.research_notebooks,public.research_items,public.watchlists,public.workflow_orders,public.wbe_assessments,public.consultations to authenticated;
+-- Column-limited UPDATE prevents editing the user profile role and notification text.
+grant select on public.profiles,public.notifications to authenticated;
+grant update(display_name,locale,timezone,home_lat,home_lon) on public.profiles to authenticated;
+grant update(read_at,acknowledged_at) on public.notifications to authenticated;
+grant select,insert on public.workflow_orders to authenticated;
+grant update(title,description,priority,jurisdiction,related_entity_id,due_at,requires_human_confirmation,evidence_bundle) on public.workflow_orders to authenticated;
+grant select,insert,update,delete on public.birth_profiles,public.saved_reports,public.research_notebooks,public.research_items,public.watchlists,public.wbe_assessments,public.consultations to authenticated;
 grant select on public.workflow_events to authenticated;
 grant usage,select on sequence public.workflow_events_id_seq to authenticated;
 
