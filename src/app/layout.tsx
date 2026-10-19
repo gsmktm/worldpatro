@@ -11,6 +11,7 @@ import "./styles/admin-console.css";
 import "./styles/work-modules.css";
 import "./styles/system-live.css";
 import "./styles/login-auth.css";
+import "./styles/jyotish-explorer.css";
 
 export const metadata: Metadata = {
   title: { default:"World Patro", template:"%s · World Patro" },
