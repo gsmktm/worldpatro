@@ -25,12 +25,21 @@ export function requireSameOrigin(request: Request): NextResponse | null {
   return null;
 }
 
-export async function readMutationJson(
-  request: Request,
-  maxBytes = 8192
-): Promise<{ ok: true; data: unknown } | { ok: false; response: NextResponse }> {
+type ReadResult = { ok: true; data: unknown } | { ok: false; response: NextResponse };
+
+/** Public calculators accept cross-origin JSON but must still enforce size limits. */
+export function readPublicJson(request: Request, maxBytes = 4096): Promise<ReadResult> {
+  return readJsonLimited(request, maxBytes);
+}
+
+/** Private cookie-backed mutations additionally reject cross-origin requests. */
+export function readMutationJson(request: Request, maxBytes = 8192): Promise<ReadResult> {
   const originError = requireSameOrigin(request);
-  if (originError) return { ok: false, response: originError };
+  if (originError) return Promise.resolve({ ok: false, response: originError });
+  return readJsonLimited(request, maxBytes);
+}
+
+async function readJsonLimited(request: Request, maxBytes: number): Promise<ReadResult> {
 
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
     return { ok: false, response: errorResponse("Use application/json.", 415) };

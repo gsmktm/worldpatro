@@ -1,5 +1,6 @@
 import {NextResponse} from "next/server";
 import {z} from "zod";
+import {readMutationJson} from "@/lib/http/write-guard";
 import {useFirebaseBackend} from "@/lib/firebase/config";
 import {getFirebaseUser} from "@/lib/firebase/user";
 import {serializeDocument,userCollection} from "@/lib/firebase/data";
@@ -8,15 +9,11 @@ import {requireUser} from "@/lib/auth";
 const Patch=z.object({read:z.boolean().optional(),acknowledged:z.boolean().optional()}).strict()
   .refine(p=>Object.keys(p).length>0,"Supply at least one change.");
 export async function PATCH(request:Request,{params}:{params:Promise<{id:string}>}){
-  if(request.headers.get("sec-fetch-site")==="cross-site")return NextResponse.json({error:"Cross-origin update denied."},{status:403});
-  const origin=request.headers.get("origin");
-  if(origin){try{
-    if(new URL(origin).origin!==new URL(request.url).origin)return NextResponse.json({error:"Cross-origin update denied."},{status:403});
-  }catch{return NextResponse.json({error:"Invalid Origin."},{status:403});}}
+  const body=await readMutationJson(request,4096);
+  if(!body.ok)return body.response;
   const {id}=await params;
   if(!/^[A-Za-z0-9_-]{5,128}$/.test(id))return NextResponse.json({error:"Invalid notification ID."},{status:400});
-  if(!request.headers.get("content-type")?.startsWith("application/json"))return NextResponse.json({error:"Use JSON."},{status:415});
-  const input=Patch.safeParse(await request.json().catch(()=>null));
+  const input=Patch.safeParse(body.data);
   if(!input.success)return NextResponse.json({error:"Invalid notification update."},{status:400});
   if(useFirebaseBackend()){
     const user=await getFirebaseUser();
