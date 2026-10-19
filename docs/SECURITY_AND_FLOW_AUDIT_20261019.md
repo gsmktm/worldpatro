@@ -12,6 +12,7 @@ This is a source-based review of critical routes, authentication, admin, SQL sch
 | P1 | Supabase public.notifications | Broad UPDATE includes trusted notification content, not just read/acknowledged timestamps. | Adopt narrower column grants in PR #19 after validation. |
 | P1 | Login provider | main can display Firebase login whenever Firebase Admin and client keys exist, even if intended data backend is Supabase. | Review Supabase-only login fix and auth recovery in PR #19; validate real sign-in/confirmation/reset paths. |
 | P1 | Birth-profile mutation API | PATCH read unbounded JSON without shared same-origin check; DELETE lacked same-origin check and reported success even if no matching row. | Fixed in this patch: bounded JSON guard, ID validation, empty-change rejection, ownership filtered deletion with 404 on absent row. |
+| P1 | Public calculator POST APIs | Calendar conversion and WBE assessment previously parsed unbounded JSON. WBE also coerced score values at the engine layer. | Fixed in this patch: shared public bounded JSON reader, 4 KiB cap, and strict nine-score validation; added negative-route smoke assertions. |
 | P1 | Notification mutation API | PATCH used unbounded request.json and custom inconsistent JSON/origin handling. | Fixed in this patch: common bounded mutation guard with negative-path regression tests. |
 | P1 | Research items | An owner policy on research_items.user_id alone does not bind notebook_id to a notebook with the same owner. | Add an integrity constraint / trusted trigger or parent-owner RLS check; test direct Data API inserts across user boundaries. |
 | P1 | Authenticated agents | AI execution depends on gateway credentials and access mode. Production defaults authenticated, but explicit public mode has potential usage/cost abuse. | Confirm production mode, add persistent per-identity quota/rate limits, exercise tool and model failure paths. |
@@ -30,7 +31,7 @@ This is a source-based review of critical routes, authentication, admin, SQL sch
 
 ## Required acceptance gates before production
 1. Merge only reviewed and independently passing changes; compare PR #19 and this PR and confirm they do not conflict.
-2. Run CI typecheck, Next build, astronomy golden tests, route graph, production smoke, WENS, auth and mutation guard checks.
+2. Run CI typecheck, Next build, astronomy golden tests, route graph, production smoke, WENS, auth and private/public JSON mutation guard checks.
 3. Backup and apply reviewed least-privilege schema changes to an authorized **staging** Supabase project; run Supabase security/performance advisors and SQL privilege assertions.
 4. Test anonymous/owner/other-user/editor/admin access, direct table writes, RPC workflow transitions, deleted/missing rows and CSRF/oversized bodies.
 5. Test sign-up, confirmation callback, login, logout, reset, user-created content, admin publishing and version-conflict behavior using test accounts.
