@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { readMutationJson, requireSameOrigin } from "@/lib/http/write-guard";
 import { requireUser } from "@/lib/auth";
 
 const UpdateProfile = z.object({
@@ -15,11 +16,17 @@ const UpdateProfile = z.object({
 });
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const body = await readMutationJson(request, 8192);
+  if (!body.ok) return body.response;
+  const { id } = await params;
+  if (!z.string().uuid().safeParse(id).success)
+    return NextResponse.json({ error: "Invalid birth profile ID" }, { status: 400 });
+  const parsed = UpdateProfile.safeParse(body.data);
+  if (!parsed.success) return NextResponse.json({ error: "Invalid profile update", issues: parsed.error.issues }, { status: 400 });
+  if (!Object.keys(parsed.data).length)
+    return NextResponse.json({ error: "No changes supplied" }, { status: 400 });
   const auth = await requireUser();
   if (auth.error || !auth.supabase || !auth.userId) return auth.error!;
-  const { id } = await params;
-  const parsed = UpdateProfile.safeParse(await request.json().catch(() => null));
-  if (!parsed.success) return NextResponse.json({ error: "Invalid profile update", issues: parsed.error.issues }, { status: 400 });
   const v = parsed.data;
   const patch: Record<string, unknown> = {};
   if (v.name !== undefined) patch.name = v.name;
@@ -36,11 +43,17 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   return NextResponse.json({ profile: data });
 }
 
-export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
+  const { id } = await params;
+  if (!z.string().uuid().safeParse(id).success)
+    return NextResponse.json({ error: "Invalid birth profile ID" }, { status: 400 });
   const auth = await requireUser();
   if (auth.error || !auth.supabase || !auth.userId) return auth.error!;
-  const { id } = await params;
-  const { error } = await auth.supabase.from("birth_profiles").delete().eq("id", id).eq("user_id", auth.userId);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ ok: true });
+  const { data, error } = await auth.supabase.from("birth_profiles")
+    .delete().eq("id", id).eq("user_id", auth.userId).select("id").maybeSingle();
+  if (error) return NextResponse.json({ error: "Profile deletion unavailable" }, { status: 503 });
+  if (!data) return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+  return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
 }
