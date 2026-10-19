@@ -32,4 +32,15 @@ await expectStatus("notification PATCH rejects malformed JSON", notification,
 await expectStatus("notification PATCH caps body", notification,
   { method: "PATCH", headers: json, body: JSON.stringify({ read: true, text: "x".repeat(5000) }) }, 413);
 
-console.log("Authenticated mutation guard regression checks passed.");
+const calendar = origin + "/api/v1/calendar/convert";
+const wbe = origin + "/api/v1/wbe/assess";
+await expectStatus("calendar calculation rejects non-JSON", calendar,
+  { method: "POST", headers: { "content-type": "text/plain" }, body: "no" }, 415);
+await expectStatus("calendar calculation rejects oversize JSON", calendar,
+  { method: "POST", headers: json, body: JSON.stringify({ date: "2026-10-19", padding: "x".repeat(5000) }) }, 413);
+await expectStatus("WBE assessment rejects invalid scores", wbe,
+  { method: "POST", headers: json, body: JSON.stringify({ scores: [1,2] }) }, 400);
+await expectStatus("WBE assessment rejects oversize JSON", wbe,
+  { method: "POST", headers: json, body: JSON.stringify({ scores: Array(9).fill(5), padding: "x".repeat(5000) }) }, 413);
+
+console.log("Account and public calculator JSON guard regression checks passed.");
