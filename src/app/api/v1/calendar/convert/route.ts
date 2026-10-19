@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { buildCalendarSnapshot } from "@/lib/calendars";
+import { readPublicJson } from "@/lib/http/write-guard";
 
 const Input = z.object({ date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/), locale:z.enum(["en","ne"]).default("en") });
 
 export async function POST(request:Request) {
-  const parsed = Input.safeParse(await request.json().catch(()=>null));
+  const body = await readPublicJson(request, 4096);
+  if (!body.ok) return body.response;
+  const parsed = Input.safeParse(body.data);
   if (!parsed.success) return NextResponse.json({error:"Expected { date: YYYY-MM-DD, locale?: string }",issues:parsed.error.issues},{status:400});
   const date = new Date(`${parsed.data.date}T12:00:00Z`);
   if (Number.isNaN(date.getTime())||date.toISOString().slice(0,10)!==parsed.data.date)
