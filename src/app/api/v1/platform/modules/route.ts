@@ -50,7 +50,7 @@ export function GET(){
     categories:GROUPS.map(g=>({title:g.name,count:g.slugs.length})),
     modules,agentSpecialists:AGENT_PROFILES.map(p=>({name:p.name,role:p.role,mission:p.mission,boundary:p.boundary})),
     infrastructure:{
-      dataBackend:backend,firebaseWebConfigured:isFirebaseClientConfigured(),
+      dataBackend:backend,supabaseConfigured:isSupabaseConfigured(),firebaseWebConfigured:isFirebaseClientConfigured(),
       firebaseAdminConfigured:isFirebaseAdminConfigured(),gatewayConfigured:gateway,agentAccess:access
     },
     caveat:"Static route availability does not prove live provider data, live database access or third-party booking. Account and administrator actions require verified authentication."

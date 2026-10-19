@@ -25,6 +25,8 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run typecheck
+      - name: Verify Supabase least-privilege schema
+        run: node scripts/validate-supabase-security.mjs
       - name: External astronomical golden dates (USNO)
         run: node scripts/validate-astronomy.mjs
       - run: npm run build

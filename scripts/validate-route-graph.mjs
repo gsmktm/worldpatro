@@ -21,7 +21,7 @@ assert.equal(inventory.categories.reduce((sum,c) => sum + c.count,0), inventory.
 assert.equal(inventory.modules.find(m=>m.slug==="wens")?.group, "BALANCE", "WENS must belong to the BALANCE navigation group");
 assert.ok(inventory.modules.every(m=>m.group!=="OTHER"), "No module may be orphaned from the navigator");
 
-const basePages = ["/", "/app", "/app/system", "/app/authorities", "/login"];
+const basePages = ["/", "/app", "/app/account", "/app/system", "/app/authorities", "/login", "/login/recovery"];
 for (const module of inventory.modules) basePages.push(module.url);
 for (const route of new Set(basePages)) {
   const { response, body } = await hit(route);
