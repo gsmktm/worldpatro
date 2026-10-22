@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./styles/tokens.css";
 import "./styles/wbe-studio.css";
 import "./styles/wens-studio.css";
 import "./styles/patro-studio.css";

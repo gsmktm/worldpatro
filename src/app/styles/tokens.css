@@ -1,0 +1,31 @@
+/* World Patro · Himalayan Observatory design tokens.
+   Prefixed --wp-* / --t-* so they never collide with legacy globals.css variables. */
+:root{
+  /* surfaces */
+  --wp-void:#04070d; --wp-night:#071423; --wp-panel:#0b1d30; --wp-panel-2:#0f2740;
+  --wp-line:rgba(222,180,94,.20); --wp-line-soft:rgba(255,255,255,.07);
+  /* ink */
+  --wp-ivory:#f5efe2; --wp-text:#e8eff5; --wp-muted:#8fa3b6;
+  /* brand: existing gold + sun + Himalayan snow */
+  --wp-gold:#d7a94f; --wp-gold-2:#f0d696; --wp-sun:#ff9f43; --wp-snow:#bfe6ff; --wp-crimson:#9b233a;
+  /* truth states (README production principle 3) */
+  --t-fact:#5bd19e; --t-authority:#6aa8ff; --t-astronomy:#7fd8ff; --t-interpretation:#c49bff;
+  --t-symbolism:#f0d696; --t-scenario:#ff9f5a; --t-unknown:#94a3b8;
+  /* type */
+  --wp-serif:Georgia,"Times New Roman",serif;
+  --wp-sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","Noto Sans Devanagari",sans-serif;
+  --wp-mono:ui-monospace,"JetBrains Mono",monospace;
+  --fs-xs:11px; --fs-sm:13px; --fs-md:15px; --fs-lg:20px; --fs-xl:28px; --fs-hero:clamp(44px,6vw,76px);
+  /* shape & motion */
+  --r-sm:10px; --r-md:14px; --r-lg:20px; --wp-shadow:0 24px 80px rgba(0,0,0,.35);
+  --wp-ease:cubic-bezier(.2,.7,.2,1); --wp-dur:180ms;
+}
+@media (prefers-reduced-motion:reduce){:root{--wp-dur:0ms}}
+
+/* Truth chip */
+.truthChip{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;border:1px solid currentColor;font:700 10px/1 var(--wp-sans);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.truthChip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.t-fact{color:var(--t-fact)}.t-authority{color:var(--t-authority)}.t-astronomy{color:var(--t-astronomy)}
+.t-interpretation{color:var(--t-interpretation)}.t-symbolism{color:var(--t-symbolism)}
+.t-scenario{color:var(--t-scenario)}.t-unknown{color:var(--t-unknown)}
+.truthLegend{display:flex;flex-wrap:wrap;gap:8px}
