@@ -12,12 +12,18 @@ import "./styles/work-modules.css";
 import "./styles/system-live.css";
 import "./styles/login-auth.css";
 import "./styles/jyotish-explorer.css";
+import "./styles/tokens.css";
+import "./styles/observatory.css";
 
 export const metadata: Metadata = {
   title: { default:"World Patro", template:"%s · World Patro" },
-  description:"Global Calendar, Astrology, Sacred Time & World Intelligence OS — Nepal to the world."
+  description:"Your Nepali calendar, Panchang, festivals, Jyotish, personal planner and everyday tools. Rooted in Nepal. Connected to the world.",
+  applicationName:"World Patro",
+  manifest:"/manifest.webmanifest",
+  icons:{icon:"/icon.svg",apple:"/icon.svg"}
 };
 
 export default function RootLayout({children}:{children:React.ReactNode}) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:'try{document.documentElement.dataset.wpTheme=localStorage.getItem("worldpatro.theme.v1")==="day"?"day":"night"}catch(e){}'}}/></head><body>{children}</body></html>;
 }
+

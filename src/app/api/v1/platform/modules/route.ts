@@ -7,10 +7,10 @@ import {isSupabaseConfigured} from "@/lib/env";
 
 export const dynamic="force-dynamic";
 const GROUPS=[
- {name:"TIME",slugs:["patro","panchang","astrology","kundli","muhurat","numerology","religions"]},
+ {name:"TIME",slugs:["patro","panchang","astrology","kundli","muhurat","numerology","religions","festivals","tools"]},
  {name:"INTELLIGENCE",slugs:["world","research","sources","alerts"]},
  {name:"BALANCE",slugs:["wens","wbe","gates"]},
- {name:"OPERATIONS",slugs:["agents","workflows","admin","privacy","consult","learn"]}
+ {name:"OPERATIONS",slugs:["agents","workflows","admin","privacy","consult","learn","planner"]}
 ] as const;
 const authSlugs=new Set(["research","alerts","workflows","privacy","consult"]);
 const editorialSlugs=new Set(["religions","learn"]);
@@ -38,7 +38,7 @@ export function GET(){
       url:"/app/"+feature.slug,api:feature.api||[],
       access:accessType,availability:state,implementation:feature.status,
       requiresExternalAuthority:feature.slug==="religions"||feature.slug==="patro",
-      note:state==="available"?"Route and core implementation available; individual source providers may still fail.":
+      note:feature.slug==="planner"?"Device planner available without login; account sync requires configured Supabase authentication and the existing saved_reports schema.":state==="available"?"Route and core implementation available; individual source providers may still fail.":
        state==="requires-published-sources"?"Page exists; only reviewed, published records will appear.":
        state==="requires-admin-role"?"Server-verified administrator role and database required.":
        state==="requires-ai-access"?"Gateway and access mode must be configured before AI agent execution.":
@@ -56,3 +56,4 @@ export function GET(){
     caveat:"Static route availability does not prove live provider data, live database access or third-party booking. Account and administrator actions require verified authentication."
   },{headers:{"Cache-Control":"no-store"}});
 }
+

@@ -10,6 +10,9 @@ export type Feature = {
 };
 
 export const FEATURES: Feature[] = [
+  { slug:"festivals", title:"Festival Calendar", eyebrow:"Culture & Community", description:"Reviewed Kartik 2083 observances with municipal sources, search, personal-planner links and calendar export.", functions:["Source-labelled festival dates","Upcoming and reviewed-date views","Nepali and English names","RFC 5545 calendar export","Add to personal planner"], api:["/api/v1/festivals"], status:"live-core" },
+  { slug:"planner", title:"My Planner", eyebrow:"Personal Calendar", description:"Personal events and notes on your device, with optional authenticated Supabase account storage using the existing owner-protected report store.", functions:["Create, edit and complete personal events","Device storage without an account","Optional owner-scoped account CRUD","Search and coming-up filters","Calendar and JSON backup export"], api:["/api/v1/planner"], tables:["saved_reports"], status:"live-core" },
+  { slug:"tools", title:"Everyday Tools", eyebrow:"Useful Utilities", description:"Reviewed AD/BS conversion, civil date difference, age, Nepali number conversion and world clocks.", functions:["AD ↔ BS within reviewed source months","Timezone-aware world clocks","Civil date difference and age","Nepali / English digit conversion","Clipboard export"], api:["/api/v1/calendar/bs/convert"], status:"live-core" },
   { slug:"patro", title:"9 Calendars · One Patro", eyebrow:"Time Engine", description:"One linked location-and-date workspace with nine calendar profiles, Panchang and source-bounded Nepal BS conversion.", functions:["One-call day and location snapshot","Interactive month/date navigation","Verified AD↔BS conversion","Sunrise/Moonrise and tithi/nakshatra/yoga","Share link / JSON / ICS / Print","Optional private report saving","Cross-module links and evidence"], api:["/api/v1/patro/day","/api/v1/patro/today","/api/v1/panchang/day","/api/v1/calendar/bs/convert","/api/v1/reports"], status:"live-core" },
   { slug:"panchang", title:"Vedic Panchang", eyebrow:"Astronomy", description:"Location-aware astronomical Panchang with explicit traditional interpretation boundary.", functions:["Tithi & Paksha","Nakshatra","Yoga","Sunrise / Sunset","Moonrise / Moonset","Lahiri sidereal positions"], api:["/api/v1/panchang/day"], tables:["saved_reports"], status:"live-core" },
   { slug:"astrology", title:"Astrology Studio", eyebrow:"Interpretive Layer", description:"Working birth-chart, planetary positions, selected Vargas and Vimshottari chronology. Transit forecasts remain pending.", functions:["Kundli calculation","Planetary longitude and motion","Seven divisional charts","Vimshottari chronology","User-owned report saving"], api:["/api/v1/jyotish/kundli"], tables:["saved_reports"], status:"live-core" },
@@ -33,3 +36,4 @@ export const FEATURES: Feature[] = [
 ];
 
 export const FEATURE_MAP = new Map(FEATURES.map(f => [f.slug, f]));
+

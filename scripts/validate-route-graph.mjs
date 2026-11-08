@@ -14,7 +14,7 @@ async function json(path) {
 }
 
 const inventory = await json("/api/v1/platform/modules");
-assert.equal(inventory.total, 20, "Expected the full 20-module system");
+assert.equal(inventory.total, 23, "Expected the retained 20 modules plus festivals, planner and everyday tools");
 assert.equal(inventory.modules.length, inventory.total);
 assert.equal(new Set(inventory.modules.map(m => m.slug)).size, inventory.total);
 assert.equal(inventory.categories.reduce((sum,c) => sum + c.count,0), inventory.total);
@@ -32,8 +32,8 @@ const missing = await hit("/app/not-an-actual-world-patro-module");
 assert.equal(missing.response.status, 404, "Unknown modules must not render a misleading placeholder");
 
 const app = await hit("/app");
-assert.ok(app.body.includes('href="/app/wens"'), "WENS navigation link missing");
-assert.ok(app.body.includes('href="/app/system"'), "System status navigation link missing");
+assert.match(app.body, /href="\/app\/wens(?:\?|\")/, "WENS navigation link missing");
+assert.match(app.body, /href="\/app\/system(?:\?|\")/, "System status navigation link missing");
 assert.ok(app.body.includes('href="#world-patro-main"'), "Keyboard skip-navigation link missing");
 assert.ok(app.body.includes('id="world-patro-main"'), "Accessible main-content target missing");
 
@@ -73,3 +73,4 @@ const invalidId = await hit("/api/v1/workflows/orders/bad!",{
 assert.equal(invalidId.response.status,400,"Malformed workflow ID must be rejected");
 
 console.log(`Full-stack route graph passed: ${inventory.total} modules, ${basePages.length} page references, ${registry.size} declared API routes, cross-origin and size guards.`);
+

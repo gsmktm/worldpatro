@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import { getFirebaseAdminAuth } from "@/lib/firebase/admin";
 import { firebaseSessionCookieName, useFirebaseBackend } from "@/lib/firebase/config";
 
 export type FirebaseAppUser = {
@@ -15,6 +14,7 @@ export async function getFirebaseUser(): Promise<FirebaseAppUser | null> {
   if (!session) return null;
 
   try {
+    const { getFirebaseAdminAuth } = await import("@/lib/firebase/admin");
     const decoded = await getFirebaseAdminAuth().verifySessionCookie(session, true);
     return {
       uid: decoded.uid,
@@ -25,3 +25,4 @@ export async function getFirebaseUser(): Promise<FirebaseAppUser | null> {
     return null;
   }
 }
+

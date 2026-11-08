@@ -32,6 +32,13 @@ export const BS_PUBLISHED_MONTHS:readonly BsPublishedMonth[]=[
     sourceUrl:"https://kathmandu.gov.np/en/calendar",
     publisher:"Kathmandu Metropolitan City",
     checkedOn:"2026-10-09",verification:"municipality-published"
+  },
+  {
+    bsYear:2083,bsMonth:7,nameEn:"Kartik",nameNe:"कार्तिक",
+    startsAD:"2026-10-18",length:30,
+    sourceUrl:"https://kathmandu.gov.np/en/calendar",
+    publisher:"Kathmandu Metropolitan City",
+    checkedOn:"2026-11-08",verification:"municipality-published"
   }
 ] as const;
 const ONE_DAY_MS=86400000;
@@ -90,3 +97,4 @@ export function publishedADFromBs(year:number,month:number,day:number) {
     provenance:{publisher:row.publisher,sourceUrl:row.sourceUrl,checkedOn:row.checkedOn}
   };
 }
+
