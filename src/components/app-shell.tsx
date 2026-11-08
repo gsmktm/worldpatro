@@ -50,7 +50,7 @@ export function AppShell({children}:{children:ReactNode}){
   function sidebar(mobile=false){
     return <>
       <Link href={href("/app")} className="wp-brand" onClick={()=>menuDialog.current?.close()}><span className="wp-brand-mark">ॐ</span><span><strong>World Patro<span className="wp-brand-dot">.</span></strong><small>NEPAL TO THE WORLD</small></span></Link>
-      <div className="wp-nav-caption">{ne?"समय, संस्कृति र सम्भावना":"TIME. CULTURE. POSSIBILITY."}</div>
+      <Link className="wp-all-apps" href={href("/app/ecosystem")}><Icon name="grid" size={16}/>{ne?"सबै साधन हेर्नुहोस्":"Explore all apps"}<Icon name="arrow" size={13}/></Link>
       <nav aria-label={mobile?"All mobile modules":"Main navigation"} className="wp-navigation">
         {NAV_GROUPS.map(group=>{
           const isOpen=openGroups.includes(group.id);
@@ -61,7 +61,7 @@ export function AppShell({children}:{children:ReactNode}){
         })}
       </nav>
       <Link href={href("/app/wens")} className="wp-nav-feature"><span>ॐ</span><div><small>WBGR-109 · 1799 BS</small><strong>{ne?"सन्तुलनको खोजी":"Explore the equilibrium"}</strong></div><Icon name="arrow" size={15}/></Link>
-      <div className="wp-side-footer"><span className="wp-status-dot"/><span>{ne?"हिमालयबाट, विश्वका लागि":"From the Himalayas, for the world"}</span><small>WORLD PATRO · V3</small></div>
+      <div className="wp-side-footer"><span className="wp-status-dot"/><span>{ne?"हिमालयबाट, विश्वका लागि":"From the Himalayas, for the world"}</span><small><Link href={href("/app/system")}>WORLD PATRO V3 · SYSTEM STATUS ↗</Link></small></div>
     </>;
   }
   const results=NAV_ITEMS.filter(x=>[x.label,x.ne,x.description,x.slug].join(" ").toLowerCase().includes(searchText.toLowerCase())).slice(0,searchText?30:8);

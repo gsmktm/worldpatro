@@ -46,3 +46,5 @@ html{background:var(--wp-bg)}body{background:var(--wp-bg);color:var(--wp-text);f
 
 /* Authentication belongs to the same visual system. */
 .loginCard{background:var(--wp-surface);border:1px solid var(--wp-border);border-radius:18px;box-shadow:none}.loginCard h1{color:var(--wp-heading);font-family:var(--wp-serif)}.loginFields input{background:var(--wp-bg);border-color:var(--wp-border);color:var(--wp-text)}.loginFields label{color:var(--wp-text)}.loginCard .primaryBtn{background:var(--wp-gold);color:var(--wp-bg);border-radius:8px}.loginCard .ghost{background:var(--wp-surface-2);color:var(--wp-gold);border-color:var(--wp-border)}.loginCard .muted,.loginCard .loginFootnote,.loginCard .loginInputHelp{color:var(--wp-muted)}
+
+.wp-all-apps{display:flex;align-items:center;gap:10px;padding:12px 11px;margin:6px 0 22px;border:1px solid #31454a;border-radius:8px;color:#a7bcbd;font-size:10px}.wp-all-apps>svg:last-child{margin-left:auto;color:#bcac8c}.wp-all-apps:hover{background:#20363b;color:#e5cfaa}
