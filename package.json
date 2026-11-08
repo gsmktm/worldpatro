@@ -1,6 +1,6 @@
 {
   "name": "worldpatro",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "private": true,
   "engines": { "node": ">=22" },
   "scripts": {
@@ -22,6 +22,9 @@
     "react-dom": "19.2.0",
     "zod": "4.1.12"
   },
+  "overrides": {
+    "jwks-rsa": { "jose": "5.10.0" }
+  },
   "devDependencies": {
     "@types/node": "24.9.1",
     "@types/react": "19.2.2",
@@ -29,3 +32,4 @@
     "typescript": "5.9.3"
   }
 }
+

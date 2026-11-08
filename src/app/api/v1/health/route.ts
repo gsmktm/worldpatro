@@ -13,7 +13,7 @@ export function GET() {
   return NextResponse.json({
     ok: true,
     service: "worldpatro",
-    version: "2.0.1",
+    version: "3.0.0",
     runtime: "node>=22",
     dataBackend: useFirebaseBackend()
       ? "firebase"
@@ -49,3 +49,4 @@ export function GET() {
     headers: { "Cache-Control": "no-store" }
   });
 }
+

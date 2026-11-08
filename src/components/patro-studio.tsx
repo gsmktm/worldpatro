@@ -97,7 +97,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
   const [notice,setNotice]=useState("");
   const [busy,setBusy]=useState(false);
   const [month,setMonth]=useState<[number,number]>(()=>getMonth(isoNepal()));
-  const [bsRaw,setBsRaw]=useState("2083-06-23");
+  const [bsRaw,setBsRaw]=useState("2083-07-22");
   const [bsMessage,setBsMessage]=useState("");
   const [bsBusy,setBsBusy]=useState(false);
   const [saved,setSaved]=useState<Saved[]>([]);
@@ -359,7 +359,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       </section>
       <section id="bs-converter" className="patroConverter">
         <div className="eyebrow">NEPAL · BIKRAM SAMBAT</div><h2>Verified AD ↔ BS</h2>
-        <p>Conversion is available only for municipality-reviewed Bhadra and Asoj 2083. Other dates are deliberately not inferred.</p>
+        <p>Conversion is available for municipality-reviewed Bhadra, Asoj and Kartik 2083. Other dates require a reviewed source release.</p>
         <div className="patroBsCurrent"><span>Selected AD date</span><strong>{day?.canonical.date||"—"}</strong>
           <span>Published BS result</span><strong>{bs?.status==="authority-sourced"?bs.value:"Official source required"}</strong></div>
         <form onSubmit={e=>{e.preventDefault();void reverseBS();}}>
@@ -400,3 +400,4 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     </footer>
   </section>;
 }
+

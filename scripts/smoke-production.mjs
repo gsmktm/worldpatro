@@ -26,7 +26,7 @@ invariant(app.text.includes("World Patro"), "Command Center did not render.");
 
 const health = await json("/api/v1/health", undefined, 200);
 invariant(health.body.ok === true, "Health endpoint is not OK.");
-invariant(health.body.version === "2.0.1", "Unexpected World Patro version.");
+invariant(health.body.version === "3.0.0", "Unexpected World Patro version.");
 invariant(health.body.aiGateway?.accessMode === "authenticated", "Production agent access must default to authenticated.");
 
 const patro = await json("/api/v1/patro/today?date=2026-10-09", undefined, 200);
@@ -218,7 +218,7 @@ const backToAD=await json("/api/v1/calendar/bs/convert?bs=2083-06-23",undefined,
 invariant(backToAD.body.result?.date==="2026-10-09","BS->AD round trip failed.");
 const firstBhadra=await json("/api/v1/calendar/bs/convert?ad=2026-08-17",undefined,200);
 invariant(firstBhadra.body.result?.bsMonth===5&&firstBhadra.body.result?.bsDay===1,"Bhadra published anchor failed.");
-const outOfCoverage=await json("/api/v1/calendar/bs/convert?ad=2026-10-18",undefined,404);
+const outOfCoverage=await json("/api/v1/calendar/bs/convert?ad=2026-11-17",undefined,404);
 invariant(outOfCoverage.body.status==="authority_required","Unverified BS dates must not be invented.");
 const bsInPatro=await json("/api/v1/patro/today?date=2026-10-09",undefined,200);
 invariant(bsInPatro.body.calendars.find(c=>c.id==="bs")?.status==="authority-sourced",
@@ -336,10 +336,10 @@ invariant(linkedPanchang.text.includes("Vedic Panchang"),"Date-linked Panchang s
 
 
 const platform=await json("/api/v1/platform/modules",undefined,200);
-invariant(platform.body.total===20,"Platform Command Map requires all 20 listed modules.");
+invariant(platform.body.total===23,"Platform Command Map requires all 23 listed modules.");
 invariant(platform.body.agentSpecialists?.length===6,"Agent supervisor must declare exactly six bounded specialist roles.");
 const allModuleUrls=new Set(platform.body.modules.map(m=>m.url));
-invariant(allModuleUrls.size===20&&[...allModuleUrls].every(x=>x.startsWith("/app/")),
+invariant(allModuleUrls.size===23&&[...allModuleUrls].every(x=>x.startsWith("/app/")),
   "Module links must be unique internal World Patro routes.");
 const expectedModulePaths=[
   ["/app/world","World Intelligence"],
@@ -465,7 +465,7 @@ console.log(JSON.stringify({
     "panchang-legacy-api-compatibility",
     "patro-invalid-date-timezone-coordinates",
     "patro-linked-module-sections",
-    "all-20-module-links-and-statuses",
+    "all-23-module-links-and-statuses",
     "six-agent-role-mapping",
     "interactive-world-and-private-workspaces",
     "built-in-source-registry",
@@ -473,3 +473,4 @@ console.log(JSON.stringify({
     "cross-origin-private-mutations"
   ]
 }));
+
