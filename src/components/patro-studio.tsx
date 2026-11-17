@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import {useSearchParams} from "next/navigation";
 import {useEffect,useMemo,useRef,useState,type FormEvent} from "react";
 import type {CalendarResult} from "@/lib/calendars";
 import NineCalendarExplorer from "@/components/nine-calendar-explorer";
@@ -110,8 +109,6 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
   const [saving,setSaving]=useState(false);
   const [historyBusy,setHistoryBusy]=useState(false);
   const request=useRef<AbortController|null>(null);
-  const currentSearch=useSearchParams().toString();
-  const syncedSearch=useRef("");
 
   function update(key:keyof Inputs,value:string){
     setForm(prev=>({...prev,[key]:value}));setNotice("");
@@ -130,7 +127,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     setBsRaw(matchedBs?`${matchedBs.bsYear}-${String(matchedBs.bsMonth).padStart(2,"0")}-${String(matchedBs.bsDay).padStart(2,"0")}`:"");
     request.current?.abort();
     const ctrl=new AbortController();request.current=ctrl;
-    setBusy(true);setError("");setNotice("");setDay(null);
+    setBusy(true);setError("");setNotice("");
     const params=new URLSearchParams({
       date:next.date,locale:next.locale,lat:String(lat),lon:String(lon),
       elevation:String(elevation),tz:next.tz
@@ -142,16 +139,14 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       if(ctrl.signal.aborted)return;
       setDay(data as Day);
       setMonth(getMonth(next.date));
-      syncedSearch.current=params.toString();
-      window.history.replaceState(null,"",window.location.pathname+"?"+params.toString()+window.location.hash);
+      // shortcut: preserve the current URL while switching days; use Copy link to share the selected date.
+      // Upgrade after a tested App Router history-sync strategy is available.
     }catch(e){
       if(!ctrl.signal.aborted)setError(e instanceof Error?e.message:"Unable to calculate.");
     }finally{if(!ctrl.signal.aborted)setBusy(false);}
   }
   useEffect(()=>{
-    if(syncedSearch.current===currentSearch)return;
-    syncedSearch.current=currentSearch;
-    const params=new URLSearchParams(currentSearch);
+    const params=new URLSearchParams(window.location.search);
     const def=todayDefaults();
     const initial:Inputs={
       date:params.get("date")||def.date,
@@ -164,7 +159,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     setForm(initial);
     void synchronize(initial);
     return ()=>{request.current?.abort();};
-  },[currentSearch]);
+  },[]);
 
   function go(date:string){
     if(!validISO(date))return;
@@ -187,7 +182,16 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
 
   async function copyLink(){
     if(!day)return;
-    try{await navigator.clipboard.writeText(window.location.href);setNotice("Link copied. It includes the selected coordinates and date.");}
+    try{
+      const url=new URL(window.location.href);
+      url.search=new URLSearchParams({
+        date:day.canonical.date,locale:day.canonical.locale,
+        lat:String(day.canonical.latitude),lon:String(day.canonical.longitude),
+        elevation:String(day.canonical.elevationMeters),tz:day.canonical.timezone
+      }).toString();
+      await navigator.clipboard.writeText(url.toString());
+      setNotice("Selected-date link copied with location and timezone.");
+    }
     catch{setError("Clipboard access was denied.");}
   }
   async function copyData(){
@@ -305,7 +309,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       <div className="patroCommandStrip">
         <div>{busy?<span role="status">Calculating local civil date…</span>:day?<span><b>{computed}/9</b> calendars with calculated or sourced dates · {day.canonical.timezone}</span>:<span>Select inputs to calculate.</span>}</div>
         <div className="patroCommandButtons">
-          <button type="button" disabled={!day} onClick={copyLink}>Copy link</button>
+          <button type="button" disabled={!day} onClick={copyLink}>Copy selected link</button>
           <button type="button" disabled={!day} onClick={copyData}>Copy JSON</button>
           <button type="button" disabled={!day} onClick={jsonExport}>Export JSON</button>
           <button type="button" disabled={!day} onClick={icsExport}>Export .ics</button>
@@ -316,10 +320,10 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       {notice&&<p className="patroNoticeInline" role="status">{notice}</p>}
     </form>
 
-    <section id="patro-calendars" className="patroResultsSection">
+    <section id="patro-calendars" className="patroResultsSection" aria-busy={busy}>
       <div className="patroSectionTitle"><div><div className="eyebrow">THE NINE TIME LENSES</div><h2>Civil & cultural calendars</h2></div>
         <span>{day?.canonical.date||"—"} · six Intl-calculated / limited authority coverage</span></div>
-      {busy&&<p role="status" className="patroLoading">Synchronizing the nine calendar profiles and astronomical context…</p>}
+      {busy&&<p role="status" className="patroLoading">Synchronizing the nine calendar profiles and astronomical context… Previous result remains visible until completion.</p>}
       <div className="patroStudioGrid">
         {(day?.calendars||[]).map((cal,i)=><article key={cal.id} className={"patroStudioCard"+(i===0?" primary":"")}>
           <div className="patroCardTop"><span className="patroCalendarIcon">{cal.icon}</span>
