@@ -4,7 +4,7 @@ import Link from "next/link";
 import {useEffect,useMemo,useRef,useState,type FormEvent} from "react";
 import type {CalendarResult} from "@/lib/calendars";
 import NineCalendarExplorer from "@/components/nine-calendar-explorer";
-import type {CalendarId} from "@/lib/calendar-month";
+import {CALENDAR_IDS,type CalendarId} from "@/lib/calendar-month";
 import {publishedBsFromAD} from "@/lib/nepal-bs-authority";
 
 type Inputs={date:string;locale:"en"|"ne";lat:string;lon:string;elevation:string;tz:string};
@@ -156,6 +156,8 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       elevation:params.get("elevation")||def.elevation,
       tz:params.get("tz")||def.tz
     };
+    const selectedCalendar=params.get("calendar");
+    if(selectedCalendar&&CALENDAR_IDS.includes(selectedCalendar as CalendarId))setCalendarFocus(selectedCalendar as CalendarId);
     setForm(initial);
     void synchronize(initial);
     return ()=>{request.current?.abort();};
@@ -163,8 +165,15 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
 
   function go(date:string){
     if(!validISO(date))return;
-    const next={...form,date};setForm(next);
-    void synchronize(next);
+    // Full navigation avoids React DOM reconciliation failures in translated/injected page content.
+    const verified=day?.canonical;
+    const params=new URLSearchParams({
+      date,locale:verified?.locale==="ne"?"ne":"en",
+      lat:String(verified?.latitude??form.lat),lon:String(verified?.longitude??form.lon),
+      elevation:String(verified?.elevationMeters??form.elevation),tz:verified?.timezone??form.tz,
+      calendar:calendarFocus
+    });
+    window.location.assign(window.location.pathname+"?"+params.toString()+window.location.hash);
   }
   function preset(i:number){
     const chosen=presets[i],next={...form,...chosen};
