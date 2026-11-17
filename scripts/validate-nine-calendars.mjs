@@ -1,10 +1,16 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 const BASE=process.env.BASE_URL||"http://127.0.0.1:3100";
 async function call(query,status=200){
  const r=await fetch(BASE+"/api/v1/calendar/month?"+query);
  assert.equal(r.status,status,query+" -> "+r.status+" "+(await r.clone().text()).slice(0,160));
  return r.json();
 }
+const shell=readFileSync(new URL("../src/components/app-shell.tsx",import.meta.url),"utf8");
+const studio=readFileSync(new URL("../src/components/patro-studio.tsx",import.meta.url),"utf8");
+assert.match(shell,/key=\\{pathname===\"\\/app\\/patro\"/, "Patro route must not remount on a date query change");
+assert.match(studio,/useSearchParams\\(\\)\\.toString\\(\\)/,"Patro must watch external URL changes");
+assert.match(studio,/syncedSearch\\.current=params\\.toString\\(\\)/,"Patro must skip duplicate self-published date fetches");
 const ids=["vedic","gregorian","bs","nepal-sambat","hijri","chinese","hebrew","persian","buddhist"];
 for(const id of ids){
  const {calendar:m}=await call("date=2026-11-17&calendar="+id);
