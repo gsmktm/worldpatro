@@ -81,7 +81,7 @@ export function AppShell({children}:{children:ReactNode}){
           </div>
         </header>
         {!online&&<div className="wp-offline" role="status">You are offline. Device planner and tools remain available while this page is open.</div>}
-        <main id="world-patro-main" tabIndex={-1} className="workspace wp-workspace"><div key={query}>{children}</div></main>
+        <main id="world-patro-main" tabIndex={-1} className="workspace wp-workspace"><div key={pathname==="/app/patro"||pathname==="/app/panchang"?pathname:query}>{children}</div></main>
         <footer className="wp-app-footer"><span>ॐ <b>World Patro</b> · Rooted in Nepal. Connected to the world.</span><span>{now?new Intl.DateTimeFormat("en-GB",{timeZone:moment.tz,hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(now):"—"} · {moment.tz}</span></footer>
         <nav className="mobileDock wp-mobile-dock" aria-label="Mobile navigation">
           {[["","home","Home","आज"],["patro","calendar","Calendar","पात्रो"],["festivals","leaf","Festivals","चाडपर्व"],["planner","bell","Planner","योजना"]].map(([slug,icon,en,np])=><Link key={slug} href={href(modulePath(slug))} aria-current={active?.slug===slug?"page":undefined}><Icon name={icon} size={21}/><small>{ne?np:en}</small></Link>)}
