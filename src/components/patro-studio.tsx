@@ -3,6 +3,7 @@
 import Link from "next/link";
 import {useEffect,useMemo,useRef,useState,type FormEvent} from "react";
 import type {CalendarResult} from "@/lib/calendars";
+import {publishedBsFromAD} from "@/lib/nepal-bs-authority";
 
 type Inputs={date:string;locale:"en"|"ne";lat:string;lon:string;elevation:string;tz:string};
 type Panchang={
@@ -98,7 +99,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
   const [notice,setNotice]=useState("");
   const [busy,setBusy]=useState(false);
   const [month,setMonth]=useState<[number,number]>(()=>getMonth(isoNepal()));
-  const [bsRaw,setBsRaw]=useState("2083-07-22");
+  const [bsRaw,setBsRaw]=useState("");
   const [bsMessage,setBsMessage]=useState("");
   const [bsBusy,setBsBusy]=useState(false);
   const [saved,setSaved]=useState<Saved[]>([]);
@@ -119,6 +120,8 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     }
     try{new Intl.DateTimeFormat("en",{timeZone:next.tz}).format(new Date());}
     catch{setError("Enter a valid IANA timezone, such as Asia/Kathmandu.");return;}
+    const matchedBs=publishedBsFromAD(next.date);
+    setBsRaw(matchedBs?`${matchedBs.bsYear}-${String(matchedBs.bsMonth).padStart(2,"0")}-${String(matchedBs.bsDay).padStart(2,"0")}`:"");
     request.current?.abort();
     const ctrl=new AbortController();request.current=ctrl;
     setBusy(true);setError("");setNotice("");setDay(null);
