@@ -340,7 +340,7 @@ for(const path of [
   "/api/v1/panchang/day?date=2026-02-30"
 ])await json(path,undefined,400);
 const integratedPage=await hit("/app/patro",undefined,200);
-for(const label of ["Date navigator","Verified AD","Connected functions","Save private report","World Patro"]){
+for(const label of ["Date navigator","Sourced AD","Connected functions","Save private report","World Patro"]){
   invariant(integratedPage.text.includes(label),"Linked Patro section missing "+label);
 }
 const linkedPanchang=await hit("/app/panchang?date=2026-10-09",undefined,200);
