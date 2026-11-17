@@ -34,6 +34,8 @@ const studio=load("../src/components/patro-studio.tsx");
 assert.match(studio,/Sourced AD ↔ BS/,"Converter must disclose supported reference data");
 assert.match(studio,/bs\.status==="public-dataset"/,"Open dataset must appear in converter UI");
 assert.match(studio,/data\.status==="municipal_source"/,"Reverse converter must classify provenance");
+assert.match(studio,/publishedBsFromAD\(next\.date\)/,"BS converter input must follow the selected Gregorian date");
+assert.match(studio,/setBsRaw\(matchedBs\?/,"BS converter field must update on selection");
 assert.doesNotMatch(studio,/Conversion is available for municipality-reviewed Bhadra, Asoj and Kartik 2083/,"Old three-month limitation must not remain");
 const calendar=load("../src/lib/calendars.ts");
 assert.match(calendar,/public-dataset/);

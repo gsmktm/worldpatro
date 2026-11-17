@@ -37,7 +37,7 @@ export function MonthCalendar({value,onSelect,compact=false,locale="en",timezone
   <div className="wp-calendar-head">
    <h3>{new Intl.DateTimeFormat(locale==="ne"?"ne-NP":"en-US",{month:"long",year:"numeric",timeZone:"UTC"}).format(first)}</h3>
    <div>
-    <button type="button" className="wp-calendar-today" disabled={!today} onClick={()=>onSelect(today)}
+    <button type="button" className="wp-calendar-today" disabled={!today} onClick={()=>{setMonth(today.slice(0,7));onSelect(today);}}
      aria-label={locale==="ne"?"आजको मितिमा जानुहोस्":"Jump to today"}>{locale==="ne"?"आज":"Today"}</button>
     <button type="button" onClick={()=>move(-1)} aria-label={locale==="ne"?"अघिल्लो महिना":"Previous month"}><Icon name="chevron" size={15} className="wp-flip"/></button>
     <button type="button" onClick={()=>move(1)} aria-label={locale==="ne"?"अर्को महिना":"Next month"}><Icon name="chevron" size={15}/></button>
