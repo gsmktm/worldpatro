@@ -139,8 +139,8 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       if(ctrl.signal.aborted)return;
       setDay(data as Day);
       setMonth(getMonth(next.date));
-      // No automatic history writes: Next App Router search-sync was remounting this view.
-      // Copy link builds the selected-date URL without modifying the active page.
+      // shortcut: preserve the current URL while switching days; use Copy link to share the selected date.
+      // Upgrade after a tested App Router history-sync strategy is available.
     }catch(e){
       if(!ctrl.signal.aborted)setError(e instanceof Error?e.message:"Unable to calculate.");
     }finally{if(!ctrl.signal.aborted)setBusy(false);}
@@ -309,7 +309,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       <div className="patroCommandStrip">
         <div>{busy?<span role="status">Calculating local civil date…</span>:day?<span><b>{computed}/9</b> calendars with calculated or sourced dates · {day.canonical.timezone}</span>:<span>Select inputs to calculate.</span>}</div>
         <div className="patroCommandButtons">
-          <button type="button" disabled={!day} onClick={copyLink}>Copy link</button>
+          <button type="button" disabled={!day} onClick={copyLink}>Copy selected link</button>
           <button type="button" disabled={!day} onClick={copyData}>Copy JSON</button>
           <button type="button" disabled={!day} onClick={jsonExport}>Export JSON</button>
           <button type="button" disabled={!day} onClick={icsExport}>Export .ics</button>
