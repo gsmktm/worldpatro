@@ -89,7 +89,7 @@ export function buildPatroDay(input:ReturnType<typeof readPatroQuery>){
     },
     provenance:{
       astronomy:"astronomy-engine@2.1.19 · Lahiri approximation",
-      calendar:"Intl/ICU for six deterministic civil calendar profiles; Nepal BS only in municipality-verified spans",
+      calendar:"Intl/ICU for six deterministic civil calendar profiles; Nepal BS sourced from municipal month grids or identified CC0 open reference months",
       traditionalInterpretation:"not established scientific forecasting"
     },
     warning:"This snapshot is computed at local civil noon for a selected day and location. Tithi/nakshatra/yoga can change during that day. Holiday and festival declarations require appropriate authorities.",
