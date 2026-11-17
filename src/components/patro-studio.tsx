@@ -3,6 +3,7 @@
 import Link from "next/link";
 import {useEffect,useMemo,useRef,useState,type FormEvent} from "react";
 import type {CalendarResult} from "@/lib/calendars";
+import NineCalendarExplorer from "@/components/nine-calendar-explorer";
 import {publishedBsFromAD} from "@/lib/nepal-bs-authority";
 
 type Inputs={date:string;locale:"en"|"ne";lat:string;lon:string;elevation:string;tz:string};
@@ -264,6 +265,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
 
     <div className="patroSectionNav" aria-label="Patro page sections">
       <a href="#patro-calendars">Calendars</a>
+      <a href="#patro-nine-months">Nine month views</a>
       <a href="#patro-panchang">Panchang</a>
       <a href="#patro-month">Month</a>
       <a href="#bs-converter">BS converter</a>
@@ -293,7 +295,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
         <button type="submit" className="primaryBtn patroCalculate" disabled={busy}>{busy?"Calculating…":"Calculate Patro →"}</button>
       </div>
       <div className="patroCommandStrip">
-        <div>{busy?<span role="status">Calculating local civil date…</span>:day?<span><b>{computed}/9</b> calendars with computed or municipality-sourced dates · {day.canonical.timezone}</span>:<span>Select inputs to calculate.</span>}</div>
+        <div>{busy?<span role="status">Calculating local civil date…</span>:day?<span><b>{computed}/9</b> calendars with calculated or sourced dates · {day.canonical.timezone}</span>:<span>Select inputs to calculate.</span>}</div>
         <div className="patroCommandButtons">
           <button type="button" disabled={!day} onClick={copyLink}>Copy link</button>
           <button type="button" disabled={!day} onClick={copyData}>Copy JSON</button>
@@ -317,7 +319,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
           </div>
           <h3>{cal.name}</h3><div className="patroCardValue">{cal.value}</div>
           <p>{cal.method}</p>
-          {cal.sourceUrl&&<a className="patroAuthorityLink" href={cal.sourceUrl} target="_blank" rel="noopener noreferrer">Municipal source ↗</a>}
+          {cal.sourceUrl&&<a className="patroAuthorityLink" href={cal.sourceUrl} target="_blank" rel="noopener noreferrer">{cal.provenance==="VERIFIED MUNICIPAL CALENDAR"?"Municipal source":"Open data source"} ↗</a>}
           {cal.coverage&&<small className="patroCoverage">{cal.coverage} · checked {cal.checkedOn}</small>}
           <div className="patroCardBottom">
             {cal.id==="vedic"?<Link href={"/app/panchang"+(params?"?"+params:"")}>Open Panchang →</Link>
@@ -329,6 +331,9 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       </div>
       {!day&&!busy&&!error&&<div className="patroEmpty">Your nine-calendar snapshot will appear here.</div>}
     </section>
+
+    {day&&<NineCalendarExplorer date={day.canonical.date} locale={form.locale} calendars={day.calendars} onSelect={go}
+      panchangUrl={"/app/panchang"+(params?"?"+params.toString():"")}/>}
 
     <section id="patro-panchang" className="patroPanchang">
       <div className="patroSectionTitle"><div><div className="eyebrow">ASTRONOMICAL PANCHANG</div><h2>Sun · Moon · Sacred Time</h2></div>
