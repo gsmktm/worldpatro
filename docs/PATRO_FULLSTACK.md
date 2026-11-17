@@ -15,7 +15,7 @@ Panchang, Muhurat, Kundli, festivals, authorities, source registry, world data, 
 - Timezone-resolved local civil noon replaces fixed UTC sampling. New York and Nepal use distinct UTC instants for the same local date.
 - Sunrise, sunset, moonrise and moonset now restrict results to the selected local civil date rather than UTC midnight.
 - A single abortable data request prevents mixing a new calendar snapshot with stale Panchang values.
-- Selected-date calculations update the in-page state. Use **Copy selected link** to generate the complete shareable URL with date, location and timezone without changing browser history; this avoids a client-side routing issue under review. JSON and ICS downloads are local, not official religious declarations.
+- Day selection performs a native page navigation with the new Gregorian date, location, timezone and active calendar encoded in the URL. This avoids a confirmed React DOM `removeChild` reconciliation failure during repeated in-place date updates; the trade-off is a brief page reload. Copy selected link remains accurate. JSON and ICS downloads are local, not official religious declarations.
 - Validation requires a real Gregorian date (1900–2100), latitude within ±66°, longitude within ±180°, elevation −500…9000m and valid IANA timezone.
 - App reports require authenticated storage and are never written without an explicit Save action.
 

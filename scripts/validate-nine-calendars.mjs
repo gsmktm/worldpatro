@@ -11,13 +11,14 @@ const studio=readFileSync(new URL("../src/components/patro-studio.tsx",import.me
 assert.ok(shell.includes("key={query}"),"Workspace keys remain unchanged from existing behavior");
 assert.ok(!studio.includes("window.history.replaceState("),"Patro must not rewrite the URL during date calculation");
 assert.ok(studio.includes("await navigator.clipboard.writeText(url.toString())"),"Patro must generate a shareable selected-date link");
+assert.ok(studio.includes("window.location.assign("),"Day selection must use stable native navigation");
+assert.ok(studio.includes("calendar:calendarFocus"),"Native navigation must preserve the chosen calendar view");
+assert.ok(studio.includes("CALENDAR_IDS.includes(selectedCalendar as CalendarId)"),"Deep links must restore the selected calendar");
+const errorBoundary=readFileSync(new URL("../src/app/app/error.tsx",import.meta.url),"utf8");
+assert.ok(!errorBoundary.includes("debugCalendar"),"Temporary crash diagnostics must be removed");
 assert.ok(!studio.includes("setDay(null)"),"Calendar explorer should remain mounted during date fetch");
 assert.ok(studio.includes('aria-busy={busy}'),"Recalculation must be announced as busy");
 
-const errorBoundary=readFileSync(new URL("../src/app/app/error.tsx",import.meta.url),"utf8");
-assert.ok(errorBoundary.includes('get("debugCalendar")==="1"'),"Error diagnostics must require explicit opt-in");
-assert.ok(errorBoundary.includes('slice(0,240)'),"Diagnostic details must have bounded size");
-assert.ok(!errorBoundary.includes("error.stack"),"Do not leak stack paths to public error UI");
 const ids=["vedic","gregorian","bs","nepal-sambat","hijri","chinese","hebrew","persian","buddhist"];
 for(const id of ids){
  const {calendar:m}=await call("date=2026-11-17&calendar="+id);
