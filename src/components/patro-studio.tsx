@@ -24,7 +24,7 @@ type Day={
 type Saved={id:string;title:string;createdAt?:string;created_at?:string};
 const quickModules=[
   {name:"Panchang",caption:"Tithi, Nakshatra & Sun/Moon",path:"/app/panchang",icon:"☀"},
-  {name:"BS Conversion",caption:"Verified AD ↔ BS dates",path:"#bs-converter",icon:"🇳🇵"},
+  {name:"BS Conversion",caption:"Sourced AD ↔ BS dates",path:"#bs-converter",icon:"🇳🇵"},
   {name:"Muhurat Finder",caption:"Candidate windows & rules",path:"/app/muhurat",icon:"✺"},
   {name:"Kundli",caption:"Birth chart & Dasha",path:"/app/kundli",icon:"♃"},
   {name:"Festivals",caption:"Reviewed observances",path:"/app/religions",icon:"☸"},
@@ -209,8 +209,8 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     try{
       const res=await fetch("/api/v1/calendar/bs/convert?bs="+encodeURIComponent(bsRaw),{cache:"no-store"});
       const data=await res.json();
-      if(!res.ok)throw new Error(data.error||"Verified conversion unavailable.");
-      setBsMessage(bsRaw+" BS → "+data.result.date+" AD · municipal calendar source");
+      if(!res.ok)throw new Error(data.error||"Sourced conversion unavailable.");
+      setBsMessage(bsRaw+" BS → "+data.result.date+" AD · "+(data.status==="municipal_source"?"reviewed municipal source":"open BS reference dataset (CC0; non-official)"));
       if(validISO(data.result.date))go(data.result.date);
     }catch(e){setBsMessage(e instanceof Error?e.message:"Conversion unavailable.");}
     finally{setBsBusy(false);}
@@ -359,10 +359,10 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
         <p className="patroCaption">Choose any day to recalculate the same location-aware time snapshot.</p>
       </section>
       <section id="bs-converter" className="patroConverter">
-        <div className="eyebrow">NEPAL · BIKRAM SAMBAT</div><h2>Verified AD ↔ BS</h2>
-        <p>Conversion is available for municipality-reviewed Bhadra, Asoj and Kartik 2083. Other dates require a reviewed source release.</p>
+        <div className="eyebrow">NEPAL · BIKRAM SAMBAT</div><h2>Sourced AD ↔ BS</h2>
+        <p>All twelve BS 2083 months have sourced date correspondence. Bhadra, Asoj and Kartik use reviewed municipal records; other months use a separately marked CC0 open reference dataset, not official Panchang or holiday authority.</p>
         <div className="patroBsCurrent"><span>Selected AD date</span><strong>{day?.canonical.date||"—"}</strong>
-          <span>Published BS result</span><strong>{bs?.status==="authority-sourced"?bs.value:"Official source required"}</strong></div>
+          <span>Sourced BS result</span><strong>{bs&&(bs.status==="authority-sourced"||bs.status==="public-dataset")?bs.value:"Sourced date not available"}</strong></div>
         <form onSubmit={e=>{e.preventDefault();void reverseBS();}}>
           <label htmlFor="patro-bs-date">BS date (YYYY-MM-DD)</label>
           <div><input id="patro-bs-date" pattern="\d{4}-\d{2}-\d{2}" value={bsRaw} onChange={e=>setBsRaw(e.target.value)} placeholder="2083-06-23" required/>
