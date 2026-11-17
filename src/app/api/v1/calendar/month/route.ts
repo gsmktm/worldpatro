@@ -11,7 +11,7 @@ const Query=z.object({
 
 export async function GET(request:NextRequest){
  const input=Query.safeParse({
-  date:request.nextUrl.searchParams.get("date")||undefined,
+  date:request.nextUrl.searchParams.get("date")||dateInNepal(),
   calendar:request.nextUrl.searchParams.get("calendar")||undefined,
   locale:request.nextUrl.searchParams.get("locale")||undefined
  });
