@@ -15,7 +15,7 @@ Panchang, Muhurat, Kundli, festivals, authorities, source registry, world data, 
 - Timezone-resolved local civil noon replaces fixed UTC sampling. New York and Nepal use distinct UTC instants for the same local date.
 - Sunrise, sunset, moonrise and moonset now restrict results to the selected local civil date rather than UTC midnight.
 - A single abortable data request prevents mixing a new calendar snapshot with stale Panchang values.
-- Selected-date calculations update the in-page state. Use **Copy selected link** to generate the complete shareable URL with date, location and timezone without changing browser history; this avoids a client-side routing issue under review. JSON and ICS downloads are local, not official religious declarations.
+- Date, location, and calendar-selection actions follow a **native browser deep link** containing date, location, timezone, locale and the selected calendar. This deliberately reloads Patro to avoid a reproducible React DOM `removeChild` crash during in-place calendar transitions. **Copy selected link** still exports the exact shareable URL; JSON and ICS downloads are local and are not religious declarations.
 - Validation requires a real Gregorian date (1900–2100), latitude within ±66°, longitude within ±180°, elevation −500…9000m and valid IANA timezone.
 - App reports require authenticated storage and are never written without an explicit Save action.
 
