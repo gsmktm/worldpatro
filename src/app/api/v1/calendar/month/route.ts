@@ -4,7 +4,7 @@ import { buildCalendarMonth, CALENDAR_IDS } from "@/lib/calendar-month";
 import { dateInNepal } from "@/lib/patro-day";
 
 const Query=z.object({
- date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/).default(dateInNepal()),
+ date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
  calendar:z.enum(CALENDAR_IDS).default("bs"),
  locale:z.enum(["en","ne"]).default("en")
 });
