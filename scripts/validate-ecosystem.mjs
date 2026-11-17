@@ -9,7 +9,9 @@ await json("/api/v1/festivals?from=2026-02-30",400);await json("/api/v1/festival
 const ics=await hit("/api/v1/festivals?format=ics");assert.equal(ics.status,200);assert.match(ics.headers.get("content-type"),/text\/calendar/);assert.ok(ics.text.startsWith("BEGIN:VCALENDAR\r\n"));assert.match(ics.text,/DTSTART;VALUE=DATE:20261108/);assert.match(ics.text,/DTEND;VALUE=DATE:20261109/);assert.match(ics.text,/https:\/\/kathmandu.gov.np/);for(const line of ics.text.split("\r\n"))assert.ok(Buffer.byteLength(line,"utf8")<=75,"RFC 5545 physical line too long");
 const forward=await json("/api/v1/calendar/bs/convert?ad=2026-11-08");assert.equal(forward.result.bsMonth,7);assert.equal(forward.result.bsDay,22);
 const reverse=await json("/api/v1/calendar/bs/convert?bs=2083-07-22");assert.equal(reverse.result.date,"2026-11-08");
-await json("/api/v1/calendar/bs/convert?ad=2026-11-17",404);
+const openYear=await json("/api/v1/calendar/bs/convert?ad=2026-11-17");
+assert.equal(openYear.status,"public_dataset");assert.equal(openYear.result.bsMonth,8);assert.equal(openYear.result.bsDay,1);
+await json("/api/v1/calendar/bs/convert?ad=2027-04-14",404);
 const body={title:"Validation only",date:"2026-11-08",category:"personal",notes:"",completed:false};
 const blocked=await hit("/api/v1/planner",{method:"POST",headers:{"content-type":"application/json",origin:"https://foreign.invalid","sec-fetch-site":"cross-site"},body:JSON.stringify(body)});assert.equal(blocked.status,403);
 assert.equal((await hit("/api/v1/planner",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...body,date:"2026-02-30"})})).status,400);
@@ -20,4 +22,4 @@ assert.ok([401,503].includes((await hit("/api/v1/planner",{method:"POST",headers
 assert.equal((await hit("/api/v1/planner/validid123",{method:"DELETE",headers:{origin:"https://foreign.invalid"}})).status,403);
 for(const [old,target] of [["/app/calendar","/app/patro"],["/app/converter","/app/tools"],["/app/my-calendar","/app/planner"],["/app/festival","/app/festivals"]]){const r=await hit(old);assert.equal(r.status,308,old);assert.ok(r.headers.get("location")?.includes(target));}
 const manifest=await json("/manifest.webmanifest");assert.equal(manifest.start_url,"/app");assert.equal((await hit("/icon.svg")).status,200);
-console.log("Ecosystem acceptance passed: pages, source-bounded dates, UTF-8 ICS, Kartik roundtrip, private API guards, menu aliases and install metadata. Authenticated database writes are not exercised.");
+console.log("Ecosystem acceptance passed: pages, source-bounded dates, UTF-8 ICS, Kartik/Mangsir roundtrip, private API guards, menu aliases and install metadata. Authenticated database writes are not exercised.");
