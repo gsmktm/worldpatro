@@ -127,7 +127,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     setBsRaw(matchedBs?`${matchedBs.bsYear}-${String(matchedBs.bsMonth).padStart(2,"0")}-${String(matchedBs.bsDay).padStart(2,"0")}`:"");
     request.current?.abort();
     const ctrl=new AbortController();request.current=ctrl;
-    setBusy(true);setError("");setNotice("");setDay(null);
+    setBusy(true);setError("");setNotice("");
     const params=new URLSearchParams({
       date:next.date,locale:next.locale,lat:String(lat),lon:String(lon),
       elevation:String(elevation),tz:next.tz
@@ -320,10 +320,10 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       {notice&&<p className="patroNoticeInline" role="status">{notice}</p>}
     </form>
 
-    <section id="patro-calendars" className="patroResultsSection">
+    <section id="patro-calendars" className="patroResultsSection" aria-busy={busy}>
       <div className="patroSectionTitle"><div><div className="eyebrow">THE NINE TIME LENSES</div><h2>Civil & cultural calendars</h2></div>
         <span>{day?.canonical.date||"—"} · six Intl-calculated / limited authority coverage</span></div>
-      {busy&&<p role="status" className="patroLoading">Synchronizing the nine calendar profiles and astronomical context…</p>}
+      {busy&&<p role="status" className="patroLoading">Synchronizing the nine calendar profiles and astronomical context… Previous result remains visible until completion.</p>}
       <div className="patroStudioGrid">
         {(day?.calendars||[]).map((cal,i)=><article key={cal.id} className={"patroStudioCard"+(i===0?" primary":"")}>
           <div className="patroCardTop"><span className="patroCalendarIcon">{cal.icon}</span>
