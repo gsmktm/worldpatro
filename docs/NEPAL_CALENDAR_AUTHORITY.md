@@ -19,3 +19,7 @@ The Nepal Panchanga Nirnayak Vikas Samiti's site (https://npns.gov.np/) describe
 ## Next expansion
 Get licensed/citeable official year/month source datasets or verified government monthly releases for all BS years, store a versioned source hash and publication metadata, independently cross-check roundtrips and date-range continuity, then expand coverage by reviewed release only. Nepal Sambat remains expert-review required.
 
+
+## Update 2026-11-17 — Public CC0 extension (non-government)
+
+The original 2026-11-08 municipal source coverage above remains unchanged. A separate, explicitly non-official CC0 BS 2083 year reference now fills the other nine months using [nMiti open dataset](https://namunaone.github.io/nMiti/data.html). The new `public-dataset` status and API `public_dataset` distinguish this from municipality-reviewed records. Mangsir 1 = 2026-11-17 and Mangsir has 29 days, checked against public Ashesh and Hamro Patro calendar pages. These cross-checks do not create government certification or grant rights to bulk-copy the publishers' festival text. Nepal Sambat, festivals and Panchang approval remain separate authority-dependent tasks.
