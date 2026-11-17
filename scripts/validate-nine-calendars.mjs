@@ -15,9 +15,13 @@ assert.ok(!studio.includes("setDay(null)"),"Calendar explorer should remain moun
 assert.ok(studio.includes('aria-busy={busy}'),"Recalculation must be announced as busy");
 
 const errorBoundary=readFileSync(new URL("../src/app/app/error.tsx",import.meta.url),"utf8");
-assert.ok(errorBoundary.includes('get("debugCalendar")==="1"'),"Error diagnostics must require explicit opt-in");
-assert.ok(errorBoundary.includes('slice(0,240)'),"Diagnostic details must have bounded size");
-assert.ok(!errorBoundary.includes("error.stack"),"Do not leak stack paths to public error UI");
+assert.ok(!errorBoundary.includes("debugCalendar"),"Temporary client error diagnostics must be removed");
+assert.ok(!errorBoundary.includes("error.message"),"Generic public error state must not leak raw error messages");
+assert.ok(studio.includes("window.location.assign(url.toString())"),"Calendar dates must use native deep-link navigation");
+assert.ok(studio.includes('url.search=new URLSearchParams({...next,calendar}).toString()'),"Date link must retain location and calendar profile");
+assert.ok(studio.includes('setCalendarFocus(requestedCalendar as CalendarId)'),"Deep links must restore the active calendar profile");
+const explorer=readFileSync(new URL("../src/components/nine-calendar-explorer.tsx",import.meta.url),"utf8");
+assert.ok(explorer.includes("onSelect(cell.date,active)"),"Month-day selection must preserve active profile");
 const ids=["vedic","gregorian","bs","nepal-sambat","hijri","chinese","hebrew","persian","buddhist"];
 for(const id of ids){
  const {calendar:m}=await call("date=2026-11-17&calendar="+id);
