@@ -11,6 +11,9 @@ const studio=readFileSync(new URL("../src/components/patro-studio.tsx",import.me
 assert.ok(shell.includes("key={query}"),"Workspace keys remain unchanged from existing behavior");
 assert.ok(!studio.includes("window.history.replaceState("),"Patro must not rewrite the URL during date calculation");
 assert.ok(studio.includes("await navigator.clipboard.writeText(url.toString())"),"Patro must generate a shareable selected-date link");
+assert.ok(!studio.includes("setDay(null)"),"Calendar explorer should remain mounted during date fetch");
+assert.ok(studio.includes('aria-busy={busy}'),"Recalculation must be announced as busy");
+
 const ids=["vedic","gregorian","bs","nepal-sambat","hijri","chinese","hebrew","persian","buddhist"];
 for(const id of ids){
  const {calendar:m}=await call("date=2026-11-17&calendar="+id);
