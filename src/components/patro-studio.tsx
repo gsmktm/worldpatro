@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import {useSearchParams} from "next/navigation";
 import {useEffect,useMemo,useRef,useState,type FormEvent} from "react";
 import type {CalendarResult} from "@/lib/calendars";
 import NineCalendarExplorer from "@/components/nine-calendar-explorer";
@@ -109,6 +110,8 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
   const [saving,setSaving]=useState(false);
   const [historyBusy,setHistoryBusy]=useState(false);
   const request=useRef<AbortController|null>(null);
+  const currentSearch=useSearchParams().toString();
+  const syncedSearch=useRef("");
 
   function update(key:keyof Inputs,value:string){
     setForm(prev=>({...prev,[key]:value}));setNotice("");
@@ -139,13 +142,16 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       if(ctrl.signal.aborted)return;
       setDay(data as Day);
       setMonth(getMonth(next.date));
+      syncedSearch.current=params.toString();
       window.history.replaceState(null,"",window.location.pathname+"?"+params.toString()+window.location.hash);
     }catch(e){
       if(!ctrl.signal.aborted)setError(e instanceof Error?e.message:"Unable to calculate.");
     }finally{if(!ctrl.signal.aborted)setBusy(false);}
   }
   useEffect(()=>{
-    const params=new URLSearchParams(window.location.search);
+    if(syncedSearch.current===currentSearch)return;
+    syncedSearch.current=currentSearch;
+    const params=new URLSearchParams(currentSearch);
     const def=todayDefaults();
     const initial:Inputs={
       date:params.get("date")||def.date,
@@ -158,7 +164,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     setForm(initial);
     void synchronize(initial);
     return ()=>{request.current?.abort();};
-  },[]);
+  },[currentSearch]);
 
   function go(date:string){
     if(!validISO(date))return;
