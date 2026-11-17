@@ -163,7 +163,7 @@ export default function WensStudio(){
         <article className="wensPanel wensCalendars">
           <div className="wensPanelTop"><span>NINE CALENDAR LENSES</span><Link href={"/app/patro"+(snapshot?"?date="+snapshot.instant.date:"")}>Full Patro ↗</Link></div>
           <div className="wensCalendarList">{(snapshot?.calendarProfiles??[]).map((entry,i)=><div key={entry.id}>
-            <span>{String(i+1).padStart(2,"0")}</span><div><strong>{entry.name}</strong><small>{entry.value}</small></div><i title={entry.provenance}>{entry.status==="calculated"?"CALCULATED":entry.status==="authority-sourced"?"MUNICIPAL SOURCE":"SOURCE NEEDED"}</i>
+            <span>{String(i+1).padStart(2,"0")}</span><div><strong>{entry.name}</strong><small>{entry.value}</small></div><i title={entry.provenance}>{entry.status==="calculated"?"CALCULATED":entry.status==="authority-sourced"?"MUNICIPAL SOURCE":entry.status==="public-dataset"?"OPEN DATASET":"SOURCE NEEDED"}</i>
           </div>)}</div>
           {!snapshot&&<p className="wensFine">Calendars will appear after the first synchronization.</p>}
           {snapshot&&<div className="wensPanchang"><div><small>TITHI</small><strong>{snapshot.panchang.tithi.paksha} · {snapshot.panchang.tithi.name}</strong></div><div><small>NAKSHATRA</small><strong>{snapshot.panchang.nakshatra.name}</strong></div><div><small>SUNRISE</small><strong>{snapshot.panchang.sunTimes.sunrise??"Unavailable"}</strong></div></div>}
