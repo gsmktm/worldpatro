@@ -29,6 +29,7 @@ const quickModules=[
   {name:"Kundli",caption:"Birth chart & Dasha",path:"/app/kundli",icon:"♃"},
   {name:"Festivals",caption:"Reviewed observances",path:"/app/religions",icon:"☸"},
   {name:"Source Registry",caption:"Publishers and evidence",path:"/app/sources",icon:"⌕"},
+  {name:"Calendar references",caption:"Ashesh and Hamro widgets",path:"#calendar-references",icon:"☼"},
   {name:"Authorities",caption:"Reviewed calendar releases",path:"/app/authorities",icon:"§"},
   {name:"Research",caption:"Evidence workspace",path:"/app/research",icon:"▤"},
   {name:"World",caption:"Global data and country indicators",path:"/app/world",icon:"◎"},
