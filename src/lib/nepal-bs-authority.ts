@@ -1,10 +1,9 @@
 /**
- * Nepali BS 2083 date correspondences, bounded to municipality-published month grids.
- * Source: Kathmandu Metropolitan City public BS/AD month pages, inspected 2026-10-09.
- *
- * This is NOT a year-long table and NOT the Nepal Panchanga Nirnayak Vikas Samiti's
- * approval certificate. It is a government municipality's published civil dates.
- * No extrapolation outside exactly the published month ranges is permitted.
+ * Nepali BS 2083 date correspondences with explicit provenance per month.
+ * Municipality-reviewed months remain authority-sourced; other 2083 months use
+ * the attributed nMiti CC0 open dataset, never presented as official decisions.
+ * This table does not certify religious observances, holidays or Panchang rules.
+ * No inferred date conversion outside these exact month ranges is permitted.
  */
 export type BsPublishedMonth = {
   bsYear:number;
