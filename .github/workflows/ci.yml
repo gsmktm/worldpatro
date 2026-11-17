@@ -64,4 +64,5 @@ jobs:
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-mutation-guards.mjs
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-jyotish-explorer.mjs
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-ecosystem.mjs
+          BASE_URL=http://127.0.0.1:3100 node scripts/validate-nine-calendars.mjs
 

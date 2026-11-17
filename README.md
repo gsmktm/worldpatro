@@ -31,6 +31,7 @@ The repo includes the upstream MIT-licensed **Ponytail** skills in [`.agents/ski
 - `/` — cinematic public landing
 - `/app` — World Patro command cockpit
 - `/app/patro` — 9 Calendars · One Patro
+  - Interactive calendar-specific month explorer, seven native civil month profiles, plus source-aware Vedic/Nepal Sambat reference navigation; local CSV export and shared-date updates. [Methods and API](docs/NINE_CALENDARS_FUNCTIONS.md).
 - `/app/panchang` — astronomical Panchang
 - `/app/astrology`
 - `/app/kundli`
@@ -54,6 +55,7 @@ The repo includes the upstream MIT-licensed **Ponytail** skills in [`.agents/ski
 - `GET /api/v1/health`
 - `GET /api/v1/patro/today?date=2026-10-09`
 - `POST /api/v1/calendar/convert`
+- `GET /api/v1/calendar/month?calendar=chinese&date=2026-11-17` — month grid for one of nine profiles
 - `GET /api/v1/panchang/day?date=2026-10-09&lat=27.7172&lon=85.3240&tz=Asia/Kathmandu`
 
 ### Public world intelligence
