@@ -29,6 +29,7 @@ const quickModules=[
   {name:"Kundli",caption:"Birth chart & Dasha",path:"/app/kundli",icon:"♃"},
   {name:"Festivals",caption:"Reviewed observances",path:"/app/religions",icon:"☸"},
   {name:"Source Registry",caption:"Publishers and evidence",path:"/app/sources",icon:"⌕"},
+  {name:"Calendar references",caption:"Ashesh and Hamro widgets",path:"#calendar-references",icon:"☼"},
   {name:"Authorities",caption:"Reviewed calendar releases",path:"/app/authorities",icon:"§"},
   {name:"Research",caption:"Evidence workspace",path:"/app/research",icon:"▤"},
   {name:"World",caption:"Global data and country indicators",path:"/app/world",icon:"◎"},
@@ -170,7 +171,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     lon:String(day.canonical.longitude),elevation:String(day.canonical.elevationMeters),tz:day.canonical.timezone
   }):null;
   const bs=day?.calendars.find(c=>c.id==="bs");
-  const computed=day?.calendars.filter(c=>c.status==="calculated"||c.status==="authority-sourced").length||0;
+  const computed=day?.calendars.filter(c=>c.status==="calculated"||c.status==="authority-sourced"||c.status==="public-dataset").length||0;
 
   async function copyLink(){
     if(!day)return;
@@ -309,7 +310,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       <div className="patroStudioGrid">
         {(day?.calendars||[]).map((cal,i)=><article key={cal.id} className={"patroStudioCard"+(i===0?" primary":"")}>
           <div className="patroCardTop"><span className="patroCalendarIcon">{cal.icon}</span>
-            <span className={"patroStatus "+((cal.status==="calculated"||cal.status==="authority-sourced")?"ok":"pending")}>{cal.status.replaceAll("-"," ")}</span>
+            <span className={"patroStatus "+((cal.status==="calculated"||cal.status==="authority-sourced"||cal.status==="public-dataset")?"ok":"pending")}>{cal.status.replaceAll("-"," ")}</span>
           </div>
           <h3>{cal.name}</h3><div className="patroCardValue">{cal.value}</div>
           <p>{cal.method}</p>

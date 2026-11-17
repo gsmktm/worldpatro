@@ -218,8 +218,20 @@ const backToAD=await json("/api/v1/calendar/bs/convert?bs=2083-06-23",undefined,
 invariant(backToAD.body.result?.date==="2026-10-09","BS->AD round trip failed.");
 const firstBhadra=await json("/api/v1/calendar/bs/convert?ad=2026-08-17",undefined,200);
 invariant(firstBhadra.body.result?.bsMonth===5&&firstBhadra.body.result?.bsDay===1,"Bhadra published anchor failed.");
-const outOfCoverage=await json("/api/v1/calendar/bs/convert?ad=2026-11-17",undefined,404);
-invariant(outOfCoverage.body.status==="authority_required","Unverified BS dates must not be invented.");
+const mangsir=await json("/api/v1/calendar/bs/convert?ad=2026-11-17",undefined,200);
+invariant(mangsir.body.status==="public_dataset","Open BS dataset classification must remain non-official.");
+invariant(mangsir.body.result?.bsYear===2083&&mangsir.body.result?.bsMonth===8&&mangsir.body.result?.bsDay===1,"Mangsir 1 correspondence failed.");
+invariant(mangsir.body.result?.provenance?.verification==="public-open-dataset","CC0 data must not be labeled municipal authority.");
+const mangsirLast=await json("/api/v1/calendar/bs/convert?ad=2026-12-15",undefined,200);
+invariant(mangsirLast.body.result?.bsMonth===8&&mangsirLast.body.result?.bsDay===29,"Mangsir must end on its 29th day.");
+const poushFirst=await json("/api/v1/calendar/bs/convert?ad=2026-12-16",undefined,200);
+invariant(poushFirst.body.result?.bsMonth===9&&poushFirst.body.result?.bsDay===1,"Poush 1 correspondence failed.");
+const reverseMangsir=await json("/api/v1/calendar/bs/convert?bs=2083-08-01",undefined,200);
+invariant(reverseMangsir.body.result?.date==="2026-11-17"&&reverseMangsir.body.status==="public_dataset","Mangsir reverse conversion failed.");
+const outOfCoverage=await json("/api/v1/calendar/bs/convert?ad=2027-04-14",undefined,404);
+invariant(outOfCoverage.body.status==="authority_required","Dates outside 2083 must remain source-required.");
+const bsAtMangsir=await json("/api/v1/patro/today?date=2026-11-17",undefined,200);
+invariant(bsAtMangsir.body.calendars.find(c=>c.id==="bs")?.status==="public-dataset","Open BS reference not surfaced in Patro.");
 const bsInPatro=await json("/api/v1/patro/today?date=2026-10-09",undefined,200);
 invariant(bsInPatro.body.calendars.find(c=>c.id==="bs")?.status==="authority-sourced",
   "Verified BS month not surfaced in Patro.");

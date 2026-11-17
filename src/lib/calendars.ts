@@ -1,5 +1,5 @@
 import { publishedBsFromAD } from "@/lib/nepal-bs-authority";
-export type CalendarStatus = "calculated" | "authority-sourced" | "authority-required" | "astronomy-required";
+export type CalendarStatus = "calculated" | "authority-sourced" | "public-dataset" | "authority-required" | "astronomy-required";
 
 export type CalendarResult = {
   id: string;
@@ -7,7 +7,7 @@ export type CalendarResult = {
   icon: string;
   value: string;
   method: string;
-  provenance: "CALCULATED" | "VERIFIED MUNICIPAL CALENDAR" | "AUTHORITY / CURATED DATA REQUIRED" | "ASTRONOMICAL";
+  provenance: "CALCULATED" | "VERIFIED MUNICIPAL CALENDAR" | "REVIEWED OPEN DATASET (CC0)" | "AUTHORITY / CURATED DATA REQUIRED" | "ASTRONOMICAL";
   sourceUrl?: string;
   checkedOn?: string;
   coverage?: string;
@@ -25,6 +25,7 @@ export function buildCalendarSnapshot(input: Date, locale = "en"): CalendarResul
   if (Number.isNaN(input.getTime())) throw new Error("Invalid date.");
   const isoDate = input.toISOString().slice(0, 10);
   const publishedBs = publishedBsFromAD(isoDate);
+  const isMunicipal=publishedBs?.provenance.verification==="municipality-published";
   return [
     {
       id: "vedic", name: "Vedic Panchang", icon: "ॐ",
@@ -45,15 +46,17 @@ export function buildCalendarSnapshot(input: Date, locale = "en"): CalendarResul
         ? publishedBs.bsYear + " " + publishedBs.monthEn + " " + publishedBs.bsDay
         : "Verified BS/AD source for this date not yet available",
       method: publishedBs?.method || "Authority-first Nepal civil calendar profile",
-      provenance: publishedBs ? "VERIFIED MUNICIPAL CALENDAR" : "AUTHORITY / CURATED DATA REQUIRED",
-      status: publishedBs ? "authority-sourced" : "authority-required",
+      provenance: publishedBs ? (isMunicipal ? "VERIFIED MUNICIPAL CALENDAR" : "REVIEWED OPEN DATASET (CC0)") : "AUTHORITY / CURATED DATA REQUIRED",
+      status: publishedBs ? (isMunicipal ? "authority-sourced" : "public-dataset") : "authority-required",
       sourceUrl: publishedBs?.provenance.sourceUrl,
       checkedOn: publishedBs?.provenance.checkedOn,
       coverage: publishedBs
         ? publishedBs.provenance.coverageStart + " – " + publishedBs.provenance.coverageEnd
         : undefined,
       note: publishedBs
-        ? "Verified against Kathmandu Metropolitan City published BS/AD month grid. Municipal civil-date correspondence; not an independent Panchang or holiday approval. Coverage is limited."
+        ? (isMunicipal
+          ? "Verified against Kathmandu Metropolitan City published BS/AD month grid. Municipal date correspondence, not a Panchang or holiday approval."
+          : "Cross-checked CC0 public BS reference. Not an official Panchang, religious observance or national holiday declaration.")
         : "Only explicitly verified month ranges are converted; World Patro does not guess dates outside those releases."
     },
     {
