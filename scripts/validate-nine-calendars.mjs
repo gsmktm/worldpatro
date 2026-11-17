@@ -14,6 +14,10 @@ assert.ok(studio.includes("await navigator.clipboard.writeText(url.toString())")
 assert.ok(!studio.includes("setDay(null)"),"Calendar explorer should remain mounted during date fetch");
 assert.ok(studio.includes('aria-busy={busy}'),"Recalculation must be announced as busy");
 
+const errorBoundary=readFileSync(new URL("../src/app/app/error.tsx",import.meta.url),"utf8");
+assert.ok(errorBoundary.includes('get("debugCalendar")==="1"'),"Error diagnostics must require explicit opt-in");
+assert.ok(errorBoundary.includes('slice(0,240)'),"Diagnostic details must have bounded size");
+assert.ok(!errorBoundary.includes("error.stack"),"Do not leak stack paths to public error UI");
 const ids=["vedic","gregorian","bs","nepal-sambat","hijri","chinese","hebrew","persian","buddhist"];
 for(const id of ids){
  const {calendar:m}=await call("date=2026-11-17&calendar="+id);
