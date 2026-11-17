@@ -8,9 +8,9 @@ async function call(query,status=200){
 }
 const shell=readFileSync(new URL("../src/components/app-shell.tsx",import.meta.url),"utf8");
 const studio=readFileSync(new URL("../src/components/patro-studio.tsx",import.meta.url),"utf8");
-assert.ok(shell.includes('key={pathname==="/app/patro"'),"Patro route must not remount on date query changes");
-assert.ok(studio.includes("useSearchParams().toString()"),"Patro must watch external URL changes");
-assert.ok(studio.includes("syncedSearch.current=params.toString()"),"Patro must skip self-published duplicate fetches");
+assert.ok(shell.includes("key={query}"),"Workspace keys remain unchanged from existing behavior");
+assert.ok(!studio.includes("window.history.replaceState("),"Patro must not rewrite the URL during date calculation");
+assert.ok(studio.includes("await navigator.clipboard.writeText(url.toString())"),"Patro must generate a shareable selected-date link");
 const ids=["vedic","gregorian","bs","nepal-sambat","hijri","chinese","hebrew","persian","buddhist"];
 for(const id of ids){
  const {calendar:m}=await call("date=2026-11-17&calendar="+id);
