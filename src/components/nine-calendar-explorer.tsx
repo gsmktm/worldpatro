@@ -95,7 +95,7 @@ export default function NineCalendarExplorer({date,locale,calendars,onSelect,pan
       aria-pressed={current} title={cell.date+" AD · "+(isReference?"Gregorian reference":cell.day+" "+active)+" · "+statusWords[view.status]}
       aria-label={cell.date+" AD, "+(isReference?"Gregorian reference date":cell.day+" in "+(selected?.name??active))+(current?", selected":"")}
       className={styles.cell+(cell.inMonth?"":" "+styles.outside)+(current?" "+styles.selected:"")+(i%7===6?" "+styles.saturday:"")}>
-      <strong>{num.format(Number(cell.day))==="NaN"?cell.day:num.format(Number(cell.day))}</strong>
+      <strong>{Number.isFinite(Number(cell.day))?num.format(Number(cell.day)):cell.day}</strong>
       <small>{isReference?"AD":active==="gregorian"?"":cell.ad+" AD"}</small>
       {cell.source==="public-open-dataset"&&<i aria-label="Open data" className={styles.dot}/>}
      </button>;
