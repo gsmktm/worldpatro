@@ -4,7 +4,7 @@ import Link from "next/link";
 import {useEffect,useMemo,useRef,useState,type FormEvent} from "react";
 import type {CalendarResult} from "@/lib/calendars";
 import NineCalendarExplorer from "@/components/nine-calendar-explorer";
-import type {CalendarId} from "@/lib/calendar-month";
+import {CALENDAR_IDS, type CalendarId} from "@/lib/calendar-month";
 import {publishedBsFromAD} from "@/lib/nepal-bs-authority";
 
 type Inputs={date:string;locale:"en"|"ne";lat:string;lon:string;elevation:string;tz:string};
@@ -139,14 +139,15 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       if(ctrl.signal.aborted)return;
       setDay(data as Day);
       setMonth(getMonth(next.date));
-      // shortcut: preserve the current URL while switching days; use Copy link to share the selected date.
-      // Upgrade after a tested App Router history-sync strategy is available.
+      // Date navigation is a full load; no history writes during asynchronous calendar calculation.
     }catch(e){
       if(!ctrl.signal.aborted)setError(e instanceof Error?e.message:"Unable to calculate.");
     }finally{if(!ctrl.signal.aborted)setBusy(false);}
   }
   useEffect(()=>{
     const params=new URLSearchParams(window.location.search);
+    const requestedCalendar=params.get("calendar");
+    if(requestedCalendar&&CALENDAR_IDS.some(id=>id===requestedCalendar))setCalendarFocus(requestedCalendar as CalendarId);
     const def=todayDefaults();
     const initial:Inputs={
       date:params.get("date")||def.date,
@@ -161,16 +162,22 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     return ()=>{request.current?.abort();};
   },[]);
 
-  function go(date:string){
+  function navigateTo(next:Inputs, calendar:CalendarId=calendarFocus){
+    if(!validISO(next.date))return;
+    // Native page navigation avoids the reproducible React removeChild failure on in-place day transitions.
+    const url=new URL(window.location.href);
+    url.search=new URLSearchParams({...next,calendar}).toString();
+    url.searchParams.delete("debugCalendar");
+    window.location.assign(url.toString());
+  }
+  function go(date:string,calendar:CalendarId=calendarFocus){
     if(!validISO(date))return;
-    const next={...form,date};setForm(next);
-    void synchronize(next);
+    navigateTo({...form,date},calendar);
   }
   function preset(i:number){
-    const chosen=presets[i],next={...form,...chosen};
-    setForm(next);void synchronize(next);
+    navigateTo({...form,...presets[i]});
   }
-  function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();void synchronize(form);}
+  function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();navigateTo(form);}
   const [year,monthIndex]=month;
   const days=useMemo(()=>monthDays(year,monthIndex),[year,monthIndex]);
   const params=day?new URLSearchParams({
