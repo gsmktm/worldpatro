@@ -68,7 +68,7 @@ export const BS_PUBLISHED_MONTHS:readonly BsPublishedMonth[]=[
     sourceUrl:"https://kathmandu.gov.np/en/calendar",
     publisher:"Kathmandu Metropolitan City",
     checkedOn:"2026-11-08",verification:"municipality-published"
-  }
+  },
   {
     bsYear:2083,bsMonth:8,nameEn:"Mangsir",nameNe:"मङ्सिर",
     startsAD:"2026-11-17",length:29,
