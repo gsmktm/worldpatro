@@ -5,6 +5,7 @@ import type { TruthState } from "@/components/ui/truth-chip";
 const STATUS_TRUTH: Record<CalendarStatus, TruthState> = {
   "calculated": "fact",
   "authority-sourced": "authority",
+  "public-dataset": "fact",
   "authority-required": "unknown",
   "astronomy-required": "astronomy"
 };
