@@ -9,7 +9,7 @@ import styles from "./nine-calendar-explorer.module.css";
 type Props={
  date:string;locale:"ne"|"en";calendars:CalendarResult[];
  active:CalendarId;onActiveChange:(id:CalendarId)=>void;
- onSelect:(date:string)=>void;panchangUrl:string;
+ onSelect:(date:string,calendar:CalendarId)=>void;panchangUrl:string;
 };
 const statusWords:Record<string,string>={
  calculated:"Calculated", "authority-sourced":"Municipal source",
@@ -91,7 +91,7 @@ export default function NineCalendarExplorer({date,locale,calendars,active,onAct
    <div className={styles.grid}>
     {view.days.map((cell,i)=>{
      const current=cell.date===date,available=cell.day!=="—";
-     return <button type="button" key={cell.date} disabled={!available} onClick={()=>onSelect(cell.date)}
+     return <button type="button" key={cell.date} disabled={!available} onClick={()=>onSelect(cell.date,active)}
       aria-pressed={current} title={cell.date+" AD · "+(isReference?"Gregorian reference":cell.day+" "+active)+" · "+statusWords[view.status]}
       aria-label={cell.date+" AD, "+(isReference?"Gregorian reference date":cell.day+" in "+(selected?.name??active))+(current?", selected":"")}
       className={styles.cell+(cell.inMonth?"":" "+styles.outside)+(current?" "+styles.selected:"")+(i%7===6?" "+styles.saturday:"")}>
