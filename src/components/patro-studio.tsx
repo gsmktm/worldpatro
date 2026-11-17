@@ -4,6 +4,7 @@ import Link from "next/link";
 import {useEffect,useMemo,useRef,useState,type FormEvent} from "react";
 import type {CalendarResult} from "@/lib/calendars";
 import NineCalendarExplorer from "@/components/nine-calendar-explorer";
+import type {CalendarId} from "@/lib/calendar-month";
 import {publishedBsFromAD} from "@/lib/nepal-bs-authority";
 
 type Inputs={date:string;locale:"en"|"ne";lat:string;lon:string;elevation:string;tz:string};
@@ -101,6 +102,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
   const [busy,setBusy]=useState(false);
   const [month,setMonth]=useState<[number,number]>(()=>getMonth(isoNepal()));
   const [bsRaw,setBsRaw]=useState("");
+  const [calendarFocus,setCalendarFocus]=useState<CalendarId>("bs");
   const [bsMessage,setBsMessage]=useState("");
   const [bsBusy,setBsBusy]=useState(false);
   const [saved,setSaved]=useState<Saved[]>([]);
@@ -322,9 +324,8 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
           {cal.sourceUrl&&<a className="patroAuthorityLink" href={cal.sourceUrl} target="_blank" rel="noopener noreferrer">{cal.provenance==="VERIFIED MUNICIPAL CALENDAR"?"Municipal source":"Open data source"} ↗</a>}
           {cal.coverage&&<small className="patroCoverage">{cal.coverage} · checked {cal.checkedOn}</small>}
           <div className="patroCardBottom">
-            {cal.id==="vedic"?<Link href={"/app/panchang"+(params?"?"+params:"")}>Open Panchang →</Link>
-             :cal.id==="bs"?<a href="#bs-converter">Convert AD / BS →</a>
-             :<Link href={cal.id==="nepal-sambat"?"/app/authorities":"/app/religions"}>Explore sources →</Link>}
+            {cal.id==="vedic"&&<Link href={"/app/panchang"+(params?"?"+params:"")}>Open Panchang →</Link>}
+             <a href="#patro-nine-months" onClick={()=>setCalendarFocus(cal.id as CalendarId)}>Browse month →</a>
             <details><summary>Method / limits</summary><p>{cal.note}</p><small>{cal.provenance}</small></details>
           </div>
         </article>)}
@@ -332,7 +333,8 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       {!day&&!busy&&!error&&<div className="patroEmpty">Your nine-calendar snapshot will appear here.</div>}
     </section>
 
-    {day&&<NineCalendarExplorer date={day.canonical.date} locale={form.locale} calendars={day.calendars} onSelect={go}
+    {day&&<NineCalendarExplorer date={day.canonical.date} locale={form.locale} calendars={day.calendars}
+      active={calendarFocus} onActiveChange={setCalendarFocus} onSelect={go}
       panchangUrl={"/app/panchang"+(params?"?"+params.toString():"")}/>}
 
     <section id="patro-panchang" className="patroPanchang">
