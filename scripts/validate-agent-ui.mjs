@@ -17,6 +17,7 @@ assert.deepEqual(missing,[],"Navigation icons must exist in local SVG registry")
 const month=source("src/components/month-calendar.tsx");
 assert.match(month,/aria-current=\{d\.date===today\?"date":undefined\}/,"Today must be accessible");
 assert.match(month,/onSelect\(today\)/,"Today shortcut must select the actual date");
+assert.match(month,/setMonth\(today\.slice\(0,7\)\)/,"Today must restore the visible month even when selection is unchanged");
 assert.match(month,/timeZone:timezone/,"Current day must respect selected location timezone");
 assert.match(month,/provenance\.verification==="public-open-dataset"/,"Open BS data must not be styled as municipal authority");
 assert.match(source("src/components/command-center.tsx"),/timezone=\{moment\.tz\}/,"Calendar must receive the selected timezone");
