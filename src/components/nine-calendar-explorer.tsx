@@ -8,6 +8,7 @@ import styles from "./nine-calendar-explorer.module.css";
 
 type Props={
  date:string;locale:"ne"|"en";calendars:CalendarResult[];
+ active:CalendarId;onActiveChange:(id:CalendarId)=>void;
  onSelect:(date:string)=>void;panchangUrl:string;
 };
 const statusWords:Record<string,string>={
@@ -17,8 +18,7 @@ const statusWords:Record<string,string>={
 };
 function csvQuote(raw:string){return '"'+raw.replace(/"/g,'""')+'"';}
 
-export default function NineCalendarExplorer({date,locale,calendars,onSelect,panchangUrl}:Props){
- const [active,setActive]=useState<CalendarId>("bs");
+export default function NineCalendarExplorer({date,locale,calendars,active,onActiveChange,onSelect,panchangUrl}:Props){
  const [cursor,setCursor]=useState(date);
  const [notice,setNotice]=useState("");
  useEffect(()=>{setCursor(date);},[date]);
@@ -27,7 +27,7 @@ export default function NineCalendarExplorer({date,locale,calendars,onSelect,pan
  const num=new Intl.NumberFormat(locale==="ne"?"ne-NP":"en-US");
  const isReference=view.mode==="gregorian-reference";
 
- function choose(id:CalendarId){setActive(id);setCursor(date);setNotice("");}
+ function choose(id:CalendarId){onActiveChange(id);setCursor(date);setNotice("");}
  function navigate(next:string|null){if(next){setCursor(next);setNotice("");}}
  function exportCsv(){
   if(isReference)return;
