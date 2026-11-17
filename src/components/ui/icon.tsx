@@ -1,5 +1,15 @@
 import type { CSSProperties } from "react";
 const paths: Record<string, React.ReactNode> = {
+  sunrise: <><path d="M3 18h18M5 21h14M12 3v3M5 8l2 2m12-2-2 2M2 13h3m14 0h3"/><path d="M6 18a6 6 0 0 1 12 0"/></>,
+  calendarCheck: <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 11h18m-13 5 3 3 5-5"/></>,
+  notebook: <><rect x="5" y="2" width="16" height="20" rx="2"/><path d="M9 2v20M13 7h4m-4 4h4M3 6h4M3 12h4M3 18h4"/></>,
+  orbit: <><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-30 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(50 12 12)"/><circle cx="12" cy="12" r="2"/></>,
+  hourglass: <><path d="M5 3h14M5 21h14M7 3v4c0 2 3 3 5 5-2 2-5 3-5 5v4M17 3v4c0 2-3 3-5 5 2 2 5 3 5 5v4"/></>,
+  sparkles: <><path d="m12 3 2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2Z"/><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7ZM4 2l.6 1.4L6 4l-1.4.6L4 6l-.6-1.4L2 4l1.4-.6Z"/></>,
+  users: <><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v1"/></>,
+  fileCheck: <><path d="M5 2h9l5 5v15H5Z M14 2v6h5"/><path d="m8 15 3 3 5-5"/></>,
+  workflow: <><rect x="2" y="3" width="7" height="6" rx="1.5"/><rect x="15" y="15" width="7" height="6" rx="1.5"/><path d="M9 6h5a4 4 0 0 1 4 4v5M18 11l-3-3m3 3 3-3M2 19h9l-3-3m3 3-3 3"/></>,
+  activity: <><path d="M2 12h4l3-8 5 16 3-8h5"/></>,
   home: <><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></>,
   calendar: <><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 11h18m-14 4h2m3 0h2m3 0h1M7 18h2m3 0h2"/></>,
   sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></>,

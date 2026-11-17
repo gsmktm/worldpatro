@@ -11,6 +11,11 @@ World Patro now has BS↔AD civil-date references for all twelve months of BS 20
 
 The `/app/patro#calendar-references` panel offers user-activated, separately credited Ashesh Nepali Calendar and Hamro Patro publisher-hosted widgets. External widget content is not copied into World Patro databases. The UI is original; full religious observance import requires reviewed rights and sources.
 
+
+## Engineering skills and UI quality
+
+The repo includes the upstream MIT-licensed **Ponytail** skills in [`.agents/skills/`](.agents/skills/) and project-specific [`AGENTS.md`](AGENTS.md) guidance. They are local coding-agent instructions, **not** runtime application dependencies or a new UI framework. CI verifies navigation icon coverage, selected-timezone "today" calendar behavior and explicit municipal-versus-open-source BS labels with `node scripts/validate-agent-ui.mjs`.
+
 ## Production principles
 
 1. **No fabricated dates or sources.**
@@ -108,9 +113,9 @@ Runtime limits:
 
 See `docs/AGENT_ARCHITECTURE.md`.
 
-## Firebase
+## Firebase (legacy opt-in)
 
-Firebase is the preferred authenticated backend.
+Supabase is the primary authenticated backend. The Firebase adapter remains an explicitly selected legacy option; do not assume it is active in production.
 
 ### Browser/public configuration
 - `NEXT_PUBLIC_FIREBASE_API_KEY`
@@ -127,13 +132,13 @@ Firebase is the preferred authenticated backend.
 
 Never commit or expose the Firebase service-account JSON.
 
-The browser uses Firebase Auth. The server verifies the Firebase ID token and issues an HttpOnly session cookie. Firestore application writes currently go through trusted Next.js server routes using Firebase Admin. Direct browser Firestore access is denied by the committed `firestore.rules` until a reviewed client rule is intentionally added.
+When the Firebase backend is explicitly enabled, the browser uses Firebase Auth; the server verifies its ID token and issues an HttpOnly session cookie. Firestore application writes currently go through trusted Next.js server routes using Firebase Admin. Direct browser Firestore access is denied by the committed `firestore.rules` until a reviewed client rule is intentionally added.
 
 See `docs/FIREBASE.md`.
 
-## Supabase fallback
+## Supabase (primary)
 
-The repository retains a complete Supabase/Postgres fallback design and migrations:
+The repository contains Supabase/Postgres schema design and migrations for the primary authenticated backend. Actual production connectivity and migrations must be verified separately:
 
 - `supabase/migrations/20261009000000_world_patro_core.sql`
 - `supabase/migrations/20261009010000_operational_flows.sql`

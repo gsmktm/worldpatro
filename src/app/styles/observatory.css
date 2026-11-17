@@ -48,3 +48,17 @@ html{background:var(--wp-bg)}body{background:var(--wp-bg);color:var(--wp-text);f
 .loginCard{background:var(--wp-surface);border:1px solid var(--wp-border);border-radius:18px;box-shadow:none}.loginCard h1{color:var(--wp-heading);font-family:var(--wp-serif)}.loginFields input{background:var(--wp-bg);border-color:var(--wp-border);color:var(--wp-text)}.loginFields label{color:var(--wp-text)}.loginCard .primaryBtn{background:var(--wp-gold);color:var(--wp-bg);border-radius:8px}.loginCard .ghost{background:var(--wp-surface-2);color:var(--wp-gold);border-color:var(--wp-border)}.loginCard .muted,.loginCard .loginFootnote,.loginCard .loginInputHelp{color:var(--wp-muted)}
 
 .wp-all-apps{display:flex;align-items:center;gap:10px;padding:12px 11px;margin:6px 0 22px;border:1px solid #31454a;border-radius:8px;color:#a7bcbd;font-size:10px}.wp-all-apps>svg:last-child{margin-left:auto;color:#bcac8c}.wp-all-apps:hover{background:#20363b;color:#e5cfaa}
+
+/* Focused calendar usability: readable BS reference dates, today and touch targets. */
+.wp-calendar-head>div{align-items:center;gap:6px}
+.wp-calendar-head button{width:35px;height:35px;min-width:35px;min-height:35px}
+.wp-calendar-head .wp-calendar-today{width:auto;min-width:54px;padding:0 9px;border-color:rgba(215,169,79,.45);color:var(--wp-gold-2,#f0d696);font-size:11px;font-weight:700}
+.wp-calendar-head .wp-calendar-today:disabled{opacity:.5}
+.wp-calendar-days>button{min-height:48px}
+.wp-calendar-days>button small{font-size:9px}
+.wp-calendar-days>button small.open-source{color:#e6bf82;font-weight:650}
+.wp-calendar-days>button.selected small.open-source{color:#4f3821}
+.wp-calendar-days>button.today:not(.selected){border-color:rgba(218,171,82,.75);background:rgba(217,169,79,.11)}
+.wp-calendar-days>button.today:not(.selected):after{content:"";width:4px;height:4px;border-radius:50%;background:#e1b765;position:absolute;top:4px;right:4px}
+.wp-calendar-legend{flex-wrap:wrap;line-height:1.6;font-size:9px}
+@media(max-width:650px){.wp-calendar-head button{width:35px;height:35px}.wp-calendar-days>button small{font-size:8px}}
