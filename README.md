@@ -4,6 +4,13 @@
 
 > **Spirit:** From the Himalayas · Nepal → the World. Quiet center, clear method, source before claim.
 
+
+## 2026-11-17 · BS 2083 open data and attributed provider views
+
+World Patro now has BS↔AD civil-date references for all twelve months of BS 2083. The original municipality-reviewed Bhadra/Asoj/Kartik months stay classified as official municipal **date correspondence**. Other months use the independently attributed nMiti **CC0 open dataset**, classified `public-dataset` and never mislabeled official Panchang or holiday authority. [Source and license details](docs/CALENDAR_REFERENCE_INTEGRATION.md).
+
+The `/app/patro#calendar-references` panel offers user-activated, separately credited Ashesh Nepali Calendar and Hamro Patro publisher-hosted widgets. External widget content is not copied into World Patro databases. The UI is original; full religious observance import requires reviewed rights and sources.
+
 ## Production principles
 
 1. **No fabricated dates or sources.**
