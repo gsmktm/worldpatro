@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import {useSearchParams} from "next/navigation";
 import {useEffect,useMemo,useRef,useState,type FormEvent} from "react";
 import type {CalendarResult} from "@/lib/calendars";
 import NineCalendarExplorer from "@/components/nine-calendar-explorer";
@@ -110,8 +109,6 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
   const [saving,setSaving]=useState(false);
   const [historyBusy,setHistoryBusy]=useState(false);
   const request=useRef<AbortController|null>(null);
-  const currentSearch=useSearchParams().toString();
-  const syncedSearch=useRef("");
 
   function update(key:keyof Inputs,value:string){
     setForm(prev=>({...prev,[key]:value}));setNotice("");
@@ -142,16 +139,14 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       if(ctrl.signal.aborted)return;
       setDay(data as Day);
       setMonth(getMonth(next.date));
-      syncedSearch.current=params.toString();
-      window.history.replaceState(null,"",window.location.pathname+"?"+params.toString()+window.location.hash);
+      // No automatic history writes: Next App Router search-sync was remounting this view.
+      // Copy link builds the selected-date URL without modifying the active page.
     }catch(e){
       if(!ctrl.signal.aborted)setError(e instanceof Error?e.message:"Unable to calculate.");
     }finally{if(!ctrl.signal.aborted)setBusy(false);}
   }
   useEffect(()=>{
-    if(syncedSearch.current===currentSearch)return;
-    syncedSearch.current=currentSearch;
-    const params=new URLSearchParams(currentSearch);
+    const params=new URLSearchParams(window.location.search);
     const def=todayDefaults();
     const initial:Inputs={
       date:params.get("date")||def.date,
@@ -164,7 +159,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
     setForm(initial);
     void synchronize(initial);
     return ()=>{request.current?.abort();};
-  },[currentSearch]);
+  },[]);
 
   function go(date:string){
     if(!validISO(date))return;
@@ -187,7 +182,16 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
 
   async function copyLink(){
     if(!day)return;
-    try{await navigator.clipboard.writeText(window.location.href);setNotice("Link copied. It includes the selected coordinates and date.");}
+    try{
+      const url=new URL(window.location.href);
+      url.search=new URLSearchParams({
+        date:day.canonical.date,locale:day.canonical.locale,
+        lat:String(day.canonical.latitude),lon:String(day.canonical.longitude),
+        elevation:String(day.canonical.elevationMeters),tz:day.canonical.timezone
+      }).toString();
+      await navigator.clipboard.writeText(url.toString());
+      setNotice("Selected-date link copied with location and timezone.");
+    }
     catch{setError("Clipboard access was denied.");}
   }
   async function copyData(){
