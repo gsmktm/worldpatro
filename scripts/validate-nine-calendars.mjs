@@ -8,9 +8,9 @@ async function call(query,status=200){
 }
 const shell=readFileSync(new URL("../src/components/app-shell.tsx",import.meta.url),"utf8");
 const studio=readFileSync(new URL("../src/components/patro-studio.tsx",import.meta.url),"utf8");
-assert.match(shell,/key=\\{pathname===\"\\/app\\/patro\"/, "Patro route must not remount on a date query change");
-assert.match(studio,/useSearchParams\\(\\)\\.toString\\(\\)/,"Patro must watch external URL changes");
-assert.match(studio,/syncedSearch\\.current=params\\.toString\\(\\)/,"Patro must skip duplicate self-published date fetches");
+assert.ok(shell.includes('key={pathname==="/app/patro"'),"Patro route must not remount on date query changes");
+assert.ok(studio.includes("useSearchParams().toString()"),"Patro must watch external URL changes");
+assert.ok(studio.includes("syncedSearch.current=params.toString()"),"Patro must skip self-published duplicate fetches");
 const ids=["vedic","gregorian","bs","nepal-sambat","hijri","chinese","hebrew","persian","buddhist"];
 for(const id of ids){
  const {calendar:m}=await call("date=2026-11-17&calendar="+id);
