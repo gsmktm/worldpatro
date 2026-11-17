@@ -16,9 +16,39 @@ export type BsPublishedMonth = {
   sourceUrl:string;
   publisher:string;
   checkedOn:string;
-  verification:"municipality-published";
+  verification:"municipality-published"|"public-open-dataset";
 };
+/** CC0 open BS 2083 reference dataset: not a government holiday or Panchang declaration.
+ * Mangsir 1 is independently cross-checked against Ashesh and Hamro Patro on 2026-11-17.
+ * Source: https://namunaone.github.io/nMiti/data.html
+ */
+const OPEN_BS_SOURCE="https://namunaone.github.io/nMiti/data.html";
 export const BS_PUBLISHED_MONTHS:readonly BsPublishedMonth[]=[
+  {
+    bsYear:2083,bsMonth:1,nameEn:"Baisakh",nameNe:"वैशाख",
+    startsAD:"2026-04-14",length:31,
+    sourceUrl:OPEN_BS_SOURCE,publisher:"nMiti open BS calendar (CC0)",
+    checkedOn:"2026-11-17",verification:"public-open-dataset"
+  },
+  {
+    bsYear:2083,bsMonth:2,nameEn:"Jestha",nameNe:"जेठ",
+    startsAD:"2026-05-15",length:31,
+    sourceUrl:OPEN_BS_SOURCE,publisher:"nMiti open BS calendar (CC0)",
+    checkedOn:"2026-11-17",verification:"public-open-dataset"
+  },
+  {
+    bsYear:2083,bsMonth:3,nameEn:"Asar",nameNe:"असार",
+    startsAD:"2026-06-15",length:32,
+    sourceUrl:OPEN_BS_SOURCE,publisher:"nMiti open BS calendar (CC0)",
+    checkedOn:"2026-11-17",verification:"public-open-dataset"
+  },
+  {
+    bsYear:2083,bsMonth:4,nameEn:"Shrawan",nameNe:"साउन",
+    startsAD:"2026-07-17",length:31,
+    sourceUrl:OPEN_BS_SOURCE,publisher:"nMiti open BS calendar (CC0)",
+    checkedOn:"2026-11-17",verification:"public-open-dataset"
+  },
+
   {
     bsYear:2083,bsMonth:5,nameEn:"Bhadra",nameNe:"भदौ",
     startsAD:"2026-08-17",length:31,
@@ -40,6 +70,36 @@ export const BS_PUBLISHED_MONTHS:readonly BsPublishedMonth[]=[
     publisher:"Kathmandu Metropolitan City",
     checkedOn:"2026-11-08",verification:"municipality-published"
   }
+  {
+    bsYear:2083,bsMonth:8,nameEn:"Mangsir",nameNe:"मङ्सिर",
+    startsAD:"2026-11-17",length:29,
+    sourceUrl:OPEN_BS_SOURCE,publisher:"nMiti open BS calendar (CC0)",
+    checkedOn:"2026-11-17",verification:"public-open-dataset"
+  },
+  {
+    bsYear:2083,bsMonth:9,nameEn:"Poush",nameNe:"पुस",
+    startsAD:"2026-12-16",length:30,
+    sourceUrl:OPEN_BS_SOURCE,publisher:"nMiti open BS calendar (CC0)",
+    checkedOn:"2026-11-17",verification:"public-open-dataset"
+  },
+  {
+    bsYear:2083,bsMonth:10,nameEn:"Magh",nameNe:"माघ",
+    startsAD:"2027-01-15",length:29,
+    sourceUrl:OPEN_BS_SOURCE,publisher:"nMiti open BS calendar (CC0)",
+    checkedOn:"2026-11-17",verification:"public-open-dataset"
+  },
+  {
+    bsYear:2083,bsMonth:11,nameEn:"Falgun",nameNe:"फागुन",
+    startsAD:"2027-02-13",length:30,
+    sourceUrl:OPEN_BS_SOURCE,publisher:"nMiti open BS calendar (CC0)",
+    checkedOn:"2026-11-17",verification:"public-open-dataset"
+  },
+  {
+    bsYear:2083,bsMonth:12,nameEn:"Chaitra",nameNe:"चैत",
+    startsAD:"2027-03-15",length:30,
+    sourceUrl:OPEN_BS_SOURCE,publisher:"nMiti open BS calendar (CC0)",
+    checkedOn:"2026-11-17",verification:"public-open-dataset"
+  },
 ] as const;
 const ONE_DAY_MS=86400000;
 
@@ -76,7 +136,9 @@ export function publishedBsFromAD(date:string) {
       return {
         bsYear:row.bsYear,bsMonth:row.bsMonth,bsDay:offset+1,
         monthEn:row.nameEn,monthNe:row.nameNe,
-        method:"Exact day offset within a municipality-published BS/AD month grid",
+        method:row.verification==="municipality-published"
+          ?"Exact day offset within a municipality-published BS/AD month grid"
+          :"Exact day offset within a CC0 open BS calendar reference month (non-official)",
         provenance:{
           publisher:row.publisher,sourceUrl:row.sourceUrl,
           checkedOn:row.checkedOn,verification:row.verification,
@@ -94,7 +156,7 @@ export function publishedADFromBs(year:number,month:number,day:number) {
   if(!row||day<1||day>row.length)return null;
   return {
     date:new Date(isoDay(row.startsAD)+(day-1)*ONE_DAY_MS).toISOString().slice(0,10),
-    provenance:{publisher:row.publisher,sourceUrl:row.sourceUrl,checkedOn:row.checkedOn}
+    provenance:{publisher:row.publisher,sourceUrl:row.sourceUrl,checkedOn:row.checkedOn,verification:row.verification}
   };
 }
 
