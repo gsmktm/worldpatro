@@ -2,7 +2,7 @@
 import { useId } from "react";
 
 /** Twelve original SVG line-symbols: one distinct path for each Vedic rāśi. */
-const RASHI_PATHS=[
+export const RASHI_PATHS=[
   "M5 20C5 14 3 5 8 5c4 0 4 5 4 8 0-3 0-8 4-8 5 0 3 9 3 15",
   "M4 4c0 5 4 6 8 6s8-1 8-6M12 10a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13",
   "M4 4h16M4 20h16M7 5c2 4 2 10 0 14M17 5c-2 4-2 10 0 14",
