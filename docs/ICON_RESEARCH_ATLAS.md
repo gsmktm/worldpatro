@@ -25,6 +25,17 @@ WorldPatro needs a coherent, original, accessible symbol vocabulary for a Nepal-
 
 The gallery has Nepali/English names, searchable metadata, eight visual family filters (including the "all" mode), keyboard-accessible buttons, and **Copy SVG** which copies the actual rendered SVG markup—including the Moon disk's internal gradient and clipping definitions. All drawings scale cleanly, and none downloads external fonts or assets.
 
+## Real interface adoption
+
+This is not a standalone gallery only. A reusable `WorldVectorIcon` renderer in `src/components/ui/world-vector-icon.tsx` draws the same registry assets in:
+- `/app` daily cockpit: visible calendar-lens iconography, replacing the old glyph and emoji-only approach.
+- `/app/patro`: all nine calendar profiles show original SVG date-system motifs, preserving source and authority labels.
+- `/app/vedic`: the Panchang's five limbs get individually identified icon motifs and an atlas entry point.
+- `/app/moon`: the existing 12 custom zodiac paths and 8 Moon disks are reused without recreating data or losing their selected-date context.
+- The sidebar's new `/app/symbols` entry uses the existing local SVG icon resolver.
+
+The atlas copies exactly the SVG rendered in the card, not a separately fabricated vector. The icon library never modifies astronomy or calendar data.
+
 ## Icon system tokens
 
 - Viewbox: `0 0 24 24` for line symbols; scalable vector composition.
