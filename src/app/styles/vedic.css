@@ -18,3 +18,15 @@
 @media(max-width:720px){.vedic{gap:16px}.vedic-hero{grid-template-columns:1fr;min-height:0;padding:27px 22px}.vedic-sky{display:none}.vedic-hero h1{font-size:38px}.vedic-hero p{font-size:11px}.vedic-pills{gap:5px}.vedic-pills span{font-size:8px}.vedic-controls{padding:13px;gap:9px;align-items:center}.vedic-controls>div:first-child{flex:1}.vedic-controls input{width:100%}.vedic-location{order:5;width:100%;margin:3px 0 0}.vedic-datebar{align-items:start}.vedic-datebar h2{font-size:25px}.vedic-clock strong{font-size:21px}.vedic-panel{padding:18px 14px}.vedic-section-head{align-items:start;gap:10px}.vedic-section-head>a{font-size:9px}.vedic-limbs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.vedic-limb{min-height:126px;padding:12px}.vedic-limb strong{font-size:20px}.vedic-sun-strip{grid-template-columns:repeat(2,1fr);gap:8px}.vedic-sun-strip>div{border:0;border-bottom:1px solid var(--wp-border);padding:8px 6px}.vedic-sun-strip strong{font-size:14px}.vedic-windows{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.vedic-intervals{grid-template-columns:1fr}.vedic-link-grid{grid-template-columns:1fr 1fr;gap:8px}.vedic-link{padding:12px}.vedic-link-icon{width:34px;height:34px}.vedic-link strong{font-size:10px}.vedic-footnote a{margin-left:0}}
 @media(max-width:370px){.vedic-limbs,.vedic-link-grid{grid-template-columns:1fr}.vedic-clock strong{font-size:17px}.vedic-tabs button{padding:8px;font-size:10px}}
 @media(prefers-reduced-motion:reduce){.vedic-link{transition:none}}
+
+
+/* Linked lunar portrait uses the same original vector language as /app/moon. */
+.vedic-moon-preview{display:grid;grid-template-columns:minmax(210px,.48fr) minmax(0,1fr);align-items:center;gap:22px;overflow:hidden;background:radial-gradient(circle at 20% 50%,#cdb26b13,transparent 40%),linear-gradient(125deg,#0c1f29,#102a2b)}
+.vedic-moon-illustration{min-height:213px;display:grid;place-items:center;position:relative;isolation:isolate}
+.vedic-moon-illustration:before,.vedic-moon-illustration:after{content:"";position:absolute;border:1px solid #d9b67933;border-radius:50%;height:230px;width:230px;z-index:-1}
+.vedic-moon-illustration:after{width:270px;height:270px;border-style:dashed;opacity:.37}
+.vedic-moon-preview h2{font:400 clamp(25px,2.8vw,36px)/1.2 Georgia,serif;color:#f1dfb6;margin:12px 0 9px}
+.vedic-moon-preview p{font-size:12px;line-height:1.75;color:#b0c0bb;max-width:530px;margin:0 0 17px}
+.vedic-moon-preview a{font-size:11px;display:inline-flex}
+.vedic-moon-preview small{display:block;line-height:1.55;font-size:9px;color:#8fa6a4;max-width:550px;margin-top:12px}
+@media(max-width:700px){.vedic-moon-preview{grid-template-columns:1fr;gap:9px}.vedic-moon-illustration{min-height:195px}.vedic-moon-illustration:before{width:205px;height:205px}.vedic-moon-illustration:after{width:245px;height:245px}.vedic-moon-preview p{font-size:11px}}
