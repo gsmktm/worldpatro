@@ -1,59 +1,73 @@
 import {NextResponse} from "next/server";
-import {FEATURES} from "@/lib/features";
+import {FEATURE_MAP} from "@/lib/features";
+import {NAV_ITEMS} from "@/lib/navigation";
 import {AGENT_PROFILES} from "@/lib/agents/contracts";
 import {agentAccessMode} from "@/lib/agents/security";
 import {useFirebaseBackend,isFirebaseAdminConfigured,isFirebaseClientConfigured} from "@/lib/firebase/config";
 import {isSupabaseConfigured} from "@/lib/env";
 
 export const dynamic="force-dynamic";
-const GROUPS=[
- {name:"TIME",slugs:["patro","panchang","astrology","kundli","muhurat","numerology","religions","festivals","tools"]},
- {name:"INTELLIGENCE",slugs:["world","research","sources","alerts"]},
- {name:"BALANCE",slugs:["wens","wbe","gates"]},
- {name:"OPERATIONS",slugs:["agents","workflows","admin","privacy","consult","learn","planner"]}
-] as const;
-const authSlugs=new Set(["research","alerts","workflows","privacy","consult"]);
-const editorialSlugs=new Set(["religions","learn"]);
-export function GET(){
-  const backend=useFirebaseBackend()?"firebase":isSupabaseConfigured()?"supabase":"not-configured";
-  const gateway=Boolean(process.env.VERCEL_OIDC_TOKEN||process.env.AI_GATEWAY_API_KEY);
-  const access=agentAccessMode();
-  const modules=FEATURES.map(feature=>{
-    let accessType:"public"|"account"|"admin"|"gateway"="public";
-    let state:"available"|"requires-database"|"requires-admin-role"|"requires-ai-access"|"requires-published-sources"="available";
-    if(authSlugs.has(feature.slug)){
-      accessType="account";
-      if(backend==="not-configured")state="requires-database";
-    }else if(feature.slug==="admin"){
-      accessType="admin";
-      state="requires-admin-role";
-    }else if(feature.slug==="agents"){
-      accessType="gateway";
-      if(!gateway||(access==="authenticated"&&backend==="not-configured"))state="requires-ai-access";
-    }else if(editorialSlugs.has(feature.slug)){
-      state="requires-published-sources";
-    }
-    return {
-      slug:feature.slug,title:feature.title,group:GROUPS.find(g=>(g.slugs as readonly string[]).includes(feature.slug))?.name||"OTHER",
-      url:"/app/"+feature.slug,api:feature.api||[],
-      access:accessType,availability:state,implementation:feature.status,
-      requiresExternalAuthority:feature.slug==="religions"||feature.slug==="patro",
-      note:feature.slug==="planner"?"Device planner available without login; account sync requires configured Supabase authentication and the existing saved_reports schema.":state==="available"?"Route and core implementation available; individual source providers may still fail.":
-       state==="requires-published-sources"?"Page exists; only reviewed, published records will appear.":
-       state==="requires-admin-role"?"Server-verified administrator role and database required.":
-       state==="requires-ai-access"?"Gateway and access mode must be configured before AI agent execution.":
-       "Login and activated user-owned database required."
-    };
-  });
-  return NextResponse.json({
-    total:modules.length,
-    categories:GROUPS.map(g=>({title:g.name,count:g.slugs.length})),
-    modules,agentSpecialists:AGENT_PROFILES.map(p=>({name:p.name,role:p.role,mission:p.mission,boundary:p.boundary})),
-    infrastructure:{
-      dataBackend:backend,supabaseConfigured:isSupabaseConfigured(),firebaseWebConfigured:isFirebaseClientConfigured(),
-      firebaseAdminConfigured:isFirebaseAdminConfigured(),gatewayConfigured:gateway,agentAccess:access
-    },
-    caveat:"Static route availability does not prove live provider data, live database access or third-party booking. Account and administrator actions require verified authentication."
-  },{headers:{"Cache-Control":"no-store"}});
+const GROUPS=["TIME","INTELLIGENCE","BALANCE","OPERATIONS"] as const;
+type Group=typeof GROUPS[number];
+type Availability="available"|"requires-database"|"requires-database-verification"|"requires-admin-role"|"requires-ai-access"|"requires-published-sources";
+const accountSlugs=new Set(["research","alerts","workflows","privacy","consult","account"]);
+const editorialSlugs=new Set(["religions","learn","people","authorities"]);
+function groupFor(navGroup:string):Group{
+ if(navGroup==="DAILY"||navGroup==="JYOTISH")return "TIME";
+ if(navGroup==="EXPLORE")return "INTELLIGENCE";
+ if(navGroup==="WENS")return "BALANCE";
+ return "OPERATIONS";
 }
 
+export function GET(){
+ const backend=useFirebaseBackend()?"firebase":isSupabaseConfigured()?"supabase":"not-configured";
+ const gateway=Boolean(process.env.VERCEL_OIDC_TOKEN||process.env.AI_GATEWAY_API_KEY);
+ const access=agentAccessMode();
+ // Availability is a capability gate, not a claim of tested accounts or reachable third-party services.
+ const modules=NAV_ITEMS.filter(item=>item.slug).map(item=>{
+  const feature=FEATURE_MAP.get(item.slug);
+  let accessType:"public"|"account"|"admin"|"gateway"="public";
+  let state:Availability="available";
+  if(accountSlugs.has(item.slug)){
+   accessType="account";
+   state=backend==="not-configured"?"requires-database":"requires-database-verification";
+  }else if(item.slug==="admin"){
+   accessType="admin";
+   state="requires-admin-role";
+  }else if(item.slug==="agents"){
+   accessType="gateway";
+   state=!gateway?"requires-ai-access":
+    access==="authenticated"?(backend==="not-configured"?"requires-database":"requires-database-verification"):"available";
+  }else if(editorialSlugs.has(item.slug)){
+   state="requires-published-sources";
+  }
+  const note=item.slug==="planner"
+   ?"Device planner is available; account sync still requires successful authentication and an owner-protected database."
+   :state==="requires-database-verification"?"Backend settings were found; connectivity, sign-in and owner-only access have not been verified."
+   :state==="requires-database"?"A configured, working database and authenticated account are required."
+   :state==="requires-admin-role"?"Server-verified administrator identity and publishing permissions are required."
+   :state==="requires-ai-access"?"AI Gateway and its configured access mode are required; no paid AI request is enabled by this page."
+   :state==="requires-published-sources"?"Only independently reviewed and published reference records are shown; coverage may be incomplete."
+   :"The page and core interface exist. This does not certify every third-party provider or private operation.";
+  return {
+   slug:item.slug,title:feature?.title||item.label,group:groupFor(item.group),
+   url:"/app/"+item.slug,api:feature?.api||[],
+   access:accessType,availability:state,implementation:feature?.status||"ui-route",
+   requiresExternalAuthority:item.slug==="religions"||item.slug==="patro"||item.slug==="authorities",
+   note
+  };
+ });
+ return NextResponse.json({
+  total:modules.length,
+  categories:GROUPS.map(title=>({title,count:modules.filter(m=>m.group===title).length})),
+  modules,
+  agentSpecialists:AGENT_PROFILES.map(p=>({name:p.name,role:p.role,mission:p.mission,boundary:p.boundary})),
+  infrastructure:{
+   dataBackend:backend,supabaseConfigured:isSupabaseConfigured(),
+   backendConnectivityVerified:false,
+   firebaseWebConfigured:isFirebaseClientConfigured(),firebaseAdminConfigured:isFirebaseAdminConfigured(),
+   gatewayConfigured:gateway,agentAccess:access
+  },
+  caveat:"Navigation completeness and route existence are not service readiness. Database presence is not connectivity; authenticated writes, RLS, subscriptions and external sources need separate verification."
+ },{headers:{"Cache-Control":"no-store"}});
+}
