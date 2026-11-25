@@ -1,0 +1,53 @@
+/* Original World Patro visual identity: 78 cross-cultural SVG icons, without font or third-party artwork. */
+.atlas{display:grid;gap:20px;--atlas-gold:#deb976;--atlas-line:#344e4e}
+.atlas-hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(190px,.55fr);align-items:center;min-height:270px;padding:34px 37px;border:1px solid #b9a06a55;border-radius:19px;background:radial-gradient(circle at 78% 40%,#c49e4f24,transparent 45%),linear-gradient(115deg,#101e2a,#143038)}
+.atlas-hero h1{font:400 clamp(32px,3.8vw,54px)/1.12 Georgia,serif;letter-spacing:-.035em;color:#f2e1c0;margin:14px 0}
+.atlas-hero p{max-width:700px;color:#b2c3c0;font-size:12px;line-height:1.8;margin:0}
+.atlas-summary{display:flex;flex-wrap:wrap;gap:9px;margin-top:23px}
+.atlas-summary span{border:1px solid #d9b67944;border-radius:99px;background:#d9b6790e;padding:7px 12px;font-size:10px;color:#dec68e}
+.atlas-summary b{font-size:14px;color:#f7e1b9}
+.atlas-mandala{position:relative;display:grid;place-items:center;min-height:190px;isolation:isolate}
+.atlas-mandala>span{font:400 70px Georgia,serif;color:#e3c78f;text-shadow:0 0 32px #dfac563c}
+.atlas-ring{position:absolute;top:50%;left:50%;border:1px solid #dfc48b60;transform:translate(-50%,-50%) rotate(45deg);pointer-events:none}
+.atlas-ring.ring-a{width:145px;height:145px;border-radius:50%}.atlas-ring.ring-b{width:193px;height:193px;border-radius:50%;border-style:dashed;opacity:.5}
+.atlas-ring.ring-c{width:150px;height:150px;border-radius:31px;opacity:.5}
+.atlas-mandala i{position:absolute;color:#e3c18f;font-size:24px;top:10px;right:40px}
+.atlas-toolbar{display:flex;align-items:center;gap:10px}
+.atlas-toolbar label{flex:1;min-width:160px;display:flex;align-items:center;gap:10px;border-radius:9px;border:1px solid #3e575b;background:#0e2129;padding:11px 13px;color:#c4af82}
+.atlas-toolbar input{width:100%;border:0;outline:0;background:transparent;color:#f6edda;font:inherit;font-size:12px;min-width:0}
+.atlas-toolbar input::placeholder{color:#8caaa8}
+.atlas-toolbar>a{padding:12px 17px;border:1px solid #bca06e53;border-radius:9px;color:#e7d2a3;display:flex;align-items:center;gap:9px;white-space:nowrap;font-size:11px}
+.atlas-toolbar>a:hover{background:#dac08c18}
+.atlas-tabs{display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#586f6d transparent;padding:0 0 5px}
+.atlas-tabs button{white-space:nowrap;display:flex;align-items:center;gap:9px;background:#10252b;color:#b2c4bd;border:1px solid #344d4e;border-radius:9px;padding:10px 13px;font-size:11px}
+.atlas-tabs button small{border:1px solid #526463;border-radius:99px;padding:2px 6px;font-size:9px;font-variant-numeric:tabular-nums;color:#c1cbbf}
+.atlas-tabs button[aria-pressed=true]{background:#ddba7821;border-color:#debb79;color:#f4dcac}
+.atlas-tabs button:hover{border-color:#c9ae78}
+.atlas-content-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:7px}
+.atlas-content-title h2{font:400 27px Georgia,serif;color:#eae0cd;margin:0}
+.atlas-content-title>span{font-size:10px;color:#92a8aa}
+.atlas-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:11px}
+.atlas-card{display:flex;flex-direction:column;min-width:0;border:1px solid #355051;border-radius:12px;background:linear-gradient(150deg,#122932,#0d1f28);padding:13px 12px 11px;transition:border-color .16s,background .16s}
+.atlas-card:hover{border-color:#bca26c;background:linear-gradient(150deg,#1b3439,#112630)}
+.atlas-card-art{min-height:102px;display:grid;place-items:center;color:#dfc48b;border:1px solid #b9a16d28;border-radius:10px;background:radial-gradient(circle at center,#c8a86112,transparent 75%),#071922}
+.atlas-card-art svg{max-width:90%;height:auto}
+.atlas-card-heading{display:grid;gap:3px;margin-top:13px}
+.atlas-card-heading strong{color:#f1e8d7;font-size:12px;font-weight:600;overflow-wrap:anywhere}
+.atlas-card-heading small{font-size:10px;color:#a4bab9;overflow-wrap:anywhere}
+.atlas-card p{font-size:9px;line-height:1.6;color:#8fa4a6;min-height:30px;margin:9px 0 13px}
+.atlas-copy{margin-top:auto;border:1px solid #d9b6794a;border-radius:7px;background:#d9b6790b;display:flex;justify-content:center;align-items:center;gap:7px;color:#e3c58e;padding:9px 7px;font-size:10px}
+.atlas-copy:hover{background:#d9b67923}
+.atlas-copy:focus-visible,.atlas-tabs button:focus-visible{outline:2px solid #f2dba0;outline-offset:2px}
+.atlas-empty{background:#122a30;border:1px solid #355053;border-radius:10px;padding:22px;color:#b1c6c2;font-size:12px}
+.atlas-boundary{padding:23px 26px;border:1px solid #aa935a44;border-radius:15px;background:linear-gradient(135deg,#1a3030,#10252b)}
+.atlas-boundary>div:first-child{display:flex;align-items:center;gap:11px;color:#e1bf7c}
+.atlas-boundary h3{font:400 22px Georgia,serif;color:#efe3ca;margin:0}
+.atlas-boundary p{font-size:11px;line-height:1.7;color:#acbfbc;max-width:950px}
+.atlas-source-links{display:flex;flex-wrap:wrap;gap:11px;padding-top:11px;border-top:1px solid #d9b6792d}
+.atlas-source-links a{font-size:10px;color:#eccd93;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:1300px){.atlas-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:1100px){.atlas-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:820px){.atlas-hero{grid-template-columns:1fr}.atlas-mandala{display:none}.atlas-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:610px){.atlas{gap:16px}.atlas-hero{padding:25px 19px;min-height:auto}.atlas-hero h1{font-size:35px}.atlas-summary span{padding:5px 9px}.atlas-toolbar{flex-wrap:wrap}.atlas-toolbar label{width:100%;flex:none}.atlas-toolbar>a{padding:9px 12px}.atlas-content-title h2{font-size:23px}.atlas-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.atlas-card{padding:8px}.atlas-card-art{min-height:88px}.atlas-card-art svg{width:56px}.atlas-card-heading{margin-top:9px}.atlas-card-heading strong{font-size:11px}.atlas-card p{font-size:8px;min-height:26px}.atlas-boundary{padding:17px 14px}}
+@media(max-width:350px){.atlas-grid{grid-template-columns:1fr}.atlas-card-art{min-height:80px}}
+@media(prefers-reduced-motion:reduce){.atlas-card{transition:none}}
