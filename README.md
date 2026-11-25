@@ -26,6 +26,10 @@ The repo includes the upstream MIT-licensed **Ponytail** skills in [`.agents/ski
 6. **Consequential workflow actions require explicit human confirmation.**
 7. **Agents orchestrate trusted tools; they are not a second truth system.**
 
+## Moon Observatory · lunar size, dates and twelve rāśi
+
+The new [`/app/moon`](src/app/app/moon/page.tsx) combines a large original SVG Moon, 14 clickable lunar-date portraits, actual illumination, calculated apparent angular diameter and Earth–Moon distance, four next major phase timestamps and **12 distinct sign vector drawings**. It follows WorldPatro's chosen location, date, timezone and bilingual interface. Astronomy is clearly distinguished from sidereal-rāśi tradition and decorative orientation. [Calculation and UX specification](docs/MOON_OBSERVATORY.md).
+
 ## Vedic daily observatory · 2026-11-25
 
 The new [`/app/vedic`](src/app/app/vedic/page.tsx) offers bilingual five-limb Panchang, location-aware sunrise/sunset, calculated daylight Choghadiya and Hora, Rahu Kala and an indicative Abhijit interval. It reuses World Patro's verified-method astronomy and nine-calendar references instead of scraping third-party data. **Traditional timing windows are not authoritative or guaranteed auspiciousness declarations.** See [integration specification](docs/VEDIC_HUB_INTEGRATION.md); deterministic checks: `npm run test:vedic`.
@@ -38,6 +42,7 @@ The new [`/app/vedic`](src/app/app/vedic/page.tsx) offers bilingual five-limb Pa
   - Interactive calendar-specific month explorer, seven native civil month profiles, plus source-aware Vedic/Nepal Sambat reference navigation; local CSV export and shared-date updates. [Methods and API](docs/NINE_CALENDARS_FUNCTIONS.md).
 - `/app/panchang` — astronomical Panchang
 - `/app/vedic` — Vedic daily, five limbs, daylight Choghadiya/Hora and traditional intervals
+- `/app/moon` — Moon Observatory: 14-day phases, apparent size, dated quarter milestones and 12 rāśi vector icons
 - `/app/astrology`
 - `/app/kundli`
 - `/app/muhurat`
@@ -60,6 +65,7 @@ The new [`/app/vedic`](src/app/app/vedic/page.tsx) offers bilingual five-limb Pa
 - `GET /api/v1/health`
 - `GET /api/v1/patro/today?date=2026-10-09`
 - `GET /api/v1/vedic/day?date=2026-11-25&tz=Asia/Kathmandu`
+- `GET /api/v1/moon/day?date=2026-11-25&tz=Asia/Kathmandu`
 - `POST /api/v1/calendar/convert`
 - `GET /api/v1/calendar/month?calendar=chinese&date=2026-11-17` — month grid for one of nine profiles
 - `GET /api/v1/panchang/day?date=2026-10-09&lat=27.7172&lon=85.3240&tz=Asia/Kathmandu`
