@@ -4,7 +4,7 @@ export const NAV_ITEMS:NavItem[]=[
 {slug:"patro",label:"Calendar",ne:"पात्रो",icon:"calendar",description:"Nine calendars and month navigation",group:"DAILY"},
 {slug:"vedic",label:"Vedic daily",ne:"वैदिक दिनचर्या",icon:"sun",description:"Five-limb Panchang, Choghadiya, Hora and Rahu Kala",group:"DAILY"},
 {slug:"moon",label:"Moon & rāśi",ne:"चन्द्र र राशि",icon:"moon",description:"Lunar size, phases, dated events and twelve zodiac vectors",group:"DAILY"},
-{slug:"symbols",label:"Symbol atlas",ne:"प्रतीक सङ्ग्रह",icon:"star",description:"78 SVG icons: Nakshatra, Navagraha, Rāśi, Moon and calendars",group:"JYOTISH"},
+{slug:"symbols",label:"Symbol atlas",ne:"प्रतीक सङ्ग्रह",icon:"star",description:"119 SVG icons: Nakshatra, Navagraha, Rāśi, Moon and calendars",group:"JYOTISH"},
 {slug:"panchang",label:"Panchang",ne:"पञ्चाङ्ग",icon:"sunrise",description:"Tithi, nakshatra, sunrise and moonrise",group:"DAILY"},
 {slug:"festivals",label:"Festivals",ne:"चाडपर्व",icon:"calendarCheck",description:"Source-backed festivals and calendar export",group:"DAILY"},
 {slug:"planner",label:"My planner",ne:"मेरो योजना",icon:"notebook",description:"Personal events, notes and calendar export",group:"DAILY"},
