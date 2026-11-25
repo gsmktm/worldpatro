@@ -26,6 +26,7 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm run typecheck
       - run: npm run test:vedic
+      - run: npm run test:icons
       - name: Validate Ponytail skill installation and UI affordances
         run: node scripts/validate-agent-ui.mjs
       - name: Verify BS year and attributed calendar references
