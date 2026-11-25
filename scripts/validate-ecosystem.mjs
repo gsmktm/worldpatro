@@ -3,6 +3,16 @@ const base=process.env.BASE_URL||"http://127.0.0.1:3100";
 async function hit(path,init){const r=await fetch(new URL(path,base),{redirect:"manual",...init});const text=await r.text();return {status:r.status,headers:r.headers,text};}
 async function json(path,status=200,init){const r=await hit(path,init);assert.equal(r.status,status,path+": "+r.status+" "+r.text.slice(0,150));return JSON.parse(r.text);}
 for(const page of ["/","/app","/app/planner","/app/tools","/app/festivals","/app/ecosystem"]){const r=await hit(page);assert.equal(r.status,200,page);assert.match(r.text,/World Patro/);}
+const explorer=await hit("/app/ecosystem");
+assert.match(explorer.text,/Every World Patro module/);
+assert.match(explorer.text,/id="ecosystem-search"/,"Module search must have a visible text input and accessible label");
+assert.match(explorer.text,/id="ecosystem-status"/,"Runtime-readiness filter must be keyboard accessible");
+const inventory=await json("/api/v1/platform/modules");
+assert.ok(inventory.total>=32,"The module directory must include all current navigation routes");
+assert.equal(inventory.categories.reduce((n,group)=>n+group.count,0),inventory.total);
+assert.ok(inventory.modules.some(m=>m.slug==="moon"&&m.availability==="available"));
+assert.ok(inventory.modules.some(m=>m.slug==="authorities"&&m.availability==="requires-published-sources"));
+assert.ok(inventory.modules.some(m=>m.slug==="account"&&m.availability!=="available"));
 const festival=await json("/api/v1/festivals");assert.equal(festival.completeYear,false);assert.equal(festival.source.checkedOn,"2026-11-08");assert.equal(festival.festivals.find(f=>f.id==="kukur-laxmi-2083")?.date,"2026-11-08");assert.equal(festival.festivals.find(f=>f.id==="bhai-tika-2083")?.date,"2026-11-11");
 assert.equal((await json("/api/v1/festivals?from=2027-01-01&to=2027-12-31")).festivals.length,0);
 await json("/api/v1/festivals?from=2026-02-30",400);await json("/api/v1/festivals?from=2026-11-10&to=2026-11-01",400);
