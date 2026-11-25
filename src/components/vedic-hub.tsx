@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMoment } from "@/components/app-shell";
 import { Icon } from "@/components/ui/icon";
+import { WorldVectorIcon } from "@/components/ui/world-vector-icon";
 import { MoonDisk } from "@/components/moon-vectors";
 import { civilDate, momentQuery } from "@/lib/ui/moment";
 import type { DaySnapshot } from "@/lib/ui/day-types";
@@ -109,7 +110,7 @@ export default function VedicHub(){
          {en:"Nakshatra",ne:"नक्षत्र",value:p?.nakshatra.name,detail:p?.nakshatra.number?"#"+p.nakshatra.number:""},
          {en:"Yoga",ne:"योग",value:p?.yoga.name,detail:p?.yoga.number?"#"+p.yoga.number:""},
          {en:"Karana",ne:"करण",value:p?.karana.name,detail:p?.karana.number?"#"+p.karana.number:""}
-       ].map((c,i)=><article key={c.en} className="vedic-limb"><span className="vedic-limb-number">0{i+1}</span><small>{ne?c.ne:c.en}</small><strong>{c.value?(ne&&c.en==="Tithi"?TITHI_NE[c.value]||c.value:c.value):"—"}</strong><span>{ne&&c.en==="Vara"?c.detail:ne&&c.en==="Tithi"?(PAKSHA_NE[p?.tithi.paksha||""]||p?.tithi.paksha)+" पक्ष":c.detail}</span></article>)}
+       ].map((c,i)=><article key={c.en} className="vedic-limb"><span className="vedic-limb-number"><WorldVectorIcon family="panchang" name={["vara","tithi","nakshatra","yoga","karana"][i]} size={26}/> 0{i+1}</span><small>{ne?c.ne:c.en}</small><strong>{c.value?(ne&&c.en==="Tithi"?TITHI_NE[c.value]||c.value:c.value):"—"}</strong><span>{ne&&c.en==="Vara"?c.detail:ne&&c.en==="Tithi"?(PAKSHA_NE[p?.tithi.paksha||""]||p?.tithi.paksha)+" पक्ष":c.detail}</span></article>)}
      </div>
      <div className="vedic-sun-strip">
        {[
