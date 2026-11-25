@@ -46,7 +46,7 @@ const HORA_CYCLE=[
 const FIRST_HORA=[3,6,2,5,1,4,0] as const;
 
 function parseClock(raw:string|null):number|null{
-  if(!raw||!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(raw))return null;
+  if(!raw||!/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(raw))return null;
   const [h,m]=raw.split(":").map(Number);
   return h*60+m;
 }
