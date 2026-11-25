@@ -12,7 +12,7 @@ assert.ok(data.size.distanceKm>300000&&data.size.distanceKm<500000,"Moon distanc
 assert.ok(data.size.angularDiameterArcmin>25&&data.size.angularDiameterArcmin<40,"Moon apparent diameter should be credible");
 assert.equal(data.events.length,4,"Four future astronomical quarter milestones must be returned");
 assert.deepEqual([...data.events].map(e=>e.instantUTC),data.events.map(e=>e.instantUTC).sort(),"Lunar events must be ordered by UTC instant");
-assert.ok(data.events.every(e=>e.date.match(/^\\d{4}-\\d{2}-\\d{2}$/)));
+assert.ok(data.events.every(e=>/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(e.date)));
 assert.equal(data.days.length,14,"Moon day strip should cover 14 local noon snapshots");
 assert.equal(data.days.filter(d=>d.selected).length,1);
 assert.ok(data.days.some(d=>d.selected&&d.date===data.reference.date));
