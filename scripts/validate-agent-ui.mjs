@@ -17,7 +17,7 @@ const imported=[
 for(const [name,license] of imported){
  const skillPath=".agents/skills/"+name+"/SKILL.md";
  assert.ok(existsSync(new URL("../"+skillPath,import.meta.url)),skillPath+" missing");
- assert.match(source(skillPath),new RegExp("name: "+name+"\\\\b"),skillPath+" has no matching identity");
+ assert.match(source(skillPath),new RegExp("name: "+name+"\\b"),skillPath+" has no matching identity");
  assert.match(source("docs/third-party/"+license),/MIT License/,"Upstream MIT notice missing");
  assert.ok(source("AGENTS.md").includes(skillPath),"Vetted skill not discoverable in agent guide");
 }
