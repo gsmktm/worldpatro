@@ -35,6 +35,17 @@ assert.match(atlas,/navigator\.clipboard\.writeText\(markup\)/,"Copy SVG must ha
 assert.match(atlas,/querySelector\("svg"\)/,"SVG copy must use the rendered vector, including Moon gradients");
 assert.match(atlas,/aria-label=\{"Copy "/);
 assert.match(page,/IconAtlas/);
+const vectors=readFileSync(new URL("../src/components/ui/world-vector-icon.tsx",import.meta.url),"utf8");
+const patro=readFileSync(new URL("../src/components/patro-studio.tsx",import.meta.url),"utf8");
+const dashboard=readFileSync(new URL("../src/components/command-center.tsx",import.meta.url),"utf8");
+const vedic=readFileSync(new URL("../src/components/vedic-hub.tsx",import.meta.url),"utf8");
+assert.match(vectors,/WORLD_ICON_GROUPS\.find/,"Reusable icon component must resolve catalog IDs");
+assert.match(vectors,/aria-hidden=/,"Decorative icons must be hidden from assistive tech");
+assert.match(patro,/WorldVectorIcon family="calendar"/,"Nine calendars must use new icons");
+assert.match(dashboard,/WorldVectorIcon family="calendar"/,"Home calendar lenses must use new icons");
+assert.match(vedic,/WorldVectorIcon family="panchang"/,"Panchang must show five original glyphs");
+assert.match(vedic,/name=\{c\.id\}/);
+
 assert.match(nav,/slug:"symbols"/);
 assert.ok(!atlas.includes("dangerouslySetInnerHTML"),"No untrusted SVG injection");
 const total=fullIds.length+zodiacPaths.length+8;
