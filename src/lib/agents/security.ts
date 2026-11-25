@@ -55,10 +55,11 @@ function isBrowserSameOrigin(request: Request) {
   const secFetchSite = request.headers.get("sec-fetch-site");
   if (secFetchSite === "cross-site") return false;
 
-  const origin = requestOrigin(request);
-  if (!origin) return true;
+  const declaredOrigin = request.headers.get("origin");
+  if (declaredOrigin === null) return true;
 
-  return expectedOrigins(request).has(origin);
+  const origin = requestOrigin(request);
+  return Boolean(origin && expectedOrigins(request).has(origin));
 }
 
 export async function authorizeAgentRequest(request: Request): Promise<{
