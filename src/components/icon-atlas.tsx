@@ -6,9 +6,10 @@ import { Icon } from "@/components/ui/icon";
 import { MoonDisk, ZodiacVector } from "@/components/moon-vectors";
 import { MOON_PHASES, MOON_RASHIS } from "@/lib/moon-timeline";
 import { WORLD_ICON_GROUPS, type VectorIcon } from "@/lib/world-iconography";
+import { VEDIC_FEATURE_ICONS } from "@/lib/vedic-feature-icons";
 import { useMoment } from "@/components/app-shell";
 
-type GroupId="all"|"graha"|"nakshatra"|"calendar"|"panchang"|"tools"|"rashi"|"phase";
+type GroupId="all"|"graha"|"nakshatra"|"calendar"|"panchang"|"tools"|"rashi"|"phase"|"vedic-features";
 type ArtItem={key:string;name:string;ne:string;detail:string;kind:"line"|"rashi"|"phase";path?:string;index:number;phase?:number;illumination?:number};
 const groupNames:Record<GroupId,{en:string;ne:string}>={
  all:{en:"All symbols",ne:"सबै चिह्न"},
@@ -18,7 +19,8 @@ const groupNames:Record<GroupId,{en:string;ne:string}>={
  panchang:{en:"Panchang",ne:"पञ्चाङ्ग"},
  tools:{en:"Daily tools",ne:"साधन"},
  rashi:{en:"12 Rāśi",ne:"बाह्र राशि"},
- phase:{en:"8 Moon phases",ne:"आठ चन्द्रकला"}
+ phase:{en:"8 Moon phases",ne:"आठ चन्द्रकला"},
+ "vedic-features":{en:"41 Vedic tools",ne:"४१ वैदिक साधन"}
 };
 const phaseIllumination=[0,14.64,50,85.36,100,85.36,50,14.64] as const;
 const sourceGroups:{group:GroupId;items:ArtItem[]}[]=[
@@ -31,13 +33,16 @@ const sourceGroups:{group:GroupId;items:ArtItem[]}[]=[
  {group:"rashi",items:MOON_RASHIS.map((item,index)=>({
    key:"rashi-"+item.english,name:item.english,ne:item.ne,detail:item.name+" · 30° equal sidereal signs",kind:"rashi" as const,index
  }))},
+ {group:"vedic-features",items:VEDIC_FEATURE_ICONS.map((item,index)=>({
+   key:"vedic-feature-"+item.id,name:item.name,ne:item.ne,detail:item.motif+" · "+(item.status==="concept"?"Icon concept":item.status==="related"?"Related module":"Available module"),kind:"line" as const,path:item.path,index
+ }))},
  {group:"phase",items:MOON_PHASES.map((item,index)=>({
    key:"phase-"+item.id,name:item.name,ne:item.ne,
    detail:"Illustrative moon phase · not a festival declaration",
    kind:"phase" as const,index,phase:item.degrees,illumination:phaseIllumination[index]
  }))}
 ];
-const groups:GroupId[]=["all","rashi","graha","nakshatra","phase","calendar","panchang","tools"];
+const groups:GroupId[]=["all","rashi","graha","nakshatra","phase","calendar","panchang","tools","vedic-features"];
 function AtlasSvg({item}:{item:ArtItem}){
  if(item.kind==="rashi")return <ZodiacVector index={item.index} size={68}/>;
  if(item.kind==="phase")return <MoonDisk phaseDegrees={item.phase??0} illuminationPercent={item.illumination??0} size={78}/>;
@@ -85,7 +90,7 @@ export default function IconAtlas(){
        <span className="wp-overline">ॐ · WORLD PATRO / ORIGINAL SYMBOL SYSTEM</span>
        <h1>{ne?"विश्व पात्रोका मौलिक भेक्टर चिह्न":"Every symbol, one visual language."}</h1>
        <p>{ne?"नेपाली र विश्व पात्रोका लागि मौलिक SVG चिह्नहरू। धार्मिक परम्परा, खगोल र आधुनिक सञ्चारलाई सम्मान गर्दै एकरूप दृश्य प्रणाली।":"A research-led, original SVG language for Nepal's calendars, Jyotish, the Moon and the world's time traditions. Never a substitute for canonical religious iconography."}</p>
-       <div className="atlas-summary"><span><b>{total}</b> {ne?"चिह्न":"vector icons"}</span><span><b>7</b> {ne?"समूह":"families"}</span><span>SVG · {ne?"कुनै अतिरिक्त फन्ट छैन":"no icon fonts"}</span></div>
+       <div className="atlas-summary"><span><b>{total}</b> {ne?"चिह्न":"vector icons"}</span><span><b>8</b> {ne?"समूह":"families"}</span><span>SVG · {ne?"कुनै अतिरिक्त फन्ट छैन":"no icon fonts"}</span></div>
      </div>
      <div className="atlas-mandala" aria-hidden="true"><div className="atlas-ring ring-a"/><div className="atlas-ring ring-b"/><div className="atlas-ring ring-c"/><span>ॐ</span><i>✦</i></div>
    </header>
