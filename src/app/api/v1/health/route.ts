@@ -14,7 +14,7 @@ export function GET() {
     ok: true,
     service: "worldpatro",
     version: "3.0.0",
-    runtime: "node>=22",
+    runtime: process.version,
     dataBackend: useFirebaseBackend()
       ? "firebase"
       : isSupabaseConfigured()
