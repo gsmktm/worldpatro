@@ -16,7 +16,7 @@ async function json(path) {
 
 const inventory = await json("/api/v1/platform/modules");
 const navSource=readFileSync(new URL("../src/lib/navigation.ts",import.meta.url),"utf8");
-const navSlugs=[...navSource.matchAll(/\\{slug:"([^"]+)"/g)].map(match=>match[1]).filter(Boolean);
+const navSlugs=[...navSource.matchAll(/\{slug:"([^"]+)"/g)].map(match=>match[1]).filter(Boolean);
 assert.deepEqual(inventory.modules.map(m=>m.slug).sort(),navSlugs.sort(),
  "The platform readiness inventory must include every navigable module, not only older feature records");
 assert.equal(inventory.infrastructure.backendConnectivityVerified,false,
