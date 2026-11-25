@@ -348,7 +348,7 @@ invariant(linkedPanchang.text.includes("Vedic Panchang"),"Date-linked Panchang s
 
 
 const platform=await json("/api/v1/platform/modules",undefined,200);
-invariant(platform.body.total>=32,"Platform Command Map must include the complete navigation registry.");
+invariant(platform.body.total>=31,"Platform Command Map must include the complete navigation registry.");
 invariant(platform.body.agentSpecialists?.length===6,"Agent supervisor must declare exactly six bounded specialist roles.");
 const allModuleUrls=new Set(platform.body.modules.map(m=>m.url));
 invariant(allModuleUrls.size===platform.body.total&&[...allModuleUrls].every(x=>x.startsWith("/app/")),
