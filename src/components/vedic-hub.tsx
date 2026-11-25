@@ -12,6 +12,8 @@ import type { VedicDaylightResult, TimeWindow } from "@/lib/vedic-windows";
 type VedicSnapshot=DaySnapshot & {
   panchang:DaySnapshot["panchang"] & {
     karana:{name:string;number:number};
+    nakshatra:{name:string;number:number};
+    yoga:{name:string;number:number};
     ayanamsa:number;
     interpretationBoundary:string;
   };
