@@ -26,6 +26,10 @@ The repo includes the upstream MIT-licensed **Ponytail** skills in [`.agents/ski
 6. **Consequential workflow actions require explicit human confirmation.**
 7. **Agents orchestrate trusted tools; they are not a second truth system.**
 
+## Original vector Symbol Atlas · researched and accessible
+
+The new [`/app/symbols`](src/app/app/symbols/page.tsx) displays **78 original SVG icons**: 27 illustrative Nakshatra motifs, 9 Navagraha (Rahu/Ketu clearly identified as lunar nodes), 12 unique rāśi, 8 Moon phases, 9 neutral calendar profiles, 5 Panchang limbs and 8 original daily-tool glyphs. Includes bilingual searchable/filterable cards and a user-triggered **Copy SVG** control. Decorative Nakshatra art is not claimed to be canonical. See [research and licensing notes](docs/ICON_RESEARCH_ATLAS.md).
+
 ## Moon Observatory · lunar size, dates and twelve rāśi
 
 The new [`/app/moon`](src/app/app/moon/page.tsx) combines a large original SVG Moon, 14 clickable lunar-date portraits, actual illumination, calculated apparent angular diameter and Earth–Moon distance, four next major phase timestamps and **12 distinct sign vector drawings**. It follows WorldPatro's chosen location, date, timezone and bilingual interface. Astronomy is clearly distinguished from sidereal-rāśi tradition and decorative orientation. [Calculation and UX specification](docs/MOON_OBSERVATORY.md).
@@ -43,6 +47,7 @@ The new [`/app/vedic`](src/app/app/vedic/page.tsx) offers bilingual five-limb Pa
 - `/app/panchang` — astronomical Panchang
 - `/app/vedic` — Vedic daily, five limbs, daylight Choghadiya/Hora and traditional intervals
 - `/app/moon` — Moon Observatory: 14-day phases, apparent size, dated quarter milestones and 12 rāśi vector icons
+- `/app/symbols` — original 78-icon SVG library, searchable, bilingual, copyable
 - `/app/astrology`
 - `/app/kundli`
 - `/app/muhurat`
