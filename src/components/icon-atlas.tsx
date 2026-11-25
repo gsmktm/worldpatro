@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type MouseEvent, type ReactNode } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
 import { Icon } from "@/components/ui/icon";
 import { MoonDisk, ZodiacVector } from "@/components/moon-vectors";
 import { MOON_PHASES, MOON_RASHIS } from "@/lib/moon-timeline";
@@ -85,7 +85,7 @@ export default function IconAtlas(){
        <span className="wp-overline">ॐ · WORLD PATRO / ORIGINAL SYMBOL SYSTEM</span>
        <h1>{ne?"विश्व पात्रोका मौलिक भेक्टर चिह्न":"Every symbol, one visual language."}</h1>
        <p>{ne?"नेपाली र विश्व पात्रोका लागि मौलिक SVG चिह्नहरू। धार्मिक परम्परा, खगोल र आधुनिक सञ्चारलाई सम्मान गर्दै एकरूप दृश्य प्रणाली।":"A research-led, original SVG language for Nepal's calendars, Jyotish, the Moon and the world's time traditions. Never a substitute for canonical religious iconography."}</p>
-       <div className="atlas-summary"><span><b>{total}</b> {ne?"चिह्न":"vector icons"}</span><span><b>8</b> {ne?"समूह":"families"}</span><span>SVG · {ne?"कुनै अतिरिक्त फन्ट छैन":"no icon fonts"}</span></div>
+       <div className="atlas-summary"><span><b>{total}</b> {ne?"चिह्न":"vector icons"}</span><span><b>7</b> {ne?"समूह":"families"}</span><span>SVG · {ne?"कुनै अतिरिक्त फन्ट छैन":"no icon fonts"}</span></div>
      </div>
      <div className="atlas-mandala" aria-hidden="true"><div className="atlas-ring ring-a"/><div className="atlas-ring ring-b"/><div className="atlas-ring ring-c"/><span>ॐ</span><i>✦</i></div>
    </header>
