@@ -30,3 +30,6 @@
 .vedic-moon-preview a{font-size:11px;display:inline-flex}
 .vedic-moon-preview small{display:block;line-height:1.55;font-size:9px;color:#8fa6a4;max-width:550px;margin-top:12px}
 @media(max-width:700px){.vedic-moon-preview{grid-template-columns:1fr;gap:9px}.vedic-moon-illustration{min-height:195px}.vedic-moon-illustration:before{width:205px;height:205px}.vedic-moon-illustration:after{width:245px;height:245px}.vedic-moon-preview p{font-size:11px}}
+
+/* Original five-limb glyphs share the atlas' pictographic scale. */
+.vedic-limb-number{display:flex;align-items:center;gap:9px}.vedic-limb-number svg{color:#efcb86;flex:none}
