@@ -105,12 +105,12 @@ export default function VedicHub(){
      <div className="vedic-section-head"><div><span className="wp-overline">०१ / PANCHANGA</span><h2>{ne?"पञ्चाङ्गका पाँच अङ्ग":"Five limbs of the Panchang"}</h2></div><Link href={href("/app/panchang")}>{ne?"पूरा पञ्चाङ्ग":"Full Panchang"} <Icon name="arrow" size={15}/></Link></div>
      <div className="vedic-limbs">
        {[
-         {en:"Vara · Weekday",ne:"वार",value:daylight?.weekday,detail:daylight?.weekday?WEEK_NE[daylight.weekday]:""},
-         {en:"Tithi",ne:"तिथि",value:p?.tithi.name,detail:(p?.tithi.paksha||"")+" · "+(p?.tithi.number||"")},
-         {en:"Nakshatra",ne:"नक्षत्र",value:p?.nakshatra.name,detail:p?.nakshatra.number?"#"+p.nakshatra.number:""},
-         {en:"Yoga",ne:"योग",value:p?.yoga.name,detail:p?.yoga.number?"#"+p.yoga.number:""},
-         {en:"Karana",ne:"करण",value:p?.karana.name,detail:p?.karana.number?"#"+p.karana.number:""}
-       ].map((c,i)=><article key={c.en} className="vedic-limb"><span className="vedic-limb-number"><WorldVectorIcon family="panchang" name={["vara","tithi","nakshatra","yoga","karana"][i]} size={26}/> 0{i+1}</span><small>{ne?c.ne:c.en}</small><strong>{c.value?(ne&&c.en==="Tithi"?TITHI_NE[c.value]||c.value:c.value):"—"}</strong><span>{ne&&c.en==="Vara"?c.detail:ne&&c.en==="Tithi"?(PAKSHA_NE[p?.tithi.paksha||""]||p?.tithi.paksha)+" पक्ष":c.detail}</span></article>)}
+         {id:"vara",en:"Vara · Weekday",ne:"वार",value:daylight?.weekday,detail:daylight?.weekday?WEEK_NE[daylight.weekday]:""},
+         {id:"tithi",en:"Tithi",ne:"तिथि",value:p?.tithi.name,detail:(p?.tithi.paksha||"")+" · "+(p?.tithi.number||"")},
+         {id:"nakshatra",en:"Nakshatra",ne:"नक्षत्र",value:p?.nakshatra.name,detail:p?.nakshatra.number?"#"+p.nakshatra.number:""},
+         {id:"yoga",en:"Yoga",ne:"योग",value:p?.yoga.name,detail:p?.yoga.number?"#"+p.yoga.number:""},
+         {id:"karana",en:"Karana",ne:"करण",value:p?.karana.name,detail:p?.karana.number?"#"+p.karana.number:""}
+       ].map((c,i)=><article key={c.en} className="vedic-limb"><span className="vedic-limb-number"><WorldVectorIcon family="panchang" name={c.id} size={26}/> 0{i+1}</span><small>{ne?c.ne:c.en}</small><strong>{c.value?(ne&&c.en==="Tithi"?TITHI_NE[c.value]||c.value:c.value):"—"}</strong><span>{ne&&c.en==="Vara"?c.detail:ne&&c.en==="Tithi"?(PAKSHA_NE[p?.tithi.paksha||""]||p?.tithi.paksha)+" पक्ष":c.detail}</span></article>)}
      </div>
      <div className="vedic-sun-strip">
        {[
