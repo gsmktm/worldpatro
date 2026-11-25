@@ -9,6 +9,20 @@ for(const name of skills){
 }
 assert.match(source("AGENTS.md"),/\.agents\/skills\/ponytail\/SKILL\.md/);
 assert.match(source("docs/third-party/PONYTAIL_LICENSE.txt"),/MIT License/);
+const imported=[
+ ["diagnosing-bugs","MATTPOCOCK_SKILLS_LICENSE.txt"],
+ ["accessibility","ECC_LICENSE.txt"],
+ ["verification-before-completion","SUPERPOWERS_LICENSE.txt"]
+];
+for(const [name,license] of imported){
+ const skillPath=".agents/skills/"+name+"/SKILL.md";
+ assert.ok(existsSync(new URL("../"+skillPath,import.meta.url)),skillPath+" missing");
+ assert.match(source(skillPath),new RegExp("name: "+name+"\\\\b"),skillPath+" has no matching identity");
+ assert.match(source("docs/third-party/"+license),/MIT License/,"Upstream MIT notice missing");
+ assert.ok(source("AGENTS.md").includes(skillPath),"Vetted skill not discoverable in agent guide");
+}
+assert.match(source(".agents/skills/worldpatro-interface/SKILL.md"),/name: worldpatro-interface/);
+
 const icons=new Set([...source("src/components/ui/icon.tsx").matchAll(/^  ([A-Za-z][A-Za-z0-9]*):\s*</gm)].map(m=>m[1]));
 const names=[...source("src/lib/navigation.ts").matchAll(/icon:"([^"]+)"/g)].map(m=>m[1]);
 assert.ok(names.length>=25,"Navigation inventory unexpectedly small");
