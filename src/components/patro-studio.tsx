@@ -4,6 +4,7 @@ import Link from "next/link";
 import {useEffect,useMemo,useRef,useState,type FormEvent} from "react";
 import type {CalendarResult} from "@/lib/calendars";
 import NineCalendarExplorer from "@/components/nine-calendar-explorer";
+import { WorldVectorIcon } from "@/components/ui/world-vector-icon";
 import {CALENDAR_IDS,type CalendarId} from "@/lib/calendar-month";
 import {publishedBsFromAD} from "@/lib/nepal-bs-authority";
 
@@ -338,7 +339,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       {busy&&<p role="status" className="patroLoading">Synchronizing the nine calendar profiles and astronomical context… Previous result remains visible until completion.</p>}
       <div className="patroStudioGrid">
         {(day?.calendars||[]).map((cal,i)=><article key={cal.id} className={"patroStudioCard"+(i===0?" primary":"")}>
-          <div className="patroCardTop"><span className="patroCalendarIcon">{cal.icon}</span>
+          <div className="patroCardTop"><span className="patroCalendarIcon"><WorldVectorIcon family="calendar" name={cal.id} size={27}/></span>
             <span className={"patroStatus "+((cal.status==="calculated"||cal.status==="authority-sourced"||cal.status==="public-dataset")?"ok":"pending")}>{cal.status.replaceAll("-"," ")}</span>
           </div>
           <h3>{cal.name}</h3><div className="patroCardValue">{cal.value}</div>
