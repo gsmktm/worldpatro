@@ -27,6 +27,8 @@ invariant(app.text.includes("World Patro"), "Command Center did not render.");
 const health = await json("/api/v1/health", undefined, 200);
 invariant(health.body.ok === true, "Health endpoint is not OK.");
 invariant(health.body.version === "3.0.0", "Unexpected World Patro version.");
+invariant(health.body.runtime === process.version, "Health must describe the live Node.js runtime.");
+invariant(process.versions.node.split(".")[0] === "24", "Expected Node 24 LTS runtime.");
 invariant(health.body.aiGateway?.accessMode === "authenticated", "Production agent access must default to authenticated.");
 
 const patro = await json("/api/v1/patro/today?date=2026-10-09", undefined, 200);
@@ -70,6 +72,19 @@ await json("/api/v1/agents/run", {
   body: JSON.stringify({ message: "smoke test only" })
 }, 403);
 
+
+// Opaque or malformed Origin is an explicit cross-origin signal, never an absent header.
+await json("/api/v1/agents/run", {
+  method: "POST",
+  headers: { "content-type":"application/json", origin:"null" },
+  body: JSON.stringify({ message:"smoke test only" })
+}, 403);
+
+await json("/api/v1/agents/run", {
+  method: "POST",
+  headers: { "content-type":"application/json", origin:"not-a-valid-origin" },
+  body: JSON.stringify({ message:"smoke test only" })
+}, 403);
 
 const visualPages = [
   ["/app/wbe", "WBGR-109"],
