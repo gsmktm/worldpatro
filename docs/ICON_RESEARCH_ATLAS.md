@@ -25,6 +25,10 @@ WorldPatro needs a coherent, original, accessible symbol vocabulary for a Nepal-
 
 The gallery has Nepali/English names, searchable metadata, eight visual family filters (including the "all" mode), keyboard-accessible buttons, and **Copy SVG** which copies the actual rendered SVG markup—including the Moon disk's internal gradient and clipping definitions. All drawings scale cleanly, and none downloads external fonts or assets.
 
+## 2026-11-25 Vedic homepage reference coverage addendum
+
+WorldPatro extended this **original 78-symbol foundational library** with 41 new independently drawn utility/ritual icons, covering the three VedicPatro homepage category groups. The current app total is **119 original SVG icons**; the original seven families and this Vedic-feature family yield eight families plus an All filter. See [41-feature topic-by-topic inventory](VEDIC_ICON_COVERAGE.md). An external feature index is used for research only; no proprietary icon assets were copied.
+
 ## Real interface adoption
 
 This is not a standalone gallery only. A reusable `WorldVectorIcon` renderer in `src/components/ui/world-vector-icon.tsx` draws the same registry assets in:
