@@ -27,13 +27,19 @@ export function dateInNepal(){return dateInTimezone(new Date(),"Asia/Kathmandu")
 
 export function readPatroQuery(url:URL){
   const query=url.searchParams;
+  const tz=query.get("tz")||defaults.tz;
+  let date=query.get("date");
+  if(!date){
+    try{date=dateInTimezone(new Date(),tz);}
+    catch{throw new PatroValidationError("Invalid timezone.");}
+  }
   const input=Query.safeParse({
-    date:query.get("date")||dateInNepal(),
+    date,
     locale:query.get("locale")||"en",
     lat:query.get("lat")??String(defaults.lat),
     lon:query.get("lon")??String(defaults.lon),
     elevation:query.get("elevation")??"1400",
-    tz:query.get("tz")||defaults.tz
+    tz
   });
   if(!input.success)throw new PatroValidationError("Invalid date, language, coordinates, elevation or timezone.");
 
