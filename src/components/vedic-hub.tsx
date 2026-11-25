@@ -28,7 +28,7 @@ const LINKS=[
   {path:"/app/patro",icon:"calendar",en:"9 calendars",ne:"नौ पात्रो",detail:"Nepal BS, Nepal Sambat & world traditions"},
   {path:"/app/panchang",icon:"sunrise",en:"Panchang studio",ne:"पञ्चाङ्ग",detail:"Sun, Moon & five limbs"},
   {path:"/app/moon",icon:"moon",en:"Moon Observatory",ne:"चन्द्र दर्शन",detail:"Phases, Moon size, dates & 12 original rāśi vectors"},
-  {path:"/app/symbols",icon:"star",en:"Symbol Atlas",ne:"प्रतीक सङ्ग्रह",detail:"78 original SVG icons · Navagraha, Nakshatra and calendars"},
+  {path:"/app/symbols",icon:"star",en:"Symbol Atlas",ne:"प्रतीक सङ्ग्रह",detail:"119 original SVG icons · Navagraha, Nakshatra and calendars"},
   {path:"/app/muhurat",icon:"hourglass",en:"Muhurat finder",ne:"मुहूर्त खोज",detail:"Screen candidate dates and windows"},
   {path:"/app/kundli",icon:"chart",en:"Birth chart",ne:"जन्मकुण्डली",detail:"Graha, Lagna, Varga & Dasha"},
   {path:"/app/astrology",icon:"orbit",en:"Planetary observatory",ne:"ग्रह वेधशाला",detail:"Astronomy and traditional interpretation"},
