@@ -64,7 +64,7 @@ function IconCard({item,ne}:{item:ArtItem;ne:boolean}){
      setCopied(false);
    }
  }
- return <article className="atlas-card">
+ return <article className={"atlas-card"+(item.key.startsWith("vedic-feature-")?" atlas-card-vedic":"")}>
    <div className="atlas-card-art"><AtlasSvg item={item}/></div>
    <div className="atlas-card-heading"><strong>{ne?item.ne:item.name}</strong><small>{ne?item.name:item.ne}</small></div>
    <p>{item.detail}</p>
