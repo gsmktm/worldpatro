@@ -9,6 +9,15 @@ for(const name of skills){
 }
 assert.match(source("AGENTS.md"),/\.agents\/skills\/ponytail\/SKILL\.md/);
 assert.match(source("docs/third-party/PONYTAIL_LICENSE.txt"),/MIT License/);
+const policy=source("AGENTS.md");
+assert.match(policy,/in \*\*full\*\* mode/, "Ponytail must be active in full mode");
+for(const name of skills)assert.match(policy,new RegExp(name), "Skill missing from policy: "+name);
+const pkg=JSON.parse(source("package.json"));
+const lock=JSON.parse(source("package-lock.json"));
+assert.equal(pkg.engines.node,"24.x", "Pin supported Node major for reproducible Vercel builds");
+assert.equal(lock.packages[""].engines.node,pkg.engines.node,"Lockfile must agree with runtime");
+assert.match(source(".github/workflows/ci.yml"),/node-version: 24/,"CI must use the deployed Node major");
+
 const icons=new Set([...source("src/components/ui/icon.tsx").matchAll(/^  ([A-Za-z][A-Za-z0-9]*):\s*</gm)].map(m=>m[1]));
 const names=[...source("src/lib/navigation.ts").matchAll(/icon:"([^"]+)"/g)].map(m=>m[1]);
 assert.ok(names.length>=25,"Navigation inventory unexpectedly small");
