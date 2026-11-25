@@ -11,6 +11,16 @@ Source: [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) at
 - [Ponytail gain](.agents/skills/ponytail-gain/SKILL.md) — upstream benchmark context
 - [Ponytail help](.agents/skills/ponytail-help/SKILL.md) — command reference
 
+## Additional verified skill sources (select only when relevant)
+
+The following MIT-licensed, exact upstream skill texts are pinned under `.agents/skills/`. Keep Ponytail Full as the **primary** policy; use specialized skills only for their corresponding work:
+- [Matt Pocock · diagnosing-bugs](.agents/skills/diagnosing-bugs/SKILL.md) — first reproduce, then correct the root cause and its tests
+- [ECC · accessibility](.agents/skills/accessibility/SKILL.md) — accessible semantics, keyboard, touch, screen-reader and WCAG checks
+- [Superpowers · verification-before-completion](.agents/skills/verification-before-completion/SKILL.md) — fresh CI/build/preview evidence before declaring results
+- [WorldPatro interface](.agents/skills/worldpatro-interface/SKILL.md) — original Nepal-first design and honest runtime readiness labeling
+
+See [the skill provenance and compatibility audit](docs/ENGINEERING_SKILLS_2026-11-25.md). Do **not** copy full external agent harnesses, hooks, shell scripts, secrets, telemetry, installation commands or entire foreign application frameworks into the app. Skill instructions are not automatically executed by GitHub Actions or production Node.js. They improve how coding agents work, not what is deployed in the app.
+
 ## Repo-specific hard requirements
 1. Nepal BS/AD dates must keep verifiable source and explicit `municipality-published` versus `public-open-dataset` classifications. Never invent Tithi, festivals, authoritative Muhrat or additional conversion coverage.
 2. Astro calculations must state their method, timezone and approximation; they are not government or scientific proof of personal predictions.
