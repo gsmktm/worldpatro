@@ -12,6 +12,10 @@ World Patro now has BS↔AD civil-date references for all twelve months of BS 20
 The `/app/patro#calendar-references` panel offers user-activated, separately credited Ashesh Nepali Calendar and Hamro Patro publisher-hosted widgets. External widget content is not copied into World Patro databases. The UI is original; full religious observance import requires reviewed rights and sources.
 
 
+## Ponytail audit and critical-path corrections · 2026-11-25
+
+The six upstream Ponytail skills are already installed without a new package or plugin dependency, and `AGENTS.md` selects Full mode. [The verified engineering audit](docs/PONYTAIL_AUDIT_2026-11-25.md) documents three narrow code corrections: consistent Node 24 across Vercel/CI, timezone-correct default dates for astronomy APIs, and fail-closed handling for malformed explicit agent request Origin headers. It also records unresolved live Supabase connectivity and separate security/branch-protection checks. A clean build is not certification of live account access.
+
 ## Engineering skills and UI quality
 
 The repo includes the upstream MIT-licensed **Ponytail** skills in [`.agents/skills/`](.agents/skills/) and project-specific [`AGENTS.md`](AGENTS.md) guidance. They are local coding-agent instructions, **not** runtime application dependencies or a new UI framework. CI verifies navigation icon coverage, selected-timezone "today" calendar behavior and explicit municipal-versus-open-source BS labels with `node scripts/validate-agent-ui.mjs`.
