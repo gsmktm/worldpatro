@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test:vedic": "node --experimental-strip-types scripts/validate-vedic-day.mjs"
+    "test:vedic": "node --experimental-strip-types scripts/validate-vedic-day.mjs",
+    "test:icons": "node --experimental-strip-types scripts/validate-icon-atlas.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",
