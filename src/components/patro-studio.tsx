@@ -11,6 +11,7 @@ type Inputs={date:string;locale:"en"|"ne";lat:string;lon:string;elevation:string
 type Panchang={
   method:string;interpretationBoundary:string;ayanamsa:number;
   tithi:{name:string;number:number;paksha:string};
+  karana:{name:string;number:number};
   nakshatra:{name:string;number:number};
   yoga:{name:string;number:number};
   sunTimes:{sunrise:string|null;sunset:string|null};
@@ -27,6 +28,7 @@ type Day={
 type Saved={id:string;title:string;createdAt?:string;created_at?:string};
 const quickModules=[
   {name:"Panchang",caption:"Tithi, Nakshatra & Sun/Moon",path:"/app/panchang",icon:"☀"},
+  {name:"Vedic daily",caption:"Choghadiya, Hora, Rahu Kala",path:"/app/vedic",icon:"ॐ"},
   {name:"BS Conversion",caption:"Sourced AD ↔ BS dates",path:"#bs-converter",icon:"🇳🇵"},
   {name:"Muhurat Finder",caption:"Candidate windows & rules",path:"/app/muhurat",icon:"✺"},
   {name:"Kundli",caption:"Birth chart & Dasha",path:"/app/kundli",icon:"♃"},
@@ -288,6 +290,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
       <a href="#patro-calendars">Calendars</a>
       <a href="#patro-nine-months">Nine month views</a>
       <a href="#patro-panchang">Panchang</a>
+      <Link href={"/app/vedic"+(params?"?"+params.toString():"")}>Vedic daily ↗</Link>
       <a href="#patro-month">Month</a>
       <a href="#bs-converter">BS converter</a>
       <a href="#patro-modules">All modules</a>
@@ -363,6 +366,7 @@ export default function PatroStudio({focus="calendars"}:{focus?:"calendars"|"pan
         <div><span>Tithi / Paksha</span><strong>{day.panchang.tithi.name}</strong><small>{day.panchang.tithi.paksha} · #{day.panchang.tithi.number}</small></div>
         <div><span>Nakshatra</span><strong>{day.panchang.nakshatra.name}</strong><small>#{day.panchang.nakshatra.number}</small></div>
         <div><span>Yoga</span><strong>{day.panchang.yoga.name}</strong><small>#{day.panchang.yoga.number}</small></div>
+        <div><span>Karana</span><strong>{day.panchang.karana.name}</strong><small>Half-tithi #{day.panchang.karana.number} · local noon</small></div>
         <div><span>Sunrise / sunset</span><strong>{day.panchang.sunTimes.sunrise||"—"} / {day.panchang.sunTimes.sunset||"—"}</strong><small>{day.canonical.timezone} · local date</small></div>
         <div><span>Moonrise / moonset</span><strong>{day.panchang.moonTimes.moonrise||"—"} / {day.panchang.moonTimes.moonset||"—"}</strong><small>May have no event on some days</small></div>
         <div><span>Lahiri approximation</span><strong>{day.panchang.ayanamsa.toFixed(4)}°</strong><small>Sidereal reference offset</small></div>
