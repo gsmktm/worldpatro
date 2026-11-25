@@ -1,6 +1,7 @@
 // Built-server acceptance test: every advertised module route, the module graph,
 // and shared input guards. Does not require or modify user database records.
 import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
 
 const base = process.env.BASE_URL || "http://127.0.0.1:3100";
 async function hit(path, init) {
@@ -14,7 +15,19 @@ async function json(path) {
 }
 
 const inventory = await json("/api/v1/platform/modules");
-assert.equal(inventory.total, 23, "Expected the retained 20 modules plus festivals, planner and everyday tools");
+const navSource=readFileSync(new URL("../src/lib/navigation.ts",import.meta.url),"utf8");
+const navSlugs=[...navSource.matchAll(/\{slug:"([^"]+)"/g)].map(match=>match[1]).filter(Boolean);
+assert.deepEqual(inventory.modules.map(m=>m.slug).sort(),navSlugs.sort(),
+ "The platform readiness inventory must include every navigable module, not only older feature records");
+assert.equal(inventory.infrastructure.backendConnectivityVerified,false,
+ "Configuration alone cannot certify live database connectivity");
+for(const slug of ["vedic","moon","symbols","jyotish-explorer","people","authorities","system","account"]){
+ assert.ok(inventory.modules.some(m=>m.slug===slug),"Recent UI route missing from readiness map: "+slug);
+}
+for(const slug of ["account","research","alerts","workflows","consult","admin"]){
+ const module=inventory.modules.find(m=>m.slug===slug);
+ assert.ok(module&&module.availability!=="available",slug+" cannot be certified available without real-user verification");
+}
 assert.equal(inventory.modules.length, inventory.total);
 assert.equal(new Set(inventory.modules.map(m => m.slug)).size, inventory.total);
 assert.equal(inventory.categories.reduce((sum,c) => sum + c.count,0), inventory.total);
