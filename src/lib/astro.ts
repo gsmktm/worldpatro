@@ -4,6 +4,8 @@ const TITHI_NAMES = [
   "Pratipada","Dwitiya","Tritiya","Chaturthi","Panchami","Shashthi","Saptami",
   "Ashtami","Navami","Dashami","Ekadashi","Dwadashi","Trayodashi","Chaturdashi","Purnima / Amavasya"
 ];
+const REPEATING_KARANAS = ["Bava","Balava","Kaulava","Taitila","Garaja","Vanija","Vishti"] as const;
+const TERMINAL_KARANAS = ["Shakuni","Chatushpada","Naga"] as const;
 const NAKSHATRAS = [
   "Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha",
   "Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha",
@@ -78,6 +80,10 @@ export function calculatePanchang(input: PanchangInput) {
   const tithiNumber = Math.floor(elongation / 12) + 1;
   const tithiInPaksha = ((tithiNumber - 1) % 15) + 1;
   const paksha = tithiNumber <= 15 ? "Shukla" : "Krishna";
+  const karanaHalf = Math.floor(elongation / 6) + 1; // 60 halves of a synodic month.
+  const karanaName = karanaHalf === 1 ? "Kimstughna"
+    : karanaHalf >= 58 ? TERMINAL_KARANAS[karanaHalf - 58]
+    : REPEATING_KARANAS[(karanaHalf - 2) % 7];
   const nakshatraIndex = Math.floor(moonSidereal / (360 / 27));
   const yogaIndex = Math.floor(norm(sunSidereal + moonSidereal) / (360 / 27));
   const observer=new Astro.Observer(lat,lon,elevation);
@@ -92,7 +98,9 @@ export function calculatePanchang(input: PanchangInput) {
     ayanamsa: Number(ayanamsa.toFixed(6)),
     sun: { tropicalLongitude: Number(sunTropical.toFixed(6)), siderealLongitude: Number(sunSidereal.toFixed(6)) },
     moon: { tropicalLongitude: Number(moonTropical.toFixed(6)), siderealLongitude: Number(moonSidereal.toFixed(6)), phaseAngle: Number(Astro.MoonPhase(time).toFixed(4)) },
-    tithi: { number: tithiNumber, paksha, name: TITHI_NAMES[tithiInPaksha - 1] },
+    tithi: { number: tithiNumber, paksha, name: tithiInPaksha === 15
+      ? (paksha === "Shukla" ? "Purnima" : "Amavasya") : TITHI_NAMES[tithiInPaksha - 1] },
+    karana: { number: karanaHalf, name: karanaName },
     nakshatra: { number: nakshatraIndex + 1, name: NAKSHATRAS[nakshatraIndex] },
     yoga: { number: yogaIndex + 1, name: YOGAS[yogaIndex] },
     sunTimes: {

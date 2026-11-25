@@ -4,6 +4,7 @@ import {useEffect,useState} from "react";
 import {useRouter} from "next/navigation";
 import {useMoment} from "@/components/app-shell";
 import {Icon} from "@/components/ui/icon";
+import {WorldVectorIcon} from "@/components/ui/world-vector-icon";
 import {MonthCalendar} from "@/components/month-calendar";
 import {TruthChip} from "@/components/ui/truth-chip";
 import {calendarTruth} from "@/lib/ui/truth";
@@ -56,7 +57,7 @@ export default function CommandCenter(){
     <p className="wp-source-caption">Municipal calendar · reviewed {FESTIVAL_SOURCE.checkedOn}. <a href={FESTIVAL_SOURCE.url} target="_blank" rel="noreferrer">View source ↗</a></p><Link href={href("/app/festivals")} className="wp-text-link">Explore the festival calendar <Icon name="arrow" size={17}/></Link>
    </section>
   </div>
-  <section className="wp-calendar-lenses"><div className="wp-section-head"><div><span className="wp-overline">ONE MOMENT, MANY PERSPECTIVES</span><h2>{ne?"विश्वका पात्रोहरू":"Time, around the world"}</h2></div><Link href={href("/app/patro")} className="wp-text-link">All nine calendars <Icon name="arrow" size={16}/></Link></div><div className="wp-lens-grid">{day?.calendars.filter(c=>["bs","gregorian","hijri","buddhist"].includes(c.id)).map(c=><article className="wp-lens-card" key={c.id}><div><span>{c.icon}</span><TruthChip state={calendarTruth(c)}/></div><h3>{c.name}</h3><strong>{c.value}</strong><small>{c.method}</small></article>)}{busy&&[0,1,2,3].map(i=><div className="wp-lens-card wp-loading-card" key={i}><span className="wp-skeleton"/><span className="wp-skeleton"/></div>)}</div></section>
+  <section className="wp-calendar-lenses"><div className="wp-section-head"><div><span className="wp-overline">ONE MOMENT, MANY PERSPECTIVES</span><h2>{ne?"विश्वका पात्रोहरू":"Time, around the world"}</h2></div><Link href={href("/app/patro")} className="wp-text-link">All nine calendars <Icon name="arrow" size={16}/></Link></div><div className="wp-lens-grid">{day?.calendars.filter(c=>["bs","gregorian","hijri","buddhist"].includes(c.id)).map(c=><article className="wp-lens-card" key={c.id}><div><span><WorldVectorIcon family="calendar" name={c.id} size={23}/></span><TruthChip state={calendarTruth(c)}/></div><h3>{c.name}</h3><strong>{c.value}</strong><small>{c.method}</small></article>)}{busy&&[0,1,2,3].map(i=><div className="wp-lens-card wp-loading-card" key={i}><span className="wp-skeleton"/><span className="wp-skeleton"/></div>)}</div></section>
   <section className="wp-explore-banner"><div className="wp-banner-symbol">ॐ</div><div><span className="wp-overline">WBGR-109 · WENS · 1799 BS</span><h2>{ne?"नौ परम्परा। नौ ग्रह। नयाँ दृष्टिकोण।":"Nine traditions. Nine grahas. A wider perspective."}</h2><p>Explore 729 symbolic gates, with calculated astronomy and clear boundaries.</p></div><Link href={href("/app/wens")} className="wp-button wp-button-gold">Explore WENS<Icon name="arrow" size={17}/></Link></section>
  </div>;
 }

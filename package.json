@@ -2,12 +2,16 @@
   "name": "worldpatro",
   "version": "3.0.0",
   "private": true,
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:vedic": "node --experimental-strip-types scripts/validate-vedic-day.mjs",
+    "test:icons": "node --experimental-strip-types scripts/validate-icon-atlas.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",
@@ -23,7 +27,9 @@
     "zod": "4.1.12"
   },
   "overrides": {
-    "jwks-rsa": { "jose": "5.10.0" }
+    "jwks-rsa": {
+      "jose": "5.10.0"
+    }
   },
   "devDependencies": {
     "@types/node": "24.9.1",
@@ -32,4 +38,3 @@
     "typescript": "5.9.3"
   }
 }
-
