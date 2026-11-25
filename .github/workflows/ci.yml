@@ -67,4 +67,5 @@ jobs:
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-ecosystem.mjs
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-nine-calendars.mjs
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-vedic-api.mjs
+          BASE_URL=http://127.0.0.1:3100 node scripts/validate-moon-api.mjs
 
