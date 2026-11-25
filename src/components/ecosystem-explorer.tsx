@@ -72,7 +72,7 @@ export default function EcosystemExplorer(){
       <option value="gated">{ne?"पुष्टि आवश्यक":"Verification needed"}</option>
      </select>
      <button type="button" className="wp-module-refresh" onClick={()=>void load()} disabled={loading}>
-      <Icon name="refreshCw" size={14}/>{ne?"पुनः जाँच":"Refresh"}</button>
+      <Icon name="refresh" size={14}/>{ne?"पुनः जाँच":"Refresh"}</button>
    </div>
    {error&&<p className="wp-module-error" role="alert">{error}</p>}
    <p className="wp-module-caveat">{ne?
