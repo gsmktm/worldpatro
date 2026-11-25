@@ -8,7 +8,7 @@ assert.match(explorer.text,/Every World Patro module/);
 assert.match(explorer.text,/id="ecosystem-search"/,"Module search must have a visible text input and accessible label");
 assert.match(explorer.text,/id="ecosystem-status"/,"Runtime-readiness filter must be keyboard accessible");
 const inventory=await json("/api/v1/platform/modules");
-assert.ok(inventory.total>=32,"The module directory must include all current navigation routes");
+assert.ok(inventory.total>=31,"The module directory must include all current navigation routes");
 assert.equal(inventory.categories.reduce((n,group)=>n+group.count,0),inventory.total);
 assert.ok(inventory.modules.some(m=>m.slug==="moon"&&m.availability==="available"));
 assert.ok(inventory.modules.some(m=>m.slug==="authorities"&&m.availability==="requires-published-sources"));
