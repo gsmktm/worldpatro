@@ -4,7 +4,7 @@
 
 ## Situation and verified facts
 
-Before this change, the shared navigation advertised **32** WorldPatro module routes, but `/api/v1/platform/modules` described only the **23** entries in `FEATURES`. Thus its command map was incomplete, while private services could be labeled `available` merely because a Supabase/Firebase configuration existed.
+Before this change, the shared navigation advertised **31** WorldPatro module routes, but `/api/v1/platform/modules` described only the **23** entries in `FEATURES`. Thus eight routes were absent from its command map, while private services could be labeled `available` merely because a Supabase/Firebase configuration existed.
 
 WorldPatro already installs six Ponytail skills and uses **Ponytail Full** as its top-level engineering guide. Keep that. Add only compatible skills with a concrete job and a retained license; do not install a forest of hooks or unrelated application runtimes.
 
