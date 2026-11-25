@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMoment } from "@/components/app-shell";
 import { Icon } from "@/components/ui/icon";
+import { MoonDisk } from "@/components/moon-vectors";
 import { civilDate, momentQuery } from "@/lib/ui/moment";
 import type { DaySnapshot } from "@/lib/ui/day-types";
 import type { VedicDaylightResult, TimeWindow } from "@/lib/vedic-windows";
@@ -24,6 +25,7 @@ type Tab="choghadiya"|"hora";
 const LINKS=[
   {path:"/app/patro",icon:"calendar",en:"9 calendars",ne:"नौ पात्रो",detail:"Nepal BS, Nepal Sambat & world traditions"},
   {path:"/app/panchang",icon:"sunrise",en:"Panchang studio",ne:"पञ्चाङ्ग",detail:"Sun, Moon & five limbs"},
+  {path:"/app/moon",icon:"moon",en:"Moon Observatory",ne:"चन्द्र दर्शन",detail:"Phases, Moon size, dates & 12 original rāśi vectors"},
   {path:"/app/muhurat",icon:"hourglass",en:"Muhurat finder",ne:"मुहूर्त खोज",detail:"Screen candidate dates and windows"},
   {path:"/app/kundli",icon:"chart",en:"Birth chart",ne:"जन्मकुण्डली",detail:"Graha, Lagna, Varga & Dasha"},
   {path:"/app/astrology",icon:"orbit",en:"Planetary observatory",ne:"ग्रह वेधशाला",detail:"Astronomy and traditional interpretation"},
@@ -69,6 +71,8 @@ export default function VedicHub(){
  const clock=now?timeNow(now,moment.tz):null;
  const isToday=now!==null&&civilDate(now,moment.tz)===moment.date;
  const p=data?.panchang;
+ const moonAngle=p?.moon.phaseAngle??0;
+ const moonLit=Math.max(0,Math.min(100,50*(1-Math.cos(moonAngle*Math.PI/180))));
  const daylight=data?.daylight;
  const windows=daylight?.status==="calculated"?(tab==="choghadiya"?daylight.choghadiya:daylight.hora):[];
  const bs=data?.calendars.find(item=>item.id==="bs");
@@ -115,6 +119,16 @@ export default function VedicHub(){
        ].map(item=><div key={item.label}><Icon name={item.icon} size={19}/><span>{item.label}</span><strong>{item.value||"—"}</strong></div>)}
      </div>
      <p className="vedic-method"><Icon name="fileCheck" size={15}/>{ne?"तिथि, नक्षत्र, योग र करण छानिएको दिनको स्थानीय मध्यान्हमा गणना गरिएका हुन्। समयसँगै बदलिन सक्छन्।":"Tithi, Nakshatra, Yoga and Karana are sampled at local civil noon, not throughout the whole day."} {p?.method||""}</p>
+   </section>
+
+   <section className="vedic-panel vedic-moon-preview" aria-label={ne?"चन्द्र दर्शन":"Moon Observatory"}>
+     <div className="vedic-moon-illustration"><MoonDisk phaseDegrees={moonAngle} illuminationPercent={moonLit} size={210}/></div>
+     <div><span className="wp-overline">☾ / MOON PHASE · CALENDAR DATES · 12 RĀŚI</span>
+       <h2>{ne?"चन्द्र दर्शन र बाह्र राशि":"The Moon, bigger and clearer."}</h2>
+       <p>{ne?"वास्तविक खगोलीय दूरी र कोणीय आकार, आउँदा पूर्णिमा–औँसीका मिति, चौध दिनका चन्द्रकला र बाह्र राशिका अद्वितीय SVG चिह्नहरू।":"Explore its calculated angular size, upcoming New and Full Moon dates, a 14-day lunar strip and twelve unique SVG zodiac signs."}</p>
+       <Link className="wp-button wp-button-gold" href={href("/app/moon")}>{ne?"चन्द्र वेधशाला खोल्नुहोस्":"Explore Moon Observatory"} <Icon name="arrow" size={16}/></Link>
+       <small>{ne?"यस सानो चित्रको प्रकाश प्रतिशत दीर्घांशबाट अनुमान गरिएको हो। विस्तृत मान वेधशालामा छन्।":"Preview illumination is an elongation-based illustration; the Moon Studio uses Astronomy Engine's illuminated fraction."}</small>
+     </div>
    </section>
 
    <section className="vedic-panel" id="vedic-daily-windows">
