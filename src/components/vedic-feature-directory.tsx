@@ -30,9 +30,8 @@ export default function VedicFeatureDirectory(){
     <span className={"vedic-feature-status "+item.status}>{statusLabel}
       {item.href&&<Icon name="arrow" size={12}/>}</span>
   </>;
-  const props={className:"vedic-feature-card",key:item.id,title:item.motif};
-  return item.href?<Link {...props} href={href(item.href)} aria-label={title+" · "+statusLabel}>{inner}</Link>:
-   <article {...props} aria-label={title+" · "+statusLabel}>{inner}</article>;
+  return item.href?<Link key={item.id} className="vedic-feature-card" title={item.motif} href={href(item.href)} aria-label={title+" · "+statusLabel}>{inner}</Link>:
+   <article key={item.id} className="vedic-feature-card" title={item.motif} aria-label={title+" · "+statusLabel}>{inner}</article>;
  }
  return <section className="vedic-feature-directory" aria-labelledby="vedic-feature-title">
    <header className="vedic-feature-heading">
