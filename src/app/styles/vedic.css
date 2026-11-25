@@ -33,3 +33,36 @@
 
 /* Original five-limb glyphs share the atlas' pictographic scale. */
 .vedic-limb-number{display:flex;align-items:center;gap:9px}.vedic-limb-number svg{color:#efcb86;flex:none}
+
+/* Vedic feature taxonomy, 41 original SVG medallions: editorial original, not external assets. */
+.vedic-feature-directory{padding:26px;border:1px solid #bda36c55;border-radius:18px;background:linear-gradient(135deg,#091e27,#102b31 46%,#132b31);display:grid;gap:23px;min-width:0}
+.vedic-feature-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:25px}
+.vedic-feature-heading h2{font:400 clamp(27px,3vw,39px)/1.2 Georgia,serif;color:#f3dfb5;letter-spacing:-.025em;margin:10px 0}
+.vedic-feature-heading p{max-width:670px;font-size:11px;line-height:1.8;color:#b0c4c2;margin:0}
+.vedic-feature-atlas-link{flex:none;display:flex;align-items:center;gap:8px;border:1px solid #bf9f5a66;border-radius:9px;padding:11px 14px;font-size:11px;color:#eed5a4}
+.vedic-feature-atlas-link:hover{background:#d9b67920}
+.vedic-feature-search{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid #436263;border-radius:10px;background:#071b24;color:#e7cc96}
+.vedic-feature-search input{border:none;background:transparent;outline:0;color:#f4e9d6;min-width:0;flex:1;font:inherit;font-size:12px}
+.vedic-feature-search input::placeholder{color:#93aba8}
+.vedic-feature-search>span{color:#b5c4ba;font:500 11px Georgia,serif;font-variant-numeric:tabular-nums}
+.vedic-feature-section{min-width:0;display:grid;gap:13px}
+.vedic-feature-section-label{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid #d1b07130}
+.vedic-feature-section-label>span{font:400 18px Georgia,serif;color:#caab73}
+.vedic-feature-section-label h3{font:400 24px Georgia,serif;color:#f2e2c7;margin:0}
+.vedic-feature-section-label small{margin-left:auto;font-size:10px;color:#9eaead}
+.vedic-feature-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.vedic-feature-card{display:flex;align-items:center;text-align:center;flex-direction:column;gap:5px;padding:17px 8px 12px;min-width:0;min-height:177px;border:1px solid #415b5b;border-radius:12px;background:radial-gradient(circle at 50% 25%,#d6af6611,transparent 65%),#0a212b;color:inherit;transition:background .18s,border-color .18s,transform .18s}
+a.vedic-feature-card:hover{border-color:#e2c082;background:#203c3e;transform:translateY(-2px)}
+a.vedic-feature-card:focus-visible{outline:2px solid #f0d39a;outline-offset:3px}
+.vedic-feature-art{display:grid;place-items:center;position:relative;isolation:isolate;width:76px;height:76px;margin-bottom:5px;color:#f0ce8d;border:1px solid #d9bd834e;border-radius:50%;background:radial-gradient(circle at 40% 35%,#f4dfad22,#775f3720 47%,#08232c 85%);box-shadow:inset 0 0 22px #d9b67912,0 5px 19px #00000029}
+.vedic-feature-mandala{position:absolute;width:61px;height:61px;border:1px dashed #d9be8650;border-radius:50%;z-index:-1}
+.vedic-feature-card strong{color:#eee2ce;font-size:12px;line-height:1.35;font-weight:600;overflow-wrap:anywhere}
+.vedic-feature-card>small{color:#9cafaf;font-size:10px;line-height:1.4;overflow-wrap:anywhere}
+.vedic-feature-status{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:auto;padding-top:8px;font-size:9px;color:#8ca9a8}
+.vedic-feature-status.available{color:#d6c080}.vedic-feature-status.related{color:#a8bbca}.vedic-feature-status.concept{color:#92a6a8}
+.vedic-feature-disclaimer{border-top:1px solid #d9b6792d;padding-top:16px;color:#9fb3b4;font-size:10px;line-height:1.75;margin:0}
+.vedic-feature-no-results{border:1px solid #5a6a65;padding:18px;color:#c3d2ce;border-radius:9px}
+@media(max-width:1180px){.vedic-feature-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:850px){.vedic-feature-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.vedic-feature-heading{flex-direction:column}.vedic-feature-atlas-link{align-self:flex-start}}
+@media(max-width:570px){.vedic-feature-directory{padding:16px 10px}.vedic-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.vedic-feature-card{min-height:159px;padding:12px 4px 10px}.vedic-feature-art{height:67px;width:67px}.vedic-feature-card strong{font-size:11px}.vedic-feature-card>small{font-size:9px}.vedic-feature-section-label h3{font-size:19px}.vedic-feature-heading h2{font-size:31px}.vedic-feature-search input{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.vedic-feature-card{transition:none}}

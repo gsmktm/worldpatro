@@ -1,4 +1,4 @@
-/* Original World Patro visual identity: 78 cross-cultural SVG icons, without font or third-party artwork. */
+/* Original World Patro visual identity: 119 cross-cultural SVG icons, without font or third-party artwork. */
 .atlas{display:grid;gap:20px;--atlas-gold:#deb976;--atlas-line:#344e4e}
 .atlas-hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(190px,.55fr);align-items:center;min-height:270px;padding:34px 37px;border:1px solid #b9a06a55;border-radius:19px;background:radial-gradient(circle at 78% 40%,#c49e4f24,transparent 45%),linear-gradient(115deg,#101e2a,#143038)}
 .atlas-hero h1{font:400 clamp(32px,3.8vw,54px)/1.12 Georgia,serif;letter-spacing:-.035em;color:#f2e1c0;margin:14px 0}
@@ -51,3 +51,9 @@
 @media(max-width:610px){.atlas{gap:16px}.atlas-hero{padding:25px 19px;min-height:auto}.atlas-hero h1{font-size:35px}.atlas-summary span{padding:5px 9px}.atlas-toolbar{flex-wrap:wrap}.atlas-toolbar label{width:100%;flex:none}.atlas-toolbar>a{padding:9px 12px}.atlas-content-title h2{font-size:23px}.atlas-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.atlas-card{padding:8px}.atlas-card-art{min-height:88px}.atlas-card-art svg{width:56px}.atlas-card-heading{margin-top:9px}.atlas-card-heading strong{font-size:11px}.atlas-card p{font-size:8px;min-height:26px}.atlas-boundary{padding:17px 14px}}
 @media(max-width:350px){.atlas-grid{grid-template-columns:1fr}.atlas-card-art{min-height:80px}}
 @media(prefers-reduced-motion:reduce){.atlas-card{transition:none}}
+
+/* Expanded Vedic icon family uses distinct WorldPatro medallion frames. */
+.atlas-card-vedic .atlas-card-art{position:relative;isolation:isolate;border-radius:10px;background:radial-gradient(circle,#bba06121,transparent 68%),#071b25}
+.atlas-card-vedic .atlas-card-art:before{content:"";width:79px;height:79px;position:absolute;border:1px solid #bda47266;border-radius:50%;background:radial-gradient(circle at 38% 30%,#d5ad6340,transparent 70%);z-index:-1;box-shadow:inset 0 0 18px #e8c88619}
+.atlas-card-vedic .atlas-card-art svg{position:relative;color:#f3d89e}
+@media(max-width:610px){.atlas-card-vedic .atlas-card-art:before{width:68px;height:68px}}

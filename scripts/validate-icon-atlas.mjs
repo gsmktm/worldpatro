@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { WORLD_ICON_GROUPS } from "../src/lib/world-iconography.ts";
+import { VEDIC_FEATURE_SECTIONS, VEDIC_FEATURE_ICONS } from "../src/lib/vedic-feature-icons.ts";
 
 const expected={graha:9,nakshatra:27,calendar:9,panchang:5,tools:8};
 assert.equal(WORLD_ICON_GROUPS.length,5);
@@ -48,6 +49,32 @@ assert.match(vedic,/name=\{c\.id\}/);
 
 assert.match(nav,/slug:"symbols"/);
 assert.ok(!atlas.includes("dangerouslySetInnerHTML"),"No untrusted SVG injection");
-const total=fullIds.length+zodiacPaths.length+8;
-assert.equal(total,78);
-console.log(JSON.stringify({passed:true,categories:7,originalIllustrativeMotifs:fullIds.length,rashi:zodiacPaths.length,moonPhases:8,total},null,2));
+const expectedVedic={calendar:10,jyotish:16,muhurat:15};
+assert.equal(VEDIC_FEATURE_SECTIONS.length,3);
+for(const group of VEDIC_FEATURE_SECTIONS)
+ assert.equal(group.entries.length,expectedVedic[group.id],"Reference homepage category mismatch");
+assert.equal(VEDIC_FEATURE_ICONS.length,41);
+const vedicIds=new Set(),vedicPaths=new Set();
+const sourceSvg=readFileSync(new URL("../src/components/ui/vedic-feature-icon.tsx",import.meta.url),"utf8");
+const directory=readFileSync(new URL("../src/components/vedic-feature-directory.tsx",import.meta.url),"utf8");
+for(const icon of VEDIC_FEATURE_ICONS){
+ assert.ok([...icon.id].every(ch=>"abcdefghijklmnopqrstuvwxyz0123456789-".includes(ch)),"Only slug-safe IDs");
+ assert.ok(icon.name&&icon.ne&&icon.motif);
+ assert.ok(icon.path.startsWith("M") && !icon.path.includes("<") && !icon.path.includes(">"),"SVG path must be local and safe");
+ assert.ok(icon.path.length>15);
+ assert.ok(!vedicIds.has(icon.id),"Duplicate Vedic feature id "+icon.id);
+ assert.ok(!vedicPaths.has(icon.path),"Duplicate Vedic feature art "+icon.id);
+ vedicIds.add(icon.id);vedicPaths.add(icon.path);
+ assert.ok(["available","related","concept"].includes(icon.status));
+ if(icon.status==="concept")assert.equal(icon.href,null,"Concept icons must not link to fabricated features");
+ else assert.ok(icon.href?.startsWith("/app/") && !icon.href.includes(".."),"A linked feature must use an app route");
+}
+assert.ok(sourceSvg.includes("aria-hidden={label?undefined:true}"));
+assert.ok(directory.includes("VEDIC_FEATURE_SECTIONS.map"));
+assert.ok(directory.includes("VedicFeatureIcon id={item.id}"));
+assert.ok(directory.includes("item.href?"),"Unimplemented icons must not be dead links");
+assert.ok(atlas.includes("VEDIC_FEATURE_ICONS.map"),"All icons must be in the Atlas");
+assert.match(vedic,/VedicFeatureDirectory/,"The Vedic day page must render the 41-feature directory");
+const total=fullIds.length+zodiacPaths.length+8+VEDIC_FEATURE_ICONS.length;
+assert.equal(total,119);
+console.log(JSON.stringify({passed:true,categories:8,originalIllustrativeMotifs:fullIds.length,vedicFeatures:41,rashi:zodiacPaths.length,moonPhases:8,total},null,2));

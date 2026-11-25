@@ -131,7 +131,7 @@ export default function MoonStudio(){
     <footer className="moon-footer"><div><strong>WORLD PATRO · LUNAR METHODS</strong><p>{data?.method||"Astronomy Engine lunar calculations"}.</p><p>{data?.note}</p></div>
       <div><Link href={href("/app/panchang")}>{ne?"पञ्चाङ्ग":"Panchang"} <Icon name="arrow" size={14}/></Link>
         <Link href={href("/app/kundli")}>{ne?"कुण्डली":"Kundli"} <Icon name="arrow" size={14}/></Link>
-        <Link href={href("/app/symbols")}>{ne?"७८ चिह्न":"Icon Atlas · 78"} <Icon name="arrow" size={14}/></Link>
+        <Link href={href("/app/symbols")}>{ne?"११९ चिह्न":"Icon Atlas · 119"} <Icon name="arrow" size={14}/></Link>
         <Link href={href("/app/sources")}>{ne?"स्रोत":"Sources"} <Icon name="arrow" size={14}/></Link></div>
     </footer>
   </div>;

@@ -7,6 +7,7 @@ import { useMoment } from "@/components/app-shell";
 import { Icon } from "@/components/ui/icon";
 import { WorldVectorIcon } from "@/components/ui/world-vector-icon";
 import { MoonDisk } from "@/components/moon-vectors";
+import VedicFeatureDirectory from "@/components/vedic-feature-directory";
 import { civilDate, momentQuery } from "@/lib/ui/moment";
 import type { DaySnapshot } from "@/lib/ui/day-types";
 import type { VedicDaylightResult, TimeWindow } from "@/lib/vedic-windows";
@@ -27,7 +28,7 @@ const LINKS=[
   {path:"/app/patro",icon:"calendar",en:"9 calendars",ne:"नौ पात्रो",detail:"Nepal BS, Nepal Sambat & world traditions"},
   {path:"/app/panchang",icon:"sunrise",en:"Panchang studio",ne:"पञ्चाङ्ग",detail:"Sun, Moon & five limbs"},
   {path:"/app/moon",icon:"moon",en:"Moon Observatory",ne:"चन्द्र दर्शन",detail:"Phases, Moon size, dates & 12 original rāśi vectors"},
-  {path:"/app/symbols",icon:"star",en:"Symbol Atlas",ne:"प्रतीक सङ्ग्रह",detail:"78 original SVG icons · Navagraha, Nakshatra and calendars"},
+  {path:"/app/symbols",icon:"star",en:"Symbol Atlas",ne:"प्रतीक सङ्ग्रह",detail:"119 original SVG icons · Navagraha, Nakshatra and calendars"},
   {path:"/app/muhurat",icon:"hourglass",en:"Muhurat finder",ne:"मुहूर्त खोज",detail:"Screen candidate dates and windows"},
   {path:"/app/kundli",icon:"chart",en:"Birth chart",ne:"जन्मकुण्डली",detail:"Graha, Lagna, Varga & Dasha"},
   {path:"/app/astrology",icon:"orbit",en:"Planetary observatory",ne:"ग्रह वेधशाला",detail:"Astronomy and traditional interpretation"},
@@ -151,8 +152,10 @@ export default function VedicHub(){
      <p className="vedic-method">{daylight?.warning||"Traditional rule-based windows will appear after the solar calculation. No definitive event suitability is asserted."}</p>
    </section>
 
+   <VedicFeatureDirectory/>
+
    <section className="vedic-panel">
-     <div className="vedic-section-head"><div><span className="wp-overline">०३ / THE COMPLETE WORLD PATRO</span><h2>{ne?"वैदिक ज्ञानदेखि विश्व समयसम्म":"From Vedic knowledge to world time"}</h2></div><Link href={href("/app/ecosystem")}>{ne?"सबै साधन":"All modules"} <Icon name="arrow" size={15}/></Link></div>
+     <div className="vedic-section-head"><div><span className="wp-overline">०४ / THE COMPLETE WORLD PATRO</span><h2>{ne?"वैदिक ज्ञानदेखि विश्व समयसम्म":"From Vedic knowledge to world time"}</h2></div><Link href={href("/app/ecosystem")}>{ne?"सबै साधन":"All modules"} <Icon name="arrow" size={15}/></Link></div>
      <div className="vedic-link-grid">{LINKS.map(link=><Link key={link.path} href={href(link.path)} className="vedic-link"><span className="vedic-link-icon"><Icon name={link.icon} size={21}/></span><strong>{ne?link.ne:link.en}</strong><small>{link.detail}</small><Icon name="arrow" size={14}/></Link>)}</div>
    </section>
    <footer className="vedic-footnote"><strong>WORLD PATRO · TRUST LAYERS</strong><span>{ne?"खगोल ≠ धार्मिक अधिकार ≠ ज्योतिषीय व्याख्या":"Astronomy ≠ religious authority ≠ astrological interpretation"}</span><span>{data?.generatedAt? (ne?"गणना समय: ":"Generated: ")+new Intl.DateTimeFormat(ne?"ne-NP":"en-GB",{dateStyle:"medium",timeStyle:"short",timeZone:moment.tz}).format(new Date(data.generatedAt)):""} · {moment.tz}</span><Link href={href("/app/sources")}>{ne?"स्रोत र सीमा":"Methods & limitations"}</Link></footer>
