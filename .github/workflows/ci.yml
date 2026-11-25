@@ -25,6 +25,7 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run typecheck
+      - run: npm run test:vedic
       - name: Validate Ponytail skill installation and UI affordances
         run: node scripts/validate-agent-ui.mjs
       - name: Verify BS year and attributed calendar references
@@ -65,4 +66,5 @@ jobs:
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-jyotish-explorer.mjs
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-ecosystem.mjs
           BASE_URL=http://127.0.0.1:3100 node scripts/validate-nine-calendars.mjs
+          BASE_URL=http://127.0.0.1:3100 node scripts/validate-vedic-api.mjs
 
